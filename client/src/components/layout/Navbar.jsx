@@ -46,17 +46,12 @@ const Navbar = () => {
     }
   }, [location]);
 
-  const isHome = location.pathname === '/';
-  const isDarkNav = isHome || isScrolled;
+  const isDarkHeroPage = location.pathname === '/' || location.pathname === '/projects';
+  const isDarkTheme = isDarkHeroPage;
 
   return (
     <>
-      {(() => {
-        const isHomePage = location.pathname === '/';
-        const isDarkTheme = isHomePage;
-
-        return (
-          <header
+      <header
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 sm:px-12 ${
               isScrolled
                 ? isDarkTheme
@@ -185,8 +180,6 @@ const Navbar = () => {
               </button>
             </div>
           </header>
-        );
-      })()}
 
       {/* Mobile Drawer Overlay */}
       <div

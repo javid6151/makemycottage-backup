@@ -1,153 +1,480 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { HiArrowNarrowRight } from 'react-icons/hi';
-import AnimatedSection from '../components/common/AnimatedSection';
-import SectionLabel from '../components/common/SectionLabel';
-import CTAButton from '../components/common/CTAButton';
+import { 
+  MapPin, 
+  ChevronDown, 
+  ArrowRight,
+  ArrowUpRight,
+  Phone
+} from 'lucide-react';
 import { PROJECTS_DATA, BUSINESS_INFO } from '../utils/constants';
 
+// Resentii-style FAQ items customized for Make My Cottage
+const FAQ_ITEMS = [
+  {
+    question: 'How long does a typical wooden cottage project take from start to finish?',
+    answer:
+      'Depending on custom architecture and site topography, our precision prefabricated timber homes and handcrafted cottages typically take between 45 to 90 days from foundation readiness to turnkey handover.'
+  },
+  {
+    question: 'What does the Make My Cottage design and build process look like?',
+    answer:
+      'We guide you through three clear phases: First, site consultation and customized 3D architectural modeling. Second, precision CNC factory milling and timber weatherproofing. Third, rapid on-site assembly led by master carpenters.'
+  },
+  {
+    question: 'What timber species and treatments do you utilize for weather & termite resistance?',
+    answer:
+      'We use certified Canadian Cedar, Scandinavian Pine, seasoned Burma Teak, and high-density bamboo composites, pressure-treated with vacuum-pressure impregnation to deliver permanent termite, fungal, and monsoon resistance.'
+  },
+  {
+    question: 'Do you construct cottages across India and provide remote consultations?',
+    answer:
+      'Yes! We deliver turnkey projects across India — including Himachal Pradesh, Uttarakhand, Karnataka, Telangana, Goa, and Maharashtra. We offer remote 3D consultations along with dedicated on-ground engineering teams.'
+  },
+  {
+    question: 'Can cottage designs be customized for hilly slopes, water bodies, or farm lands?',
+    answer:
+      'Every project is 100% custom-engineered. Whether you require stilt foundations for hillside contours, cantilevered decks over lakes, or expansive verandahs for farmsteads, our designs adapt to your land seamlessly.'
+  }
+];
+
+// Minimal Vintage Timber Project Card Component
+const VintageProjectCard = ({ project, isExpanded, onMouseEnter, onMouseLeave }) => {
+  return (
+    <Link
+      to={`/projects/${project.slug}`}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      className={`group relative flex flex-col justify-between w-full h-[470px] sm:h-[490px] md:h-[510px] rounded-[24px] sm:rounded-[28px] overflow-hidden border transition-all duration-600 ease-out bg-[#1c1d21] cursor-pointer block no-underline ${
+        isExpanded
+          ? 'border-black/20 shadow-[0_16px_40px_rgba(0,0,0,0.14)]'
+          : 'border-black/[0.08] hover:border-black/20 shadow-[0_4px_20px_rgba(0,0,0,0.06)]'
+      }`}
+    >
+      {/* Background Project Image Layer with subtle 1.03-1.04 zoom */}
+      <div className="absolute inset-0 w-full h-full overflow-hidden">
+        <img
+          src={project.heroImage}
+          alt={project.name}
+          loading="lazy"
+          className={`w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] motion-reduce:transform-none ${
+            isExpanded ? 'scale-[1.035]' : 'scale-100 group-hover:scale-[1.035]'
+          }`}
+        />
+        {/* Soft Natural Vignette Gradient Overlay - Bright & Clean */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/15 to-transparent transition-opacity duration-500" />
+      </div>
+
+      {/* Top Floating Badge: Architectural Category Pill (Clean Resentii Style - No AI Dot) */}
+      <div className="relative z-10 p-5 flex items-center justify-between w-full">
+        <span
+          className={`inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-sans font-medium transition-all duration-300 shadow-sm ${
+            isExpanded
+              ? 'bg-white text-[#141517] shadow-md border border-black/10'
+              : 'bg-[#1c1d21]/80 backdrop-blur-md text-white/90 border border-white/15'
+          }`}
+        >
+          {project.category}
+        </span>
+      </div>
+
+      {/* Bottom Information Panel: Pure Luminous Light Surface */}
+      <div className={`relative z-10 m-3.5 sm:m-4 p-5 sm:p-6 rounded-[20px] bg-white/95 backdrop-blur-md border transition-all duration-600 ease-out overflow-hidden ${
+        isExpanded
+          ? 'border-black/[0.08] shadow-[0_14px_36px_rgba(0,0,0,0.10)] -translate-y-1'
+          : 'border-black/[0.06] shadow-[0_6px_24px_rgba(0,0,0,0.06)]'
+      }`}>
+        {/* Title Row with Crisp Editorial Typography & Circular Arrow Button */}
+        <div className="relative z-10">
+          <div className="flex items-center justify-between gap-3">
+            <h3 className="font-serif text-xl sm:text-[22px] text-[#141517] font-normal tracking-tight leading-snug group-hover:text-[#8C6544] transition-colors duration-300 flex-1">
+              {project.name}
+            </h3>
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 shrink-0 ${
+              isExpanded
+                ? 'bg-[#141517] text-white shadow-sm'
+                : 'bg-black/[0.04] text-[#141517] group-hover:bg-black/[0.08]'
+            }`}>
+              <ArrowUpRight className={`w-4 h-4 transition-transform duration-300 ${
+                isExpanded ? 'translate-x-0.5 -translate-y-0.5' : 'translate-x-0 translate-y-0'
+              }`} />
+            </div>
+          </div>
+        </div>
+
+        {/* Expandable Details Container: 500-700ms ease-out sequence */}
+        <div
+          className={`grid transition-[grid-template-rows] duration-600 ease-out motion-reduce:transition-none ${
+            isExpanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+          }`}
+        >
+          <div className="overflow-hidden">
+            <div
+              className={`transition-all duration-500 ease-out transform motion-reduce:transform-none ${
+                isExpanded
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-2.5'
+              }`}
+              style={{ transitionDelay: isExpanded ? '75ms' : '0ms' }}
+            >
+              {/* Project Description in clean, legible neutral text */}
+              <p className="font-sans text-xs sm:text-[13px] text-[#555866] line-clamp-2 mt-2.5 leading-relaxed font-light">
+                {project.shortDescription}
+              </p>
+
+              {/* Clean Hairline Divider Line (Revealed in Sequence) */}
+              <div
+                className={`h-[1px] bg-black/[0.06] my-3.5 transition-opacity duration-400 ease-out ${
+                  isExpanded ? 'opacity-100' : 'opacity-0'
+                }`}
+                style={{ transitionDelay: isExpanded ? '150ms' : '0ms' }}
+              />
+
+              {/* Metadata Row: Location Pin */}
+              <div
+                className={`flex items-center text-xs font-sans text-[#555866] font-medium pt-0.5 transition-all duration-500 ease-out transform ${
+                  isExpanded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-1.5'
+                }`}
+                style={{ transitionDelay: isExpanded ? '200ms' : '0ms' }}
+              >
+                <div className="flex items-center gap-1.5 truncate">
+                  <MapPin className="w-3.5 h-3.5 text-[#8C6544] shrink-0" />
+                  <span className="truncate text-[#555866] font-medium">{project.location}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+};
+
 const ProjectsPage = () => {
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedCategory, setSelectedCategory] = useState('All Projects');
+  const [openFaqIndex, setOpenFaqIndex] = useState(0);
+  const [activeCardId, setActiveCardId] = useState(null);
 
-  const categories = ['All', 'Wooden Home', 'Farm House', 'Cottage', 'Resort Cottage', 'Prefabricated Home'];
+  // Responsive hero dimensions: base height and shrunk height
+  const [heroDims, setHeroDims] = useState(() => {
+    if (typeof window === 'undefined') return { base: 615, shrunk: 360 };
+    const w = window.innerWidth;
+    if (w < 640) return { base: 500, shrunk: 320 };
+    if (w < 1024) return { base: 560, shrunk: 340 };
+    return { base: 615, shrunk: 360 };
+  });
 
-  const filteredProjects = selectedCategory === 'All'
+  useEffect(() => {
+    const handleResize = () => {
+      const w = window.innerWidth;
+      if (w < 640) {
+        setHeroDims({ base: 500, shrunk: 320 });
+      } else if (w < 1024) {
+        setHeroDims({ base: 560, shrunk: 340 });
+      } else {
+        setHeroDims({ base: 615, shrunk: 360 });
+      }
+    };
+    window.addEventListener('resize', handleResize, { passive: true });
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const { scrollY } = useScroll();
+  const cardHeight = useTransform(scrollY, (value) => {
+    const distance = heroDims.base - heroDims.shrunk;
+    if (value <= 0) return `${heroDims.base}px`;
+    if (value >= distance) return `${heroDims.shrunk}px`;
+    const progress = value / distance;
+    const h = heroDims.base - progress * (heroDims.base - heroDims.shrunk);
+    return `${h}px`;
+  });
+
+  const categories = [
+    'All Projects',
+    'Wooden Home',
+    'Farm House',
+    'Cottage',
+    'Resort Cottage',
+    'Custom Structures'
+  ];
+
+  const filteredProjects = selectedCategory === 'All Projects'
     ? PROJECTS_DATA
-    : PROJECTS_DATA.filter((p) => p.category.toLowerCase().includes(selectedCategory.toLowerCase()));
+    : PROJECTS_DATA.filter((p) =>
+        p.category.toLowerCase().includes(selectedCategory.toLowerCase())
+      );
 
   return (
-    <div className="bg-[#f5f2f2] min-h-screen w-full pt-32 pb-24 text-[#141517]">
+    <div className="bg-[#ffffff] min-h-screen w-full text-[#141517] selection:bg-[#28282c] selection:text-white">
       <Helmet>
-        <title>Projects Portfolio | Make My Cottage - Handcrafted Wooden Homes</title>
-        <meta 
-          name="description" 
-          content="Explore our completed portfolio of bespoke wooden homes, farmhouses, cottages, and prefabricated modular timber villas across India." 
+        <title>Our Projects | Make My Cottage - Handcrafted Wooden Homes</title>
+        <meta
+          name="description"
+          content="Explore our portfolio of handcrafted wooden homes, luxury farmhouses, cottages, and prefabricated modular timber villas across India."
         />
       </Helmet>
 
-      {/* Hero Header */}
-      <section className="max-w-7xl mx-auto px-6 md:px-12 mb-16 md:mb-20">
-        <AnimatedSection className="max-w-4xl">
-          <SectionLabel text="OUR PORTFOLIO" />
-          <h1 className="font-heading text-5xl sm:text-7xl md:text-8xl text-[#141517] uppercase leading-[0.92] mt-6 mb-8">
-            Projects Made to Last.
-          </h1>
-          <p className="font-sans text-black/75 text-base sm:text-lg font-light leading-relaxed max-w-2xl mb-10">
-            Each project represents our dedication to structural precision, honest timber craftsmanship, and sustainable architectural design.
-          </p>
-
-          {/* Filter Pills */}
-          <div className="flex flex-wrap items-center gap-2 pt-2">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-5 py-2.5 rounded-full text-xs uppercase tracking-wider transition-all duration-200 ${
-                  selectedCategory === cat
-                    ? 'bg-[#141517] text-white font-semibold shadow-md'
-                    : 'bg-white text-[#555] hover:text-[#141517] border border-[#e3e3de]'
-                }`}
+      {/* =========================================================================
+          1. HERO SECTION (Classic Handcrafted Timber Cottage Hero with Scroll Animation)
+      ========================================================================= */}
+      <section className="relative w-full max-w-[1440px] mx-auto p-3 sm:p-4 md:p-5">
+        {/* Pinned Hero Track */}
+        <div 
+          className="relative w-full"
+          style={{ height: `${heroDims.base}px` }}
+        >
+          {/* Shrinking Hero Card (Sticky at top, bottom shrinks upward) */}
+          <motion.div
+            style={{ height: cardHeight }}
+            className="sticky top-3 sm:top-4 md:top-5 w-full rounded-t-[28px] sm:rounded-t-[32px] rounded-br-[28px] sm:rounded-br-[32px] rounded-bl-none overflow-hidden bg-[#1c1d21] flex flex-col justify-end shadow-sm"
+          >
+            {/* Background Architectural Photo (Constant base height so image remains fixed/constant) */}
+            <div
+              style={{ height: `${heroDims.base}px` }}
+              className="absolute top-0 left-0 w-full overflow-hidden pointer-events-none"
+            >
+              <motion.div
+                initial={{ scale: 1.08, opacity: 0.9 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+                className="w-full h-full relative"
               >
-                {cat === 'All' ? 'All Projects' : cat}
-              </button>
-            ))}
+                <img
+                  src="https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=1920&q=85"
+                  alt="Make My Cottage - Handcrafted Wooden Homes & Cottages"
+                  className="w-full h-full object-cover"
+                  loading="eager"
+                />
+                {/* Multi-Stop Gradient Overlay: Dark at top for navbar legibility, dark at bottom for notch contrast */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/15 to-black/60 pointer-events-none" />
+              </motion.div>
+            </div>
+
+            {/* Signature Inverted Notch Button (Sitting at bottom-left, glides upwards over image as card shrinks) */}
+            <div className="relative z-10 flex items-end">
+              <div className="bg-white pt-3 sm:pt-4 pr-3.5 sm:pr-4 pb-0 pl-0 rounded-tr-[28px] sm:rounded-tr-[32px] relative">
+                {/* Top Concave Fillet Curve */}
+                <div className="absolute -top-[20px] left-0 w-5 h-5 pointer-events-none">
+                  <svg viewBox="0 0 20 20" fill="none" className="w-5 h-5 block">
+                    <path d="M0 20L0 0C0 11.0457 8.9543 20 20 20L0 20Z" fill="#ffffff" />
+                  </svg>
+                </div>
+
+                {/* Right Concave Fillet Curve */}
+                <div className="absolute bottom-0 -right-[20px] w-5 h-5 pointer-events-none">
+                  <svg viewBox="0 0 20 20" fill="none" className="w-5 h-5 block">
+                    <path d="M0 20H20C8.9543 20 0 11.0457 0 0V20Z" fill="#ffffff" />
+                  </svg>
+                </div>
+
+                {/* The Dark Pill Badge with Clean Sans-Serif Title Case */}
+                <motion.div
+                  initial={{ opacity: 0, x: -20, y: 15 }}
+                  animate={{ opacity: 1, x: 0, y: 0 }}
+                  transition={{ type: 'spring', bounce: 0.25, duration: 0.7, delay: 0.15 }}
+                  className="bg-[#28282c] text-white px-8 sm:px-12 py-4 sm:py-5 rounded-[20px] sm:rounded-[24px] flex items-center shadow-sm"
+                >
+                  <h1 className="font-sans text-3xl sm:text-5xl md:text-[54px] font-normal tracking-tight text-white leading-none">
+                    Our Projects
+                  </h1>
+                </motion.div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* White Background Wrapper for the Downward Content */}
+        <div className="bg-white pt-8 sm:pt-10 px-2 sm:px-4">
+            {/* Category Filter Tabs */}
+            <motion.div 
+              initial={{ opacity: 0, y: 25 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ type: 'spring', bounce: 0.2, duration: 0.5, delay: 0.2 }}
+              className="flex items-center gap-2.5 sm:gap-3 overflow-x-auto pb-3 mb-8 sm:mb-10 no-scrollbar"
+            >
+              {categories.map((cat) => {
+                const isActive = selectedCategory === cat;
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => setSelectedCategory(cat)}
+                    className={`px-5 sm:px-6 py-2.5 sm:py-3 rounded-[50px] text-xs sm:text-sm font-medium tracking-wide whitespace-nowrap transition-all duration-300 ease-out cursor-pointer ${
+                      isActive
+                        ? 'bg-[#28282c] text-white shadow-sm'
+                        : 'bg-[#e9ecf2] text-[#555866] hover:bg-[#dfe3ec] hover:text-[#141517]'
+                    }`}
+                  >
+                    <span>{cat}</span>
+                  </button>
+                );
+              })}
+            </motion.div>
+
+            {/* =========================================================================
+                2. PROJECT CARDS GRID (3-Column Layout, Spring Pop & Hover Interaction)
+            ========================================================================= */}
+            <motion.div 
+              layout
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 md:gap-8 pb-20 sm:pb-28"
+            >
+              <AnimatePresence mode="popLayout">
+                {filteredProjects.map((project, idx) => {
+                  const isExpanded = activeCardId === project.id;
+
+                  return (
+                    <motion.div
+                      key={project.id}
+                      layout
+                      initial={{ opacity: 0, scale: 0.82, y: 35 }}
+                      whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                      viewport={{ once: true, amount: 0.08 }}
+                      exit={{ opacity: 0, scale: 0.82, y: -10 }}
+                      transition={{
+                        type: 'spring',
+                        bounce: 0.22,
+                        duration: 0.65,
+                        delay: idx * 0.07
+                      }}
+                    >
+                      <VintageProjectCard
+                        project={project}
+                        isExpanded={isExpanded}
+                        onMouseEnter={() => setActiveCardId(project.id)}
+                        onMouseLeave={() => setActiveCardId((prev) => (prev === project.id ? null : prev))}
+                      />
+                    </motion.div>
+                  );
+                })}
+              </AnimatePresence>
+            </motion.div>
           </div>
-        </AnimatedSection>
       </section>
 
-      {/* Projects Grid */}
-      <section className="max-w-7xl mx-auto px-6 md:px-12 mb-32">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-          {filteredProjects.map((project) => (
-            <AnimatedSection key={project.id}>
-              <article id={project.slug} className="group flex flex-col justify-between h-full bg-white rounded-3xl p-5 border border-[#e3e3de] shadow-sm hover:shadow-xl transition-all duration-500">
-                <div>
-                  <Link
-                    to={`/projects/${project.slug}`}
-                    className="block relative rounded-2xl overflow-hidden aspect-[16/11] bg-black/5 mb-6 shadow-sm border border-black/5"
+      {/* =========================================================================
+          3. FAQ ACCORDION SECTION (Resentii FAQ Section Component)
+      ========================================================================= */}
+      <section className="bg-[#f9fafc] border-y border-black/[0.06] py-20 sm:py-28 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+          {/* FAQ Left Column: Sticky while scrolling, until right accordion finishes */}
+          <div className="lg:col-span-5">
+            <div className="lg:sticky lg:top-28">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#28282c] text-white text-[11px] uppercase tracking-widest font-semibold mb-4 shadow-sm">
+                <span>FAQ</span>
+              </div>
+              <h2 className="font-heading text-3xl sm:text-5xl uppercase text-[#141517] tracking-tight leading-[1.05] mb-5">
+                Got Questions? We Have Answers.
+              </h2>
+              <p className="font-sans text-[#555866] text-sm sm:text-base font-light leading-relaxed mb-8">
+                Everything you need to know about our handcrafted timber architecture, sustainable materials, and turnkey building process.
+              </p>
+              <div className="hidden lg:block">
+                <Link
+                  to="/contact"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#141517] text-white text-xs uppercase tracking-widest font-semibold hover:bg-black transition-all shadow-md hover:scale-105 duration-200"
+                >
+                  <span>Ask A Question</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* FAQ Right Column (Accordion List) */}
+          <div className="lg:col-span-7 flex flex-col gap-4">
+            {FAQ_ITEMS.map((faq, index) => {
+              const isOpen = openFaqIndex === index;
+              return (
+                <div
+                  key={index}
+                  className="bg-white rounded-[20px] border border-black/[0.07] overflow-hidden shadow-sm transition-all duration-200"
+                >
+                  <button
+                    onClick={() => setOpenFaqIndex(isOpen ? -1 : index)}
+                    className="w-full text-left p-6 sm:p-7 flex items-center justify-between gap-4 cursor-pointer"
                   >
-                    <img
-                      src={project.heroImage}
-                      alt={project.name}
-                      loading="lazy"
-                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
-
-                    <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none">
-                      <span className="px-3 py-1 rounded-full text-[10px] font-sans font-medium uppercase tracking-wider bg-white/90 backdrop-blur-md text-[#141517] shadow-sm">
-                        {project.category}
-                      </span>
-                      <span className="font-heading text-sm text-white font-light">
-                        {project.num}
-                      </span>
-                    </div>
-
-                    <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-                      <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#141517] text-white text-[11px] uppercase tracking-wider font-semibold shadow-md">
-                        <span>View Project</span>
-                        <HiArrowNarrowRight className="w-3 h-3" />
-                      </span>
-                    </div>
-                  </Link>
-
-                  <div className="px-2">
-                    <div className="text-[11px] uppercase tracking-widest text-[#888] font-medium mb-1.5">
-                      {project.location} &middot; {project.specs?.builtUpArea}
-                    </div>
-                    <h3 className="font-heading text-2xl text-[#141517] mb-2 group-hover:opacity-80 transition-opacity">
-                      <Link to={`/projects/${project.slug}`}>
-                        {project.name}
-                      </Link>
-                    </h3>
-                    <p className="text-xs text-[#666] font-light leading-relaxed line-clamp-3 mb-6">
-                      {project.shortDescription}
-                    </p>
-                  </div>
+                    <span className="font-heading text-base sm:text-lg text-[#141517] font-medium leading-snug">
+                      {faq.question}
+                    </span>
+                    <span
+                      className={`w-9 h-9 rounded-full shrink-0 flex items-center justify-center transition-transform duration-300 ${
+                        isOpen
+                          ? 'bg-[#28282c] text-white rotate-180'
+                          : 'bg-[#f0f2f5] text-[#141517]'
+                      }`}
+                    >
+                      <ChevronDown className="w-4 h-4" />
+                    </span>
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                      >
+                        <div className="px-6 sm:px-7 pb-6 sm:pb-7 pt-1 font-sans text-xs sm:text-sm text-[#555866] leading-relaxed font-light border-t border-black/[0.04]">
+                          {faq.answer}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
-
-                <div className="pt-4 px-2 border-t border-black/5 flex items-center justify-between">
-                  <span className="text-[11px] text-[#999] uppercase tracking-wider">
-                    {project.specs?.constructionType}
-                  </span>
-                  <Link
-                    to={`/projects/${project.slug}`}
-                    className="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest font-semibold text-[#141517] hover:underline"
-                  >
-                    <span>Full Details</span>
-                    <HiArrowNarrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-                  </Link>
-                </div>
-              </article>
-            </AnimatedSection>
-          ))}
+              );
+            })}
+          </div>
         </div>
       </section>
 
-      {/* Bottom CTA */}
-      <section className="bg-[#141517] text-white py-24 md:py-36 px-6 md:px-12 text-center">
-        <AnimatedSection className="max-w-3xl mx-auto flex flex-col items-center">
-          <SectionLabel text="START YOUR BUILD" />
-          <h2 className="font-heading text-4xl sm:text-6xl uppercase leading-[1] mt-4 mb-8">
-            Ready to build something lasting?
+      {/* =========================================================================
+          4. CTA BANNER (Resentii "Ready to Transform Your Space?" Component)
+      ========================================================================= */}
+      {/* =========================================================================
+          4. CTA BANNER (Full-Bleed Architectural Wooden Cottage Banner)
+      ========================================================================= */}
+      <section className="relative w-full overflow-hidden bg-[#0c0d10] py-24 sm:py-32 md:py-40 border-t border-black/[0.08]">
+        {/* Full-Bleed Architectural Wooden Cottage Background Image Layer */}
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          <img
+            src="https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=1920&q=85"
+            alt="Handcrafted Wooden Cottage Architecture in Nature"
+            className="w-full h-full object-cover opacity-50 scale-105 transform motion-reduce:transform-none"
+            loading="lazy"
+          />
+          {/* Cinematic Multi-Stop Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d10] via-[#0c0d10]/80 to-[#0c0d10]/65" />
+          {/* Ambient Warm Radial Backdrops */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-[#8C6544]/20 rounded-full blur-[140px] pointer-events-none" />
+        </div>
+
+        <div className="relative z-10 max-w-4xl mx-auto px-6 sm:px-8 text-center flex flex-col items-center">
+          {/* Editorial Heading */}
+          <h2 className="font-heading text-4xl sm:text-6xl md:text-7xl text-white font-normal tracking-tight leading-[1.06] mb-6">
+            Ready to Transform Your Space?
           </h2>
-          <p className="text-white/70 font-light text-base md:text-lg mb-10 max-w-xl">
-            Get in touch with our team for customized 3D plans, budget estimations, and turnkey execution schedules.
+
+          {/* Subtext */}
+          <p className="font-sans text-[#d0d1db] text-base sm:text-lg md:text-xl font-light leading-relaxed max-w-2xl mx-auto mb-12">
+            Every great space starts with a single conversation. Let's talk about your vision and bring it to life together.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <CTAButton to="/contact" variant="accent">
-              Start Project &rarr;
-            </CTAButton>
-            <a
-              href={`tel:${BUSINESS_INFO.phone}`}
-              className="inline-flex items-center justify-center px-8 py-3.5 rounded-full bg-white/10 text-white hover:bg-white hover:text-black text-xs uppercase tracking-widest font-semibold transition-all"
+
+          {/* Action Button: Signature White Pill with Brown Arrow Badge */}
+          <div className="flex items-center justify-center">
+            <Link
+              to="/contact"
+              className="group inline-flex items-center gap-4 pl-8 pr-2.5 py-2.5 rounded-full bg-white text-[#141517] hover:bg-white font-sans font-medium text-base tracking-normal transition-all duration-300 shadow-[0_12px_36px_rgba(0,0,0,0.35)] hover:shadow-[0_16px_45px_rgba(0,0,0,0.45)] hover:scale-105 active:scale-95"
             >
-              Call {BUSINESS_INFO.phone}
-            </a>
+              <span className="font-semibold text-black tracking-tight">
+                Let's Talk
+              </span>
+              <span className="w-12 h-12 rounded-full bg-[#855836] text-white flex items-center justify-center transition-transform duration-300 group-hover:translate-x-1 shadow-sm">
+                <ArrowRight className="w-5 h-5 text-white" />
+              </span>
+            </Link>
           </div>
-        </AnimatedSection>
+        </div>
       </section>
     </div>
   );
