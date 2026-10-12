@@ -12,7 +12,6 @@ import FoldText from '../components/common/FoldText';
 import ScrollRevealText from '../components/common/ScrollRevealText';
 import ScrollTimeline from '../components/common/ScrollTimeline';
 import ServicesTextRotate from '../components/common/ServicesTextRotate';
-import TestimonialsSection from '../components/common/TestimonialsSection';
 import CurvedRibbonShowcase from '../components/common/CurvedRibbonShowcase';
 import FAQSection from '../components/common/FAQSection';
 import { 
@@ -508,10 +507,6 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* =========================================================================
-          09.5 — TESTIMONIALS (What Our Clients Say About Us - Exact Bildora Dual Marquee)
-      ========================================================================= */}
-      <TestimonialsSection />
 
       {/* =========================================================================
           10 — 3D CURVED RIBBON SHOWCASE (Exact RBP Imageworks Sinusoidal Card Stream)
