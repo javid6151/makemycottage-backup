@@ -190,8 +190,10 @@ const AboutPage = () => {
 
   // =========================================================================
   // Ground Rules Sticky Scroll Controller & One-by-One Line Shrinking
-  // The section pins in the viewport while each line progressively shrinks
-  // from 254px down to 133px one by one along with the user's scroll.
+  // The section stays pinned in the viewport while each line progressively shrinks
+  // from 254px down to 133px one by one along with the scroll.
+  // All 4 bars complete shrinking by 65% progress, ensuring all bars are fully
+  // completed before the section ever scrolls down.
   // =========================================================================
   const groundRulesRef = useRef(null);
   const { scrollYProgress: groundProgress } = useScroll({
@@ -199,17 +201,10 @@ const AboutPage = () => {
     offset: ['start start', 'end end']
   });
 
-  const springConfig = { damping: 32, stiffness: 200, mass: 0.8 };
-
-  const col1Raw = useTransform(groundProgress, [0.08, 0.26], [254, 133]);
-  const col2Raw = useTransform(groundProgress, [0.26, 0.44], [254, 133]);
-  const col3Raw = useTransform(groundProgress, [0.44, 0.62], [254, 133]);
-  const col4Raw = useTransform(groundProgress, [0.62, 0.80], [254, 133]);
-
-  const col1Height = useSpring(col1Raw, springConfig);
-  const col2Height = useSpring(col2Raw, springConfig);
-  const col3Height = useSpring(col3Raw, springConfig);
-  const col4Height = useSpring(col4Raw, springConfig);
+  const col1Height = useTransform(groundProgress, [0.05, 0.20], [254, 133]);
+  const col2Height = useTransform(groundProgress, [0.20, 0.35], [254, 133]);
+  const col3Height = useTransform(groundProgress, [0.35, 0.50], [254, 133]);
+  const col4Height = useTransform(groundProgress, [0.50, 0.65], [254, 133]);
   const colHeights = [col1Height, col2Height, col3Height, col4Height];
 
   return (
@@ -376,7 +371,7 @@ const AboutPage = () => {
       {/* ========================================================================= */}
       <section
         ref={groundRulesRef}
-        className="relative bg-[#FAF7F0] border-t border-[#EAE3D2] md:h-[300vh] py-20 md:py-0"
+        className="relative bg-[#FAF7F0] border-t border-[#EAE3D2] md:h-[360vh] py-20 md:py-0"
       >
         <div className="md:sticky md:top-0 md:h-screen flex flex-col justify-center pt-8 md:pt-20 pb-8 md:pb-12 px-6 md:px-12 lg:px-16 max-w-7xl mx-auto w-full z-10">
           {/* Section Tag */}
