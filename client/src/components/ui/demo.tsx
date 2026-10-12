@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { motion, AnimatePresence } from "framer-motion"
 import { TextRotate, TextRotateRef } from "@/components/ui/text-rotate"
 import { PROJECTS_DATA } from "@/utils/constants"
 
@@ -14,6 +15,14 @@ export interface ProjectItem {
   category: string
   shortDescription?: string
   description?: string
+  specs?: {
+    builtUpArea?: string
+    location?: string
+    projectType?: string
+    constructionType?: string
+    completion?: string
+    materials?: string
+  }
   heroImage: string
   images?: string[]
 }
@@ -184,98 +193,134 @@ export function Preview() {
     <div
       ref={sectionRef}
       className="relative w-full bg-white text-[#141517]"
-      style={{ height: `${projects.length * 60}vh` }}
+      style={{ height: `${projects.length * 65}vh` }}
     >
       {/* Sticky viewport pinned while scrolling through the section */}
-      <div className="sticky top-0 h-screen w-full flex items-center justify-between overflow-hidden bg-white select-none">
+      <div className="sticky top-0 h-screen w-full flex flex-col md:flex-row items-center justify-between overflow-hidden bg-white select-none">
         
-        {/* LEFT COLUMN: Vertical sliding project images */}
-        <div className="w-1/2 h-full relative overflow-hidden flex items-start justify-center">
+        {/* LEFT COLUMN: Vertical sliding project images - Occupies Full Screen Left Half */}
+        <div className="w-full md:w-1/2 h-[45vh] md:h-full relative overflow-hidden flex items-start justify-center bg-neutral-900">
           <div
-            className="w-full flex flex-col items-center transition-transform duration-500 ease-out"
+            className="w-full h-full flex flex-col items-center transition-transform duration-700 ease-out"
             style={{
-              transform: `translateY(-${activeIndex * 100}vh)`,
+              transform: `translateY(-${activeIndex * 100}%)`,
             }}
           >
             {projects.map((project, index) => (
               <div
                 key={project.id}
-                className="h-screen w-full flex-shrink-0 flex justify-center items-center px-4"
+                className="h-full md:h-screen w-full flex-shrink-0 relative overflow-hidden cursor-pointer group select-none"
+                onClick={() => {
+                  if (index === activeIndex) {
+                    navigate(`/projects/${project.slug}`)
+                  } else {
+                    jumpToIndex(index)
+                  }
+                }}
               >
-                <div
-                  className="group relative w-40 h-40 sm:w-56 sm:h-56 md:w-72 md:h-72 lg:w-96 lg:h-96 aspect-square rounded-xl sm:rounded-2xl overflow-hidden shadow-xl hover:scale-[1.03] transition-all duration-300 cursor-pointer bg-neutral-100 border border-neutral-200"
-                  onClick={() => {
-                    if (index === activeIndex) {
-                      navigate(`/projects/${project.slug}`)
-                    } else {
-                      jumpToIndex(index)
-                    }
-                  }}
-                  title={`View ${project.name}`}
-                >
-                  <img
-                    src={project.heroImage}
-                    alt={project.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  {/* Subtle hover overlay badge */}
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-colors duration-200 flex items-center justify-center">
-                    <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-white text-[10px] sm:text-[11px] font-sans uppercase tracking-widest font-semibold bg-black/80 px-3.5 py-1.5 rounded-full backdrop-blur-sm shadow-md">
-                      View Project &rarr;
-                    </span>
-                  </div>
-                </div>
+                <img
+                  src={project.heroImage}
+                  alt={project.name}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  loading="lazy"
+                />
               </div>
             ))}
           </div>
         </div>
 
-        {/* RIGHT COLUMN: Rotating Project Name Text */}
-        <div className="w-1/2 h-full flex flex-col items-start justify-center pl-4 sm:pl-10 md:pl-16 pr-8 sm:pr-12 select-none">
-          <div
-            className="cursor-pointer group flex flex-col items-start max-w-full"
-            onClick={() => {
-              navigate(`/projects/${currentProject.slug}`)
-            }}
-            title={`View ${currentProject.name}`}
-          >
-            <TextRotate
-              ref={textRotateRef}
-              texts={projects.map((project) => project.name.toUpperCase())}
-              mainClassName="text-xl sm:text-3xl md:text-5xl lg:text-6xl font-sans uppercase font-medium tracking-normal text-[#141517] group-hover:opacity-75 transition-opacity"
-              splitLevelClassName="overflow-hidden pb-1 sm:pb-2"
-              staggerFrom={"first"}
-              animatePresenceMode="wait"
-              loop={false}
-              auto={false}
-              staggerDuration={0.005}
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -40 }}
-              transition={{ type: "spring", duration: 0.5, bounce: 0 }}
-            />
+        {/* RIGHT COLUMN: Editorial Content, Title, Dynamic Description & Specs */}
+        <div className="w-full md:w-1/2 h-[55vh] md:h-full flex flex-col justify-center px-6 sm:px-10 md:px-12 lg:px-16 xl:px-20 select-none overflow-y-auto md:overflow-visible">
+          <div className="max-w-xl w-full py-4 md:py-0">
+            {/* Rotating Project Title */}
+            <div
+              className="cursor-pointer group flex flex-col items-start"
+              onClick={() => navigate(`/projects/${currentProject.slug}`)}
+            >
+              <TextRotate
+                ref={textRotateRef}
+                texts={projects.map((project) => project.name.toUpperCase())}
+                mainClassName="text-2xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-sans uppercase font-bold tracking-tight text-[#141517] leading-[1.05] group-hover:text-[#ff4b18] transition-colors"
+                splitLevelClassName="overflow-hidden pb-1 sm:pb-2"
+                staggerFrom={"first"}
+                animatePresenceMode="wait"
+                loop={false}
+                auto={false}
+                staggerDuration={0.005}
+                initial={{ opacity: 0, y: 35 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -35 }}
+                transition={{ type: "spring", duration: 0.5, bounce: 0 }}
+              />
 
-            {/* Subtle metadata and view link */}
-            <div className="mt-3 flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm text-[#777]">
-              <span className="font-mono text-[10px] sm:text-[11px] tracking-wider text-[#999]">
-                {currentProject.num} / 0{projects.length}
-              </span>
-              <span className="w-1 h-1 rounded-full bg-black/25" />
-              <span className="uppercase tracking-wider text-[10px] sm:text-[11px] font-medium text-[#666]">
-                {currentProject.category}
-              </span>
-              <span className="w-1 h-1 rounded-full bg-black/25" />
-              <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] uppercase tracking-wider font-semibold text-[#141517] group-hover:underline">
-                <span>View Project</span>
-                <span aria-hidden="true">&rarr;</span>
-              </span>
+              {/* Subtle metadata and view link */}
+              <div className="mt-3 flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm text-[#777]">
+                <span className="font-mono text-[10px] sm:text-[11px] tracking-wider text-[#999]">
+                  {currentProject.num} / 0{projects.length}
+                </span>
+                <span className="w-1 h-1 rounded-full bg-black/25" />
+                <span className="uppercase tracking-wider text-[10px] sm:text-[11px] font-medium text-[#666]">
+                  {currentProject.category}
+                </span>
+                <span className="w-1 h-1 rounded-full bg-black/25" />
+                <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] uppercase tracking-wider font-semibold text-[#141517] group-hover:underline">
+                  <span>View Project</span>
+                  <span aria-hidden="true">&rarr;</span>
+                </span>
+              </div>
             </div>
+
+            {/* Dynamic Animated Description & Specs */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentProject.id}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className="mt-4 sm:mt-5 flex flex-col gap-4"
+              >
+                {/* Architectural Description */}
+                <p className="text-xs sm:text-sm md:text-[15px] text-[#555] font-light leading-relaxed">
+                  {currentProject.description || currentProject.shortDescription}
+                </p>
+
+                {/* Specs Grid */}
+                {currentProject.specs && (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 py-3 border-y border-[#e5e5e0] my-1">
+                    <div>
+                      <span className="text-[10px] uppercase tracking-wider text-[#999] font-medium block">
+                        Built Area
+                      </span>
+                      <span className="text-xs sm:text-sm font-semibold text-[#141517]">
+                        {currentProject.specs.builtUpArea}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] uppercase tracking-wider text-[#999] font-medium block">
+                        Construction
+                      </span>
+                      <span className="text-xs sm:text-sm font-semibold text-[#141517]">
+                        {currentProject.specs.constructionType}
+                      </span>
+                    </div>
+                    <div className="col-span-2 sm:col-span-1">
+                      <span className="text-[10px] uppercase tracking-wider text-[#999] font-medium block">
+                        Materials
+                      </span>
+                      <span className="text-xs sm:text-sm font-semibold text-[#141517] truncate block" title={currentProject.specs.materials}>
+                        {currentProject.specs.materials}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
 
         {/* Subtle navigation dots indicator on right edge */}
-        <div className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-10">
+        <div className="hidden sm:flex absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 flex-col gap-2 z-10">
           {projects.map((_, i) => (
             <button
               key={i}

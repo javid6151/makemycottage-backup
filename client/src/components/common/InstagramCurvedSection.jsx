@@ -110,8 +110,8 @@ export const InstagramCurvedSection = () => {
     const canvas = canvasRef.current;
     if (!container || !canvas) return;
 
-    let width = window.innerWidth;
-    let height = container.clientHeight || 480;
+    let width = container.clientWidth || window.innerWidth;
+    let height = container.clientHeight || 470;
 
     // 1. Scene
     const scene = new THREE.Scene();
@@ -122,7 +122,8 @@ export const InstagramCurvedSection = () => {
 
     const updateCameraFov = (w, h) => {
       const aspect = w / h;
-      const targetTan = 1.76 / aspect;
+      // 1.62 locks horizontal span so leftmost and rightmost cards touch and bleed past screen edges
+      const targetTan = 1.62 / aspect;
       camera.fov = (2 * Math.atan(targetTan) * 180) / Math.PI;
       camera.aspect = aspect;
       camera.updateProjectionMatrix();
@@ -373,8 +374,8 @@ export const InstagramCurvedSection = () => {
     // 8. Responsive Resize
     const onResize = () => {
       if (!container) return;
-      width = window.innerWidth;
-      height = container.clientHeight || 480;
+      width = container.clientWidth || window.innerWidth;
+      height = container.clientHeight || 470;
       updateCameraFov(width, height);
       renderer.setSize(width, height);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -410,7 +411,7 @@ export const InstagramCurvedSection = () => {
         const offset = i - centerIndex + currentX;
         const angle = offset * angleStep;
 
-        if (Math.abs(offset) > 4.2) {
+        if (Math.abs(offset) > 4.6) {
           meshes[i].visible = false;
           continue;
         } else {
@@ -456,45 +457,47 @@ export const InstagramCurvedSection = () => {
   }, []);
 
   return (
-    <section className="py-20 md:py-32 px-4 sm:px-6 md:px-10 max-w-7xl mx-auto border-t border-[#e3e3de] overflow-hidden">
-      {/* 1. Header (Exact Match to Bildora & MMC Layout) */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 md:mb-12">
-        <div>
-          <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#141517] text-white border border-white/10 text-[11px] font-medium uppercase tracking-[0.2em] shadow-md mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#ff4b18] shadow-[0_0_8px_rgba(255,75,24,0.8)]" />
-            <span>Follow The Journey</span>
+    <section className="py-20 md:py-32 w-full max-w-full px-0 border-t border-[#e3e3de] overflow-hidden">
+      {/* 1. Header (Centered within max-w-7xl) */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 mb-8 md:mb-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div>
+            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#141517] text-white border border-white/10 text-[11px] font-medium uppercase tracking-[0.2em] shadow-md mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#ff4b18] shadow-[0_0_8px_rgba(255,75,24,0.8)]" />
+              <span>Follow The Journey</span>
+            </div>
+            <h2 className="font-heading text-4xl sm:text-6xl text-[#141517] uppercase leading-[0.95]">
+              On Site &amp; Instagram.
+            </h2>
+            <p className="text-sm sm:text-base text-[#666] font-light mt-3 max-w-xl">
+              See our latest wooden builds, framing stages, and behind-the-scenes video reels.
+            </p>
           </div>
-          <h2 className="font-heading text-4xl sm:text-6xl text-[#141517] uppercase leading-[0.95]">
-            On Site &amp; Instagram.
-          </h2>
-          <p className="text-sm sm:text-base text-[#666] font-light mt-3 max-w-xl">
-            See our latest wooden builds, framing stages, and behind-the-scenes video reels.
-          </p>
-        </div>
 
-        <a
-          href={BUSINESS_INFO.social.instagram}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-[#141517] text-white hover:bg-black text-xs uppercase tracking-widest font-semibold transition-all duration-300 self-start md:self-auto shadow-md group cursor-pointer"
-        >
-          <FaInstagram className="w-4 h-4 text-[#ff4b18]" />
-          <span>Follow {BUSINESS_INFO.social.instagramHandle}</span>
-          <HiArrowNarrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
-        </a>
+          <a
+            href={BUSINESS_INFO.social.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-[#141517] text-white hover:bg-black text-xs uppercase tracking-widest font-semibold transition-all duration-300 self-start md:self-auto shadow-md group cursor-pointer"
+          >
+            <FaInstagram className="w-4 h-4 text-[#ff4b18]" />
+            <span>Follow {BUSINESS_INFO.social.instagramHandle}</span>
+            <HiArrowNarrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
+          </a>
+        </div>
       </div>
 
-      {/* 2. Interactive 3D Cylindrical Perspective Carousel Slider with Live Videos & Images */}
-      <div className="relative w-full">
+      {/* 2. Interactive 3D Cylindrical Perspective Carousel Slider with Live Videos & Images (Edge-to-Edge Bleed) */}
+      <div className="relative w-full overflow-hidden">
         <div 
           ref={containerRef} 
-          className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] h-[320px] sm:h-[370px] md:h-[420px] lg:h-[450px] flex items-center justify-center overflow-hidden select-none cursor-grab active:cursor-grabbing"
+          className="relative w-full h-[330px] sm:h-[380px] md:h-[430px] lg:h-[470px] flex items-center justify-center overflow-hidden select-none cursor-grab active:cursor-grabbing"
         >
           <canvas ref={canvasRef} className="block w-full h-full" />
         </div>
 
         {/* Drag Hint */}
-        <div className="flex items-center justify-center gap-2 mt-2 text-xs text-[#888] font-light uppercase tracking-widest">
+        <div className="flex items-center justify-center gap-2 mt-4 text-xs text-[#888] font-light uppercase tracking-widest">
           <span>&larr; Drag to explore site reels &amp; builds &rarr;</span>
         </div>
       </div>
