@@ -14,8 +14,6 @@ import {
 import AnimatedSection from '../components/common/AnimatedSection';
 import SectionLabel from '../components/common/SectionLabel';
 import CTAButton from '../components/common/CTAButton';
-import ServicesExpandTypography from '../components/common/ServicesExpandTypography';
-import ServicesTextRotate from '../components/common/ServicesTextRotate';
 import Services3DProjection from '../components/services3d/Services3DProjection';
 import { SERVICES, BUSINESS_INFO } from '../utils/constants';
 
@@ -162,32 +160,6 @@ const ServicesPage = () => {
       ========================================================================= */}
       <section className="w-full bg-white border-y border-[#e3e3de] mb-24 md:mb-32">
         <Services3DProjection />
-      </section>
-
-      {/* =========================================================================
-          03 — INTERACTIVE SERVICES TEXT ROTATE & ARCHITECTURAL SLIDER (All 6 Services)
-      ========================================================================= */}
-      <section className="w-full bg-white border-y border-[#e3e3de] mb-24 md:mb-32">
-        <ServicesTextRotate onSelectServiceModal={setSelectedServiceModal} />
-      </section>
-
-      {/* =========================================================================
-          03 — SIGNATURE EXPANDING TYPOGRAPHY ANIMATION (All 6 Services)
-      ========================================================================= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 mb-28 md:mb-36">
-        <div className="border-t border-[#e3e3de] pt-12 mb-12">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <span className="text-xs uppercase tracking-[0.25em] font-semibold text-accent-terracotta">
-              Scroll To Experience Structural Craftsmanship
-            </span>
-            <span className="text-xs text-[#888] font-light">
-              Interactive expanding perspective reveals &middot; Click any image for instant specs
-            </span>
-          </div>
-        </div>
-
-        {/* Core GSAP Flip & ScrollTrigger Expanding Typography component */}
-        <ServicesExpandTypography onSelectServiceModal={setSelectedServiceModal} />
       </section>
 
       {/* =========================================================================

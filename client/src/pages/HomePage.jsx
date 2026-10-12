@@ -11,7 +11,6 @@ import CurvedSlider from '../components/common/CurvedSlider';
 import FoldText from '../components/common/FoldText';
 import ScrollRevealText from '../components/common/ScrollRevealText';
 import ScrollTimeline from '../components/common/ScrollTimeline';
-import ServicesTextRotate from '../components/common/ServicesTextRotate';
 import Services3DProjection from '../components/services3d/Services3DProjection';
 import TestimonialsSection from '../components/common/TestimonialsSection';
 import FAQSection from '../components/common/FAQSection';
