@@ -222,11 +222,11 @@ const HomePage = () => {
     </section>
 
       {/* =========================================================================
-          03 — PROJECTS SHOWCASE SECTION (Interactive Text Rotate)
+          03 — SERVICES SHOWCASE SECTION (Interactive Text Rotate)
       ========================================================================= */}
-      <section id="projects" className="scroll-mt-24 w-full bg-white border-t border-[#e3e3de] relative">
-        <div id="services" className="absolute -top-24 left-0 pointer-events-none" />
-        {/* INTERACTIVE TEXT ROTATE PROJECTS SHOWCASE */}
+      <section id="services" className="scroll-mt-24 w-full bg-white border-t border-[#e3e3de] relative">
+        <div id="projects" className="absolute -top-24 left-0 pointer-events-none" />
+        {/* INTERACTIVE TEXT ROTATE SERVICES SHOWCASE */}
         <ServicesTextRotate onSelectServiceModal={setSelectedServiceModal} />
       </section>
 

@@ -15,6 +15,7 @@ import AnimatedSection from '../components/common/AnimatedSection';
 import SectionLabel from '../components/common/SectionLabel';
 import CTAButton from '../components/common/CTAButton';
 import ServicesExpandTypography from '../components/common/ServicesExpandTypography';
+import ServicesTextRotate from '../components/common/ServicesTextRotate';
 import { SERVICES, BUSINESS_INFO } from '../utils/constants';
 
 // Detailed specifications for each of our 6 turnkey service offerings
@@ -156,7 +157,14 @@ const ServicesPage = () => {
       </section>
 
       {/* =========================================================================
-          02 — SIGNATURE EXPANDING TYPOGRAPHY ANIMATION (All 6 Services)
+          02 — INTERACTIVE SERVICES TEXT ROTATE & ARCHITECTURAL SLIDER (All 6 Services)
+      ========================================================================= */}
+      <section className="w-full bg-white border-y border-[#e3e3de] mb-24 md:mb-32">
+        <ServicesTextRotate onSelectServiceModal={setSelectedServiceModal} />
+      </section>
+
+      {/* =========================================================================
+          03 — SIGNATURE EXPANDING TYPOGRAPHY ANIMATION (All 6 Services)
       ========================================================================= */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 mb-28 md:mb-36">
         <div className="border-t border-[#e3e3de] pt-12 mb-12">
