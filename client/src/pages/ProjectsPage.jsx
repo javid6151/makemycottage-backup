@@ -62,7 +62,7 @@ const ProjectsPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
           {filteredProjects.map((project) => (
             <AnimatedSection key={project.id}>
-              <article className="group flex flex-col justify-between h-full bg-white rounded-3xl p-5 border border-[#e3e3de] shadow-sm hover:shadow-xl transition-all duration-500">
+              <article id={project.slug} className="group flex flex-col justify-between h-full bg-white rounded-3xl p-5 border border-[#e3e3de] shadow-sm hover:shadow-xl transition-all duration-500">
                 <div>
                   <Link
                     to={`/projects/${project.slug}`}

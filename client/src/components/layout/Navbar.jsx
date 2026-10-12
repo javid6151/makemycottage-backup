@@ -46,6 +46,9 @@ const Navbar = () => {
     }
   }, [location]);
 
+  const isHome = location.pathname === '/';
+  const isDarkNav = isHome || isScrolled;
+
   return (
     <>
       {(() => {
