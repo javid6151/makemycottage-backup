@@ -160,6 +160,61 @@ const springTransition = {
   mass: 1
 };
 
+const TimelineMilestoneItem = ({ item, idx, historyProgress }) => {
+  const thresholds = [0.0, 0.18, 0.38, 0.58, 0.78, 0.96];
+  const threshold = thresholds[idx];
+
+  const dotBorder = useTransform(
+    historyProgress,
+    [Math.max(0, threshold - 0.04), threshold],
+    ['#DDD5C2', '#1B1915']
+  );
+  const dotBg = useTransform(
+    historyProgress,
+    [Math.max(0, threshold - 0.04), threshold],
+    ['#FAF7F0', '#1B1915']
+  );
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 35 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.25 }}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      className="relative"
+    >
+      {/* Milestone Circle Dot centered directly on the timeline line at every year */}
+      <motion.span
+        style={{
+          borderColor: dotBorder,
+          backgroundColor: dotBg
+        }}
+        className="absolute left-[-40px] md:left-[-56px] top-2 sm:top-2.5 w-4 h-4 rounded-full border-[3px] shadow-sm z-20"
+      />
+
+      {/* Year & Badge Header */}
+      <div className="flex items-center gap-3 mb-3">
+        <span className="text-3xl sm:text-4xl md:text-5xl font-medium text-[#1B1915] tracking-tight">
+          {item.year}
+        </span>
+        <span className="bg-[#FAE1A6] text-[#271E07] px-3 py-1 rounded-[4px] text-xs font-medium shadow-sm">
+          {item.badge}
+        </span>
+      </div>
+
+      {/* Title */}
+      <h3 className="text-2xl sm:text-3xl font-medium tracking-tight text-[#1B1915] mb-2.5">
+        {item.title}
+      </h3>
+
+      {/* Description */}
+      <p className="text-base text-[#504732] leading-relaxed font-normal max-w-xl">
+        {item.description}
+      </p>
+    </motion.div>
+  );
+};
+
 const AboutPage = () => {
   // Sticky Stacking Cards Section Scroll Controller
   const stackedSectionRef = useRef(null);
@@ -469,46 +524,24 @@ const AboutPage = () => {
 
         {/* 2-Column Layout with Sticky Sunset Image */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-          {/* Left Column: Vertical Timeline Milestones with Scroll-Driven Black Progress Line */}
-          <div ref={historyTimelineRef} className="lg:col-span-7 relative pl-8 md:pl-12 space-y-16 md:space-y-24 py-4">
-            {/* Base background beige line */}
-            <div className="absolute left-0 top-3 bottom-6 w-[4px] bg-[#DDD5C2] rounded-full" />
-
-            {/* Dynamic black progress line that extends downwards on scroll */}
-            <motion.div
-              style={{ height: historyLineHeight }}
-              className="absolute left-0 top-3 w-[4px] bg-[#1B1915] rounded-full z-10 origin-top"
-            />
+          {/* Left Column: Vertical Timeline Milestones with Scroll-Driven Black Progress Line & Dots at Every Year */}
+          <div ref={historyTimelineRef} className="lg:col-span-7 relative pl-10 md:pl-14 space-y-16 md:space-y-24 py-2">
+            {/* Base background beige line starting at first year (2009) down to last year (2024) */}
+            <div className="absolute left-[6px] top-3.5 sm:top-4 bottom-3.5 sm:bottom-4 w-[4px] bg-[#DDD5C2] rounded-full overflow-hidden">
+              {/* Dynamic black progress line that extends downwards on scroll */}
+              <motion.div
+                style={{ height: historyLineHeight }}
+                className="w-full bg-[#1B1915] rounded-full origin-top"
+              />
+            </div>
 
             {timelineMilestones.map((item, idx) => (
-              <motion.div
+              <TimelineMilestoneItem
                 key={idx}
-                initial={{ opacity: 0, y: 35 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.25 }}
-                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                className="relative"
-              >
-                {/* Year & Badge Header */}
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="text-3xl sm:text-4xl md:text-5xl font-medium text-[#1B1915] tracking-tight">
-                    {item.year}
-                  </span>
-                  <span className="bg-[#FAE1A6] text-[#271E07] px-3 py-1 rounded-[4px] text-xs font-medium shadow-sm">
-                    {item.badge}
-                  </span>
-                </div>
-
-                {/* Title */}
-                <h3 className="text-2xl sm:text-3xl font-medium tracking-tight text-[#1B1915] mb-2.5">
-                  {item.title}
-                </h3>
-
-                {/* Description */}
-                <p className="text-base text-[#504732] leading-relaxed font-normal max-w-xl">
-                  {item.description}
-                </p>
-              </motion.div>
+                item={item}
+                idx={idx}
+                historyProgress={historyProgress}
+              />
             ))}
           </div>
 
