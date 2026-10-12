@@ -12,7 +12,8 @@ import FoldText from '../components/common/FoldText';
 import ScrollRevealText from '../components/common/ScrollRevealText';
 import ScrollTimeline from '../components/common/ScrollTimeline';
 import ServicesTextRotate from '../components/common/ServicesTextRotate';
-import TestimonialsSection from '../components/common/TestimonialsSection';
+import InstagramCurvedSection from '../components/common/InstagramCurvedSection';
+import CurvedRibbonShowcase from '../components/common/CurvedRibbonShowcase';
 import FAQSection from '../components/common/FAQSection';
 import { 
   BUSINESS_INFO, 
@@ -70,15 +71,6 @@ const VALUES = [
   }
 ];
 
-
-const INSTAGRAM_POSTS = [
-  { id: 1, image: 'https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=600&q=80', caption: 'Handcrafted timber frames ready for roof trusses in Shamshabad' },
-  { id: 2, image: 'https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=600&q=80', caption: 'Sunset hues hitting the cedar cladding of our Chevella farmstead' },
-  { id: 3, image: 'https://images.unsplash.com/photo-1587061949409-02df41d5e562?w=600&q=80', caption: 'Morning mist in Ananthagiri Hills around the Pine Valley build' },
-  { id: 4, image: 'https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=600&q=80', caption: 'Lakeside deck installation in progress at Shamirpet' },
-  { id: 5, image: 'https://images.unsplash.com/photo-1605146769289-440113cc3d00?w=600&q=80', caption: 'Completed resort cottage units ready for luxury hospitality handover' },
-  { id: 6, image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=80', caption: 'Modular prefabricated assembly achieved in just 45 days in Vikarabad' },
-];
 
 const HomePage = () => {
   const [lightboxIndex, setLightboxIndex] = useState(null);
@@ -454,64 +446,15 @@ const HomePage = () => {
       </AnimatePresence>
 
       {/* =========================================================================
-          09 — INSTAGRAM SECTION
+          09 — INSTAGRAM SECTION WITH 3D CURVED CYLINDER SLIDER & VIDEO REELS
       ========================================================================= */}
-      <section className="py-20 md:py-32 px-4 sm:px-6 md:px-10 max-w-7xl mx-auto border-t border-[#e3e3de]">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
-          <div>
-            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#141517] text-white border border-white/10 text-[11px] font-medium uppercase tracking-[0.2em] shadow-md mb-6">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#ff4b18] shadow-[0_0_8px_rgba(255,75,24,0.8)]" />
-              <span>Follow The Journey</span>
-            </div>
-            <h2 className="font-heading text-4xl sm:text-6xl text-[#141517] uppercase leading-[0.95]">
-              On Site &amp; Instagram.
-            </h2>
-            <p className="text-sm text-[#666] font-light mt-3">
-              See our latest wooden builds, framing stages, and behind-the-scenes work.
-            </p>
-          </div>
+      <InstagramCurvedSection />
 
-          <a
-            href={BUSINESS_INFO.social.instagram}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#141517] text-white hover:bg-black/80 text-xs uppercase tracking-widest font-semibold transition-all duration-300 self-start md:self-auto shadow-sm"
-          >
-            <span>Follow {BUSINESS_INFO.social.instagramHandle}</span>
-            <HiArrowNarrowRight className="w-4 h-4" />
-          </a>
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          {INSTAGRAM_POSTS.map((post) => (
-            <a
-              key={post.id}
-              href={BUSINESS_INFO.social.instagram}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group relative rounded-2xl overflow-hidden aspect-square bg-black/5 shadow-sm block border border-[#e3e3de]"
-            >
-              <img
-                src={post.image}
-                alt={post.caption}
-                loading="lazy"
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-3 text-center">
-                <span className="text-white text-xs font-medium line-clamp-3">
-                  {post.caption}
-                </span>
-              </div>
-            </a>
-          ))}
-        </div>
-      </section>
 
       {/* =========================================================================
-          09.5 — TESTIMONIALS (What Our Clients Say About Us - Exact Bildora Dual Marquee)
+          10 — 3D CURVED RIBBON SHOWCASE (Exact RBP Imageworks Sinusoidal Card Stream)
       ========================================================================= */}
-      <TestimonialsSection />
-
+      <CurvedRibbonShowcase />
 
       {/* =========================================================================
           11 — FAQ SECTION (Got Questions? We Have Answers)
