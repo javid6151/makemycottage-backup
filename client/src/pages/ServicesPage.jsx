@@ -6,9 +6,6 @@ import {
   HiArrowNarrowRight, 
   HiX, 
   HiOutlineCheck, 
-  HiOutlineShieldCheck, 
-  HiOutlineSparkles, 
-  HiOutlineClock,
   HiOutlineInformationCircle 
 } from 'react-icons/hi';
 import AnimatedSection from '../components/common/AnimatedSection';
@@ -113,63 +110,7 @@ const ServicesPage = () => {
         <Services3DProjection />
       </section>
 
-      {/* =========================================================================
-          03 — TURNKEY STANDARDS & ENGINEERING GUARANTEES
-      ========================================================================= */}
-      <section className="bg-white py-20 px-6 md:px-12 border-y border-[#e3e3de] mb-32">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <span className="text-xs uppercase tracking-[0.25em] font-semibold text-accent-terracotta block mb-2">
-              ENGINEERING INTEGRITY
-            </span>
-            <h2 className="font-heading text-3xl sm:text-5xl text-[#141517] uppercase leading-tight">
-              Standard On Every Build
-            </h2>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="p-6 rounded-2xl bg-[#fbf9f7] border border-[#e3e3de] space-y-3">
-              <div className="w-12 h-12 rounded-full bg-[#141517] text-white flex items-center justify-center text-xl mb-4">
-                <HiOutlineShieldCheck />
-              </div>
-              <h3 className="font-heading text-xl uppercase text-[#141517]">100% Termite Proof</h3>
-              <p className="text-xs text-[#666] leading-relaxed">
-                Vacuum-pressure impregnation with eco-safe boron preservatives ensures lifetime resistance to termites, woodborers, and dry rot.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-[#fbf9f7] border border-[#e3e3de] space-y-3">
-              <div className="w-12 h-12 rounded-full bg-[#141517] text-white flex items-center justify-center text-xl mb-4">
-                <HiOutlineClock />
-              </div>
-              <h3 className="font-heading text-xl uppercase text-[#141517]">Rapid Turnkey Delivery</h3>
-              <p className="text-xs text-[#666] leading-relaxed">
-                Prefabricated joinery and off-site timber preparation reduce on-site build timelines by up to 60% compared to traditional concrete.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-[#fbf9f7] border border-[#e3e3de] space-y-3">
-              <div className="w-12 h-12 rounded-full bg-[#141517] text-white flex items-center justify-center text-xl mb-4">
-                <HiOutlineSparkles />
-              </div>
-              <h3 className="font-heading text-xl uppercase text-[#141517]">Natural Thermal Comfort</h3>
-              <p className="text-xs text-[#666] leading-relaxed">
-                Wood possesses 15x higher thermal insulation than concrete, keeping your home naturally cool in peak summers and pleasantly warm in winters.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-[#fbf9f7] border border-[#e3e3de] space-y-3">
-              <div className="w-12 h-12 rounded-full bg-[#141517] text-white flex items-center justify-center text-xl mb-4">
-                <HiOutlineCheck />
-              </div>
-              <h3 className="font-heading text-xl uppercase text-[#141517]">10-Year Warranty</h3>
-              <p className="text-xs text-[#666] leading-relaxed">
-                Backed by certified structural engineering and a comprehensive 10-year warranty covering frame integrity, weather seals, and joinery.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* =========================================================================
           04 — DETAILED ARCHITECTURAL DELIVERABLES & SPECS (All 6 Services)
