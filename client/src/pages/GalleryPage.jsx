@@ -136,15 +136,15 @@ const GalleryPage = () => {
         <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
       </Helmet>
 
-      {/* Architectural Hero Banner (Includes Navbar at Top, Sticky Depth Parallax Transition) */}
-      <div className="sticky top-3 sm:top-4 z-10 px-3 sm:px-5 md:px-8 max-w-[1560px] mx-auto">
+      {/* Unified Gallery Section: Hero Banner + Filter Controls + Project Grid */}
+      <section className="w-full max-w-[1560px] mx-auto px-3 sm:px-5 md:px-8">
+        {/* Architectural Hero Banner */}
         <motion.div
           style={{
             scale: heroScale,
             opacity: heroOpacity,
-            y: heroY,
           }}
-          className="relative w-full h-[calc(86vh-2rem)] min-h-[500px] max-h-[660px] origin-top"
+          className="relative w-full h-[calc(86vh-2rem)] min-h-[500px] max-h-[660px] mb-8 sm:mb-10 origin-top"
         >
           {/* Component 1: Hero Image Banner Component */}
           <GalleryHeroImage
@@ -157,13 +157,9 @@ const GalleryPage = () => {
             <OurProjectsCard title="Our Gallery" />
           </div>
         </motion.div>
-      </div>
 
-      {/* Down Objects Container: Seamless zero-gap connection, smoothly slides UP OVER hero on scroll */}
-      <section className="relative z-20 bg-white mt-0 rounded-t-[36px] sm:rounded-t-[48px] shadow-[0_-20px_50px_-15px_rgba(0,0,0,0.08)] pt-2 sm:pt-3">
-        <div className="max-w-[1560px] mx-auto px-4 sm:px-6 md:px-10">
-          {/* Category Filter Pills (Sticky below navbar while browsing all 51 projects) */}
-          <div className="sticky top-20 sm:top-24 z-30 bg-white/95 backdrop-blur-md py-3 sm:py-4 mb-6 sm:mb-8 flex flex-wrap items-center gap-2.5 sm:gap-3 border-b border-gray-100/80">
+        {/* Category Filter Pills (Sticky below navbar while browsing all 51 projects) */}
+        <div className="sticky top-20 sm:top-24 z-30 bg-white/95 backdrop-blur-md py-3 sm:py-4 mb-6 sm:mb-8 flex flex-wrap items-center gap-2.5 sm:gap-3 border-b border-gray-100/80">
             {categories.map((category) => {
               const displayName = category === 'All' ? 'All Images' : category;
               const count = category === 'All' 
@@ -260,8 +256,7 @@ const GalleryPage = () => {
           )}
         </AnimatedSection>
       </div>
-    </div>
-  </section>
+    </section>
 
       {/* Fullscreen Interactive Lightbox Modal */}
       <AnimatePresence>
