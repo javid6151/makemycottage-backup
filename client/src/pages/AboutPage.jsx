@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
@@ -189,19 +189,27 @@ const AboutPage = () => {
   const card2Scale = useTransform(stackProgress, [0.40, 0.52], [0.92, 1]);
 
   // =========================================================================
-  // Ground Rules Scroll-Driven Line Shrinking (One by One)
-  // Each line starts tall (254px) and shrinks to 133px progressively on scroll
+  // Ground Rules Sticky Scroll Controller & One-by-One Line Shrinking
+  // The section pins in the viewport while each line progressively shrinks
+  // from 254px down to 133px one by one along with the user's scroll.
   // =========================================================================
   const groundRulesRef = useRef(null);
   const { scrollYProgress: groundProgress } = useScroll({
     target: groundRulesRef,
-    offset: ['start 70%', 'end 30%']
+    offset: ['start start', 'end end']
   });
 
-  const col1Height = useTransform(groundProgress, [0.05, 0.28], [254, 133]);
-  const col2Height = useTransform(groundProgress, [0.25, 0.48], [254, 133]);
-  const col3Height = useTransform(groundProgress, [0.45, 0.68], [254, 133]);
-  const col4Height = useTransform(groundProgress, [0.65, 0.88], [254, 133]);
+  const springConfig = { damping: 32, stiffness: 200, mass: 0.8 };
+
+  const col1Raw = useTransform(groundProgress, [0.08, 0.26], [254, 133]);
+  const col2Raw = useTransform(groundProgress, [0.26, 0.44], [254, 133]);
+  const col3Raw = useTransform(groundProgress, [0.44, 0.62], [254, 133]);
+  const col4Raw = useTransform(groundProgress, [0.62, 0.80], [254, 133]);
+
+  const col1Height = useSpring(col1Raw, springConfig);
+  const col2Height = useSpring(col2Raw, springConfig);
+  const col3Height = useSpring(col3Raw, springConfig);
+  const col4Height = useSpring(col4Raw, springConfig);
   const colHeights = [col1Height, col2Height, col3Height, col4Height];
 
   return (
@@ -368,63 +376,65 @@ const AboutPage = () => {
       {/* ========================================================================= */}
       <section
         ref={groundRulesRef}
-        className="py-28 md:py-40 px-6 md:px-12 lg:px-16 max-w-7xl mx-auto border-t border-[#EAE3D2] relative z-10 bg-[#FAF7F0]"
+        className="relative bg-[#FAF7F0] border-t border-[#EAE3D2] md:h-[300vh] py-20 md:py-0"
       >
-        {/* Section Tag */}
-        <div className="flex items-center gap-2 mb-4">
-          <span className="w-2.5 h-2.5 bg-[#DE5533] rounded-[2px]" />
-          <span className="text-sm font-medium tracking-wider text-[#6B6149] uppercase">
-            Ground rules
-          </span>
-        </div>
+        <div className="md:sticky md:top-0 md:h-screen flex flex-col justify-center pt-8 md:pt-20 pb-8 md:pb-12 px-6 md:px-12 lg:px-16 max-w-7xl mx-auto w-full z-10">
+          {/* Section Tag */}
+          <div className="flex items-center gap-2 mb-3">
+            <span className="w-2.5 h-2.5 bg-[#DE5533] rounded-[2px]" />
+            <span className="text-xs sm:text-sm font-medium tracking-wider text-[#6B6149] uppercase">
+              Ground rules
+            </span>
+          </div>
 
-        {/* Section Heading */}
-        <h2 className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-[-0.03em] leading-[1.05] text-[#1B1915] max-w-3xl mb-20 md:mb-28">
-          Standards built through difficult site experience
-        </h2>
+          {/* Section Heading */}
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-medium tracking-[-0.03em] leading-[1.08] text-[#1B1915] max-w-3xl mb-8 md:mb-12">
+            Standards built through difficult site experience
+          </h2>
 
-        {/* 4 Animated Columns whose timeline lines shrink one by one on scroll */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 items-start">
-          {groundRules.map((rule, idx) => (
-            <div key={idx} className="flex flex-col">
-              {/* Number (01, 02, 03, 04) */}
-              <div className="text-4xl sm:text-5xl font-light text-[#BAB3A2] tracking-tight mb-4">
-                {rule.number}
-              </div>
+          {/* 4 Animated Columns whose timeline lines shrink one by one along with scroll */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-10 items-start w-full">
+            {groundRules.map((rule, idx) => (
+              <div key={idx} className="flex flex-col">
+                {/* Number (01, 02, 03, 04) */}
+                <div className="text-4xl sm:text-5xl font-light text-[#BAB3A2] tracking-tight mb-4 select-none">
+                  {rule.number}
+                </div>
 
-              {/* Dynamic Scroll-Linked Timeline Line (shrinks from 254px to 133px one by one) */}
-              <div className="relative w-8 mb-6 flex flex-col items-center">
-                {/* Top Dot */}
-                <div className="w-2.5 h-2.5 rounded-full bg-[#1B1915] z-10 shadow-sm shrink-0" />
-
-                {/* Animated Vertical Line that shrinks progressively on scroll */}
+                {/* Dynamic Scroll-Linked Timeline Line (shrinks from 254px to 133px one by one) */}
                 <motion.div
                   style={{ height: colHeights[idx] }}
-                  className="w-[2px] bg-[#1B1915] relative origin-top"
-                />
+                  className="relative w-8 mb-6 flex flex-col items-center justify-between"
+                >
+                  {/* Top Dot */}
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#1B1915] shrink-0" />
 
-                {/* Bottom Dot */}
-                <div className="w-2.5 h-2.5 rounded-full bg-[#1B1915] z-10 shadow-sm shrink-0" />
+                  {/* Center Vertical Line */}
+                  <div className="w-[2px] bg-[#1B1915] flex-1 my-0.5" />
+
+                  {/* Bottom Dot */}
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#1B1915] shrink-0" />
+                </motion.div>
+
+                {/* Amber Pill Badge (glides upward as line shrinks) */}
+                <div className="mb-4">
+                  <span className="inline-block bg-[#FAE1A6] text-[#271E07] px-3.5 py-1.5 rounded-[4px] text-xs font-medium tracking-wide shadow-sm">
+                    {rule.badge}
+                  </span>
+                </div>
+
+                {/* Title */}
+                <h3 className="text-xl sm:text-2xl font-medium tracking-tight text-[#1B1915] mb-2.5">
+                  {rule.title}
+                </h3>
+
+                {/* Description */}
+                <p className="text-sm text-[#504732] leading-relaxed font-normal">
+                  {rule.description}
+                </p>
               </div>
-
-              {/* Amber Pill Badge (glides upward as line shrinks) */}
-              <div className="mb-4">
-                <span className="inline-block bg-[#FAE1A6] text-[#271E07] px-3.5 py-1.5 rounded-md text-xs font-medium tracking-wide shadow-sm">
-                  {rule.badge}
-                </span>
-              </div>
-
-              {/* Title */}
-              <h3 className="text-xl sm:text-2xl font-medium tracking-tight text-[#1B1915] mb-3">
-                {rule.title}
-              </h3>
-
-              {/* Description */}
-              <p className="text-sm text-[#504732] leading-relaxed font-normal">
-                {rule.description}
-              </p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
