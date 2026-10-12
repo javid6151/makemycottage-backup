@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { 
+  HiMenu,
+  HiPhone,
   HiArrowNarrowRight, 
   HiX, 
   HiOutlineCheck, 
@@ -10,8 +12,40 @@ import {
 } from 'react-icons/hi';
 import SectionLabel from '../components/common/SectionLabel';
 import CTAButton from '../components/common/CTAButton';
-import Services3DProjection from '../components/services3d/Services3DProjection';
 import { SERVICES, BUSINESS_INFO } from '../utils/constants';
+
+const serviceItems = [
+  {
+    title: "Wooden Homes",
+    image: SERVICES.find((s) => s.id === "wooden-homes")?.image || "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=1000&q=80",
+    href: "#wooden-homes"
+  },
+  {
+    title: "Farm Houses",
+    image: SERVICES.find((s) => s.id === "farm-houses")?.image || "https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=1000&q=80",
+    href: "#farm-houses"
+  },
+  {
+    title: "Cottage Homes",
+    image: SERVICES.find((s) => s.id === "cottage-homes")?.image || "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=1000&q=80",
+    href: "#cottage-homes"
+  },
+  {
+    title: "Prefabricated Homes",
+    image: SERVICES.find((s) => s.id === "prefabricated-homes")?.image || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1000&q=80",
+    href: "#prefabricated-homes"
+  },
+  {
+    title: "Resort Cottages",
+    image: SERVICES.find((s) => s.id === "resort-cottages")?.image || "https://images.unsplash.com/photo-1605146769289-440113cc3d00?w=1000&q=80",
+    href: "#resort-cottages"
+  },
+  {
+    title: "Custom Structures",
+    image: SERVICES.find((s) => s.id === "custom-structures")?.image || "https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=1000&q=80",
+    href: "#custom-structures"
+  }
+];
 
 // Detailed specifications for each of our 6 turnkey service offerings
 const SERVICE_SPECS = {
@@ -91,9 +125,23 @@ const SERVICE_SPECS = {
 
 const ServicesPage = () => {
   const [selectedServiceModal, setSelectedServiceModal] = useState(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { scrollY } = useScroll();
+  const notchY = useTransform(scrollY, (v) => -Math.min(v, 480));
+
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobileMenuOpen]);
 
   return (
-    <div className="bg-[#f5f2f2] min-h-screen w-full pt-20 pb-24 text-[#141517] overflow-x-clip selection:bg-black selection:text-white">
+    <div className="bg-[#f5f2f2] min-h-screen w-full pt-3 sm:pt-4 md:pt-5 pb-24 text-[#141517] selection:bg-black selection:text-white">
       <Helmet>
         <title>Services | Make My Cottage - Premium Handcrafted Wooden Home Construction</title>
         <meta 
@@ -103,18 +151,251 @@ const ServicesPage = () => {
       </Helmet>
 
       {/* =========================================================================
-          01 — 3D HTML-TO-CANVAS PROJECTION SHOWCASE (Matching 3D-2 Reference)
+          01 — SERVICES HERO VISUAL (Sticky Architectural Showcase & Reveal Animation)
       ========================================================================= */}
-      <section className="w-full bg-white border-b border-[#e3e3de] mb-24 md:mb-32">
-        <Services3DProjection />
+      <section className="sticky top-3 sm:top-4 md:top-5 z-0 w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pb-0 h-[calc(100svh-28px)] min-h-[540px] flex flex-col">
+        {/* Sticky Hero Showcase Card */}
+        <div className="relative w-full flex-1 rounded-tl-[28px] sm:rounded-tl-[36px] md:rounded-tl-[40px] rounded-tr-[28px] sm:rounded-tr-[36px] md:rounded-tr-[40px] rounded-br-[28px] sm:rounded-br-[36px] md:rounded-br-[40px] rounded-bl-none overflow-hidden bg-[#141517]">
+          {/* Architectural Showcase Image */}
+          <img
+            src="/images/services-hero-resentii.png"
+            alt="Make My Cottage - Our Services"
+            className="w-full h-full object-cover object-center"
+            onError={(e) => {
+              e.currentTarget.src = "https://framerusercontent.com/images/3YWf73hBWY8qiMugjcabc1XHE.png";
+            }}
+          />
+
+          {/* Natural atmospheric lighting & vignette for optimal navbar contrast */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/10 to-transparent pointer-events-none" />
+
+          {/* =====================================================================
+              MERGED HERO NAVBAR (Exact HomePage Navbar Model within Hero Visual)
+          ===================================================================== */}
+          <header className="absolute top-0 left-0 right-0 z-30 px-6 sm:px-12 py-5 sm:py-7">
+            <div className="max-w-7xl mx-auto flex items-center justify-between">
+              
+              {/* Logo with Brick / Cottage Icon */}
+              <Link
+                to="/"
+                className="flex items-center gap-2.5 group z-50 transition-opacity hover:opacity-85 text-white"
+              >
+                <div className="w-7 h-7 flex items-center justify-center text-white">
+                  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 3L2 10V21H22V10L12 3ZM4 19V11.2L12 5.6L20 11.2V19H4Z" />
+                    <path d="M6 13H10V15H6V13ZM14 13H18V15H14V13ZM10 16H14V18H10V16ZM6 16H9V18H6V16ZM15 16H18V18H15V16Z" opacity="0.85" />
+                  </svg>
+                </div>
+                <span className="font-sans text-xl sm:text-2xl font-semibold tracking-tight transition-colors text-white select-none">
+                  Make My Cottage.
+                </span>
+              </Link>
+
+              {/* Floating Center Pill Nav (HomePage Model) */}
+              <nav className="hidden md:flex items-center gap-8 px-7 py-2.5 rounded-full backdrop-blur-md shadow-sm transition-all duration-300 border border-white/20 bg-white/10">
+                <Link 
+                  to="/" 
+                  className="text-sm font-medium transition-colors text-white/85 hover:text-white"
+                >
+                  Home
+                </Link>
+                <Link 
+                  to="/about" 
+                  className="text-sm font-medium transition-colors text-white/85 hover:text-white"
+                >
+                  About
+                </Link>
+                <Link 
+                  to="/services" 
+                  className="text-sm font-semibold transition-colors text-white"
+                >
+                  Services
+                </Link>
+                <Link 
+                  to="/projects" 
+                  className="text-sm font-medium transition-colors text-white/85 hover:text-white"
+                >
+                  Projects
+                </Link>
+                <Link 
+                  to="/gallery" 
+                  className="text-sm font-medium transition-colors text-white/85 hover:text-white"
+                >
+                  Gallery
+                </Link>
+                <Link 
+                  to="/contact" 
+                  className="text-sm font-medium transition-colors text-white/85 hover:text-white"
+                >
+                  Contact
+                </Link>
+              </nav>
+
+              {/* Right Action Button (HomePage Model) */}
+              <div className="hidden sm:flex items-center gap-3 z-50">
+                <Link
+                  to="/contact"
+                  className="px-6 py-2.5 rounded-full font-semibold text-sm hover:scale-105 transition-all duration-300 shadow-md bg-white text-black hover:bg-white/90"
+                >
+                  Let’s Build
+                </Link>
+              </div>
+
+              {/* Mobile Menu Trigger (HomePage Model) */}
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="md:hidden z-50 p-2 rounded-full backdrop-blur-md transition-all focus:outline-none bg-white/10 text-white border border-white/20 hover:bg-white/20"
+                aria-label="Toggle navigation menu"
+              >
+                {isMobileMenuOpen ? <HiX className="w-6 h-6" /> : <HiMenu className="w-6 h-6" />}
+              </button>
+            </div>
+          </header>
+
+          {/* Mobile Drawer Overlay (HomePage Model) */}
+          <div
+            className={`fixed inset-0 z-40 bg-black/95 backdrop-blur-2xl flex flex-col justify-between p-8 md:p-12 transition-all duration-500 ease-in-out md:hidden ${
+              isMobileMenuOpen
+                ? 'opacity-100 pointer-events-auto translate-y-0'
+                : 'opacity-0 pointer-events-none -translate-y-8'
+            }`}
+          >
+            <div className="pt-24">
+              <p className="text-white/60 text-xs uppercase tracking-[0.25em] font-medium mb-8">
+                • YOUR VISION. OUR CRAFT.
+              </p>
+              <nav className="flex flex-col gap-4">
+                <Link
+                  to="/"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="font-sans text-3xl font-medium text-white hover:text-white/80 transition-colors py-2 border-b border-white/10"
+                >
+                  Home
+                </Link>
+                <Link
+                  to="/about"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="font-sans text-3xl font-medium text-white hover:text-white/80 transition-colors py-2 border-b border-white/10"
+                >
+                  About
+                </Link>
+                <Link
+                  to="/services"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="font-sans text-3xl font-medium text-white hover:text-white/80 transition-colors py-2 border-b border-white/10"
+                >
+                  Services
+                </Link>
+                <Link
+                  to="/projects"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="font-sans text-3xl font-medium text-white hover:text-white/80 transition-colors py-2 border-b border-white/10"
+                >
+                  Projects
+                </Link>
+                <Link
+                  to="/gallery"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="font-sans text-3xl font-medium text-white hover:text-white/80 transition-colors py-2 border-b border-white/10"
+                >
+                  Gallery
+                </Link>
+                <Link
+                  to="/contact"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="font-sans text-3xl font-medium text-white hover:text-white/80 transition-colors py-2 border-b border-white/10"
+                >
+                  Contact
+                </Link>
+              </nav>
+            </div>
+
+            <div className="pt-8 border-t border-white/15 space-y-4">
+              <div className="flex flex-col gap-1 text-sm text-white/70">
+                <span className="uppercase tracking-widest text-xs text-white/50">Experience Center</span>
+                <span>{BUSINESS_INFO.address.area}, Hyderabad</span>
+                <span className="text-white font-medium">{BUSINESS_INFO.displayPhone}</span>
+              </div>
+
+              <div className="flex gap-3">
+                <Link
+                  to="/contact"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex-1 py-3 text-center rounded-full text-xs uppercase tracking-widest font-semibold bg-white text-black hover:bg-white/90 transition-all shadow-sm"
+                >
+                  Let’s Build &rarr;
+                </Link>
+                <a
+                  href={`tel:${BUSINESS_INFO.phone}`}
+                  className="px-5 py-3 rounded-full text-xs uppercase tracking-widest font-semibold bg-white/10 text-white border border-white/20 text-center hover:bg-white/20 transition-all flex items-center justify-center shadow-sm"
+                >
+                  <HiPhone className="w-4 h-4" />
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom-Left Cutout Notch Container (Moves up smoothly on scroll) */}
+          <motion.div
+            style={{ y: notchY }}
+            className="absolute bottom-0 left-0 z-10 flex items-end will-change-transform"
+          >
+            <div className="flex flex-col items-start justify-end">
+              {/* Top Inverted Corner: curves image left boundary into notch top */}
+              <div className="w-[24px] h-[24px] sm:w-[32px] sm:h-[32px] md:w-[38px] md:h-[38px] pointer-events-none">
+                <svg
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-full h-full block"
+                >
+                  <path
+                    d="M 0 0 L 0 20 L 20 20 C 8.954 20 0 11.046 0 0 Z"
+                    fill="#f5f2f2"
+                  />
+                </svg>
+              </div>
+
+              {/* Cutout box matching page background */}
+              <div className="bg-[#f5f2f2] p-2.5 sm:p-3.5 md:p-4 rounded-tr-[24px] sm:rounded-tr-[30px] md:rounded-tr-[36px]">
+                {/* Dark Charcoal Card */}
+                <div className="bg-[#1c1d21] text-white px-5 py-3.5 sm:px-8 sm:py-4.5 md:px-10 md:py-5.5 rounded-[16px] sm:rounded-[20px] md:rounded-[22px] shadow-md">
+                  <h1 className="font-sans text-2xl sm:text-4xl md:text-5xl lg:text-[54px] font-bold tracking-tight text-white select-none whitespace-nowrap leading-none">
+                    Our Services
+                  </h1>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Inverted Corner: curves cutout right edge into hero bottom */}
+            <div className="w-[24px] h-[24px] sm:w-[32px] sm:h-[32px] md:w-[38px] md:h-[38px] pointer-events-none">
+              <svg
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-full h-full block"
+              >
+                <path
+                  d="M 0 0 L 0 20 L 20 20 C 8.954 20 0 11.046 0 0 Z"
+                  fill="#f5f2f2"
+                />
+              </svg>
+            </div>
+
+            {/* Seamless Bottom Extension to cover image beneath notch as it moves up */}
+            <div className="absolute top-full left-0 w-full h-[600px] bg-[#f5f2f2] -mt-[1px]" />
+          </motion.div>
+        </div>
       </section>
 
-
-
       {/* =========================================================================
-          04 — DETAILED ARCHITECTURAL DELIVERABLES & SPECS (All 6 Services)
+          02 — SCROLLING CONTENT LAYER (Our Services Notch Tab + Portfolio Specs)
       ========================================================================= */}
-      <section className="max-w-7xl mx-auto px-6 md:px-12 mb-32">
+      <div className="relative z-20 w-full bg-[#f5f2f2]">
+        {/* =========================================================================
+            04 — DETAILED ARCHITECTURAL DELIVERABLES & SPECS (All 6 Services)
+        ========================================================================= */}
+        <section id="service-details" className="max-w-7xl mx-auto px-6 md:px-12 pt-8 sm:pt-12 md:pt-16 mb-32 scroll-mt-24">
         <div className="mb-16">
           <SectionLabel text="FULL PORTFOLIO BREAKDOWN" />
           <h2 className="font-sans text-3xl sm:text-5xl md:text-6xl text-[#141517] font-normal leading-[1.1] tracking-tight mt-4 mb-4">
@@ -258,6 +539,7 @@ const ServicesPage = () => {
           })}
         </div>
       </section>
+    </div>
 
       {/* =========================================================================
           05 — INTERACTIVE SERVICE MODAL
