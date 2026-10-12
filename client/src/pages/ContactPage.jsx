@@ -120,7 +120,7 @@ const ContactPage = () => {
   };
 
   return (
-    <div className="bg-[#FFF7E5] min-h-screen w-full text-[#1B1915]">
+    <div className="bg-white min-h-screen w-full text-[#1B1915]">
       <Helmet>
         <title>Contact Make My Cottage | Turnkey Wooden Homes & Cottages</title>
         <meta
@@ -210,7 +210,7 @@ const ContactPage = () => {
               className="lg:col-span-7"
             >
               {status === 'success' ? (
-                <div className="bg-[#F5ECDA] rounded-2xl p-10 sm:p-14 text-center space-y-4">
+                <div className="bg-[#F8F8F7] border border-[#E5E5E2] rounded-2xl p-10 sm:p-14 text-center space-y-4">
                   <div className="w-14 h-14 rounded-full bg-[#1B1915] text-[#FCF6E9] flex items-center justify-center mx-auto text-2xl">
                     <CheckCircle2 className="w-7 h-7" />
                   </div>
@@ -222,7 +222,7 @@ const ContactPage = () => {
                   </p>
                   <button
                     onClick={() => setStatus('idle')}
-                    className="mt-6 px-7 py-3 rounded-full text-xs uppercase tracking-wider font-semibold bg-[#1B1915] text-[#FCF6E9] hover:bg-black transition-all"
+                    className="mt-6 px-7 py-3 rounded-full text-xs uppercase tracking-wider font-semibold bg-[#1B1915] text-[#FCF6E9] hover:bg-black transition-all cursor-pointer"
                   >
                     Send another inquiry
                   </button>
@@ -242,7 +242,7 @@ const ContactPage = () => {
                         placeholder="Enter first name"
                         value={formData.firstName}
                         onChange={handleChange}
-                        className="w-full bg-[#F5ECDA] hover:bg-[#F2E7D1] focus:bg-[#FFFDF7] border border-[#E8DDCA] focus:border-[#1B1915] rounded-xl px-4 py-3.5 text-sm sm:text-base text-[#1B1915] placeholder:text-[#A89E88] outline-none transition-all duration-200"
+                        className="w-full bg-[#F8F8F7] hover:bg-[#F2F2F0] focus:bg-white border border-[#E5E5E2] focus:border-[#1B1915] rounded-xl px-4 py-3.5 text-sm sm:text-base text-[#1B1915] placeholder:text-[#9E9688] outline-none transition-all duration-200"
                       />
                     </div>
                     <div>
@@ -255,7 +255,7 @@ const ContactPage = () => {
                         placeholder="Enter last name"
                         value={formData.lastName}
                         onChange={handleChange}
-                        className="w-full bg-[#F5ECDA] hover:bg-[#F2E7D1] focus:bg-[#FFFDF7] border border-[#E8DDCA] focus:border-[#1B1915] rounded-xl px-4 py-3.5 text-sm sm:text-base text-[#1B1915] placeholder:text-[#A89E88] outline-none transition-all duration-200"
+                        className="w-full bg-[#F8F8F7] hover:bg-[#F2F2F0] focus:bg-white border border-[#E5E5E2] focus:border-[#1B1915] rounded-xl px-4 py-3.5 text-sm sm:text-base text-[#1B1915] placeholder:text-[#9E9688] outline-none transition-all duration-200"
                       />
                     </div>
                   </div>
@@ -273,7 +273,7 @@ const ContactPage = () => {
                         placeholder="Enter email address"
                         value={formData.email}
                         onChange={handleChange}
-                        className="w-full bg-[#F5ECDA] hover:bg-[#F2E7D1] focus:bg-[#FFFDF7] border border-[#E8DDCA] focus:border-[#1B1915] rounded-xl px-4 py-3.5 text-sm sm:text-base text-[#1B1915] placeholder:text-[#A89E88] outline-none transition-all duration-200"
+                        className="w-full bg-[#F8F8F7] hover:bg-[#F2F2F0] focus:bg-white border border-[#E5E5E2] focus:border-[#1B1915] rounded-xl px-4 py-3.5 text-sm sm:text-base text-[#1B1915] placeholder:text-[#9E9688] outline-none transition-all duration-200"
                       />
                     </div>
                     <div>
@@ -287,7 +287,7 @@ const ContactPage = () => {
                         placeholder="Enter phone number"
                         value={formData.phone}
                         onChange={handleChange}
-                        className="w-full bg-[#F5ECDA] hover:bg-[#F2E7D1] focus:bg-[#FFFDF7] border border-[#E8DDCA] focus:border-[#1B1915] rounded-xl px-4 py-3.5 text-sm sm:text-base text-[#1B1915] placeholder:text-[#A89E88] outline-none transition-all duration-200"
+                        className="w-full bg-[#F8F8F7] hover:bg-[#F2F2F0] focus:bg-white border border-[#E5E5E2] focus:border-[#1B1915] rounded-xl px-4 py-3.5 text-sm sm:text-base text-[#1B1915] placeholder:text-[#9E9688] outline-none transition-all duration-200"
                       />
                     </div>
                   </div>
@@ -303,7 +303,7 @@ const ContactPage = () => {
                         required
                         value={formData.projectType}
                         onChange={handleChange}
-                        className="w-full bg-[#F5ECDA] hover:bg-[#F2E7D1] focus:bg-[#FFFDF7] border border-[#E8DDCA] focus:border-[#1B1915] rounded-xl px-4 py-3.5 text-sm sm:text-base text-[#1B1915] outline-none transition-all duration-200 appearance-none cursor-pointer"
+                        className="w-full bg-[#F8F8F7] hover:bg-[#F2F2F0] focus:bg-white border border-[#E5E5E2] focus:border-[#1B1915] rounded-xl px-4 py-3.5 text-sm sm:text-base text-[#1B1915] outline-none transition-all duration-200 appearance-none cursor-pointer"
                       >
                         <option value="" disabled>
                           What are you building?
@@ -334,7 +334,7 @@ const ContactPage = () => {
                       placeholder="Share ideas, plans, concerns here.."
                       value={formData.message}
                       onChange={handleChange}
-                      className="w-full bg-[#F5ECDA] hover:bg-[#F2E7D1] focus:bg-[#FFFDF7] border border-[#E8DDCA] focus:border-[#1B1915] rounded-xl px-4 py-3.5 text-sm sm:text-base text-[#1B1915] placeholder:text-[#A89E88] outline-none transition-all duration-200 resize-none"
+                      className="w-full bg-[#F8F8F7] hover:bg-[#F2F2F0] focus:bg-white border border-[#E5E5E2] focus:border-[#1B1915] rounded-xl px-4 py-3.5 text-sm sm:text-base text-[#1B1915] placeholder:text-[#9E9688] outline-none transition-all duration-200 resize-none"
                     />
                   </div>
 
@@ -409,7 +409,7 @@ const ContactPage = () => {
       {/* ========================================================================= */}
       {/* 3. COMMON QUESTIONS FAQ SECTION */}
       {/* ========================================================================= */}
-      <section className="py-24 sm:py-32 md:py-36 bg-[#FFF7E5]">
+      <section className="py-24 sm:py-32 md:py-36 bg-white">
         <div className="max-w-[1320px] mx-auto px-6 sm:px-10 md:px-16">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
             
@@ -423,7 +423,7 @@ const ContactPage = () => {
             >
               <div className="flex items-center gap-2 mb-3">
                 <span className="w-2.5 h-2.5 rounded-sm bg-[#DE5533] inline-block" />
-                <span className="text-xs uppercase tracking-widest text-[#7A6F56] font-semibold">
+                <span className="text-xs uppercase tracking-widest text-[#766E5E] font-semibold">
                   Common questions
                 </span>
               </div>
@@ -443,7 +443,7 @@ const ContactPage = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, amount: 0.1 }}
                     transition={{ duration: 0.6, delay: index * 0.05 }}
-                    className="bg-[#F5ECDA] hover:bg-[#F2E7D1] rounded-2xl p-6 sm:p-7 transition-colors cursor-pointer"
+                    className="bg-[#F8F8F7] hover:bg-[#F0F0EE] border border-[#EFEFEA] rounded-2xl p-6 sm:p-7 transition-colors cursor-pointer"
                     onClick={() => toggleFaq(index)}
                   >
                     <div className="flex items-center justify-between gap-4">
@@ -452,7 +452,7 @@ const ContactPage = () => {
                       </h3>
                       <button
                         type="button"
-                        className="w-9 h-9 rounded-full bg-[#EADDC5] flex items-center justify-center text-[#1B1915] shrink-0 transition-transform duration-200"
+                        className="w-9 h-9 rounded-full bg-[#EAEAE6] hover:bg-[#DFDFD9] flex items-center justify-center text-[#1B1915] shrink-0 transition-all duration-200"
                         aria-label={isOpen ? "Close question" : "Open question"}
                       >
                         {isOpen ? (
@@ -472,7 +472,7 @@ const ContactPage = () => {
                           transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                           className="overflow-hidden"
                         >
-                          <div className="pt-4 space-y-3 text-sm sm:text-base text-[#504732] leading-relaxed font-normal">
+                          <div className="pt-4 space-y-3 text-sm sm:text-base text-[#555044] leading-relaxed font-normal">
                             {faq.answer.map((paragraph, pIdx) => (
                               <p key={pIdx}>{paragraph}</p>
                             ))}

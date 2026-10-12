@@ -58,7 +58,7 @@ const Navbar = () => {
               isScrolled
                 ? isDarkTheme
                   ? 'py-3.5 bg-black/85 backdrop-blur-xl border-b border-white/10 shadow-lg'
-                  : 'py-3.5 bg-[#FFF7E5]/90 backdrop-blur-xl border-b border-[#E8DDCA] shadow-sm'
+                  : 'py-3.5 bg-white/90 backdrop-blur-xl border-b border-black/10 shadow-sm'
                 : 'py-5 sm:py-7 bg-transparent'
             }`}
           >

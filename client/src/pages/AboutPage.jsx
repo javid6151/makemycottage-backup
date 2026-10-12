@@ -31,7 +31,7 @@ const values = [
 
 const AboutPage = () => {
   return (
-    <div className="bg-[#f5f2f2] min-h-screen w-full pt-32 pb-24 text-[#141517]">
+    <div className="bg-white min-h-screen w-full pt-32 pb-24 text-[#141517]">
       <Helmet>
         <title>About Make My Cottage | Premium Wooden Home Builders India</title>
         <meta name="description" content="Learn about Make My Cottage Infra Pvt. Ltd., our story, our master craftsmanship, and our turnkey wooden homes across Hyderabad and India." />
