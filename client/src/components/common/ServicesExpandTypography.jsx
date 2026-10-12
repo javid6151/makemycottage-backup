@@ -12,7 +12,7 @@ gsap.registerPlugin(ScrollTrigger, Flip);
 const SERVICES_CONFIG = [
   {
     ...SERVICES[0],
-    meta: 'Service 01 — Wooden Homes',
+    meta: 'Project 01 — Wooden Homes',
     typeClass: 'content--left',
     effectType: '1',
     description: 'Custom-designed wooden residences built around your lifestyle with natural warmth and enduring strength. From high-grade timber frames to precision weather-sealed joinery.',
@@ -20,7 +20,7 @@ const SERVICES_CONFIG = [
   },
   {
     ...SERVICES[1],
-    meta: 'Service 02 — Farm Houses',
+    meta: 'Project 02 — Farm Houses',
     typeClass: 'content--center',
     effectType: '2',
     description: 'Relaxed, natural living spaces designed for weekend retreats, organic farm estates, and private countryside sanctuaries harmonized with regional topography.',
@@ -28,7 +28,7 @@ const SERVICES_CONFIG = [
   },
   {
     ...SERVICES[2],
-    meta: 'Service 03 — Cottage Homes',
+    meta: 'Project 03 — Cottage Homes',
     typeClass: 'content--right',
     effectType: '3',
     description: 'Compact, high-character cottages engineered for hill retreats, farms, and weekend stays. High thermal performance and rapid on-site assembly.',
@@ -36,7 +36,7 @@ const SERVICES_CONFIG = [
   },
   {
     ...SERVICES[3],
-    meta: 'Service 04 — Prefabricated Modular',
+    meta: 'Project 04 — Prefabricated Modular',
     typeClass: 'content--justify',
     effectType: '4',
     description: 'Factory-engineered modular timber systems assembled on-site with zero compromise on structural elegance and thermal comfort.',
@@ -44,19 +44,11 @@ const SERVICES_CONFIG = [
   },
   {
     ...SERVICES[4],
-    meta: 'Service 05 — Resort Cottages',
+    meta: 'Project 05 — Resort Cottages',
     typeClass: 'content--line',
     effectType: '5',
     description: 'Distinctive wooden accommodation spaces engineered for hospitality luxury, guest escapism, and eco-tourism resorts.',
     highlights: ['Commercial Durability', 'High Hospitality ROI', 'Boutique Eco-Luxury'],
-  },
-  {
-    ...SERVICES[5],
-    meta: 'Service 06 — Custom Structures',
-    typeClass: 'content--split',
-    effectType: '6',
-    description: 'Unique architectural wooden pergolas, pavilions, gazebos, and bespoke extensions engineered to exact site topography and aesthetic specifications.',
-    highlights: ['Architectural Pergolas', 'Gazebos & Pavilions', 'Custom Timber Joinery'],
   },
 ];
 
@@ -287,50 +279,6 @@ const ServicesExpandTypography = ({ onSelectServiceModal }) => {
             );
           }
         });
-
-        // =========================================================================
-        // EFFECT 6: Architectural Twin Horizon Expand (Service 06 — Custom Structures)
-        // =========================================================================
-        wrap.querySelectorAll('.type[data-expand-6]').forEach((el) => {
-          const image = el.querySelector('.type__expand-img');
-          const animTexts = Array.from(el.querySelectorAll('.anim'));
-          const textBlock = el.closest('.content')?.querySelector('.block');
-          if (!image) return;
-
-          el.classList.add('type--open');
-          const flipstate = Flip.getState([image, ...animTexts], {
-            props: 'transform',
-          });
-          el.classList.remove('type--open');
-
-          Flip.to(flipstate, {
-            ease: 'power1.inOut',
-            scrollTrigger: {
-              trigger: el,
-              start: 'clamp(top bottom)',
-              end: '+=130%',
-              scrub: true,
-            },
-          });
-
-          if (textBlock) {
-            gsap.fromTo(
-              textBlock,
-              { y: 35, opacity: 0.5 },
-              {
-                y: 0,
-                opacity: 1,
-                ease: 'sine.inOut',
-                scrollTrigger: {
-                  trigger: textBlock,
-                  start: 'top bottom',
-                  end: 'bottom top',
-                  scrub: true,
-                },
-              }
-            );
-          }
-        });
       }, containerRef);
 
       ScrollTrigger.refresh();
@@ -349,7 +297,6 @@ const ServicesExpandTypography = ({ onSelectServiceModal }) => {
         const isEffect3 = srv.effectType === '3';
         const isEffect4 = srv.effectType === '4';
         const isEffect5 = srv.effectType === '5';
-        const isEffect6 = srv.effectType === '6';
 
         return (
           <div key={srv.id} className={`content ${srv.typeClass}`}>
@@ -562,32 +509,6 @@ const ServicesExpandTypography = ({ onSelectServiceModal }) => {
                   </span>
                 </span>{' '}
                 destinations.
-              </h2>
-            )}
-
-            {/* EFFECT 6: Service 06 — Custom Structures */}
-            {isEffect6 && (
-              <h2 className="type" data-expand-6>
-                Bespoke pergolas,
-                <br />
-                sculpted pavilions
-                <br />
-                &amp;{' '}
-                <span className="type__expand type__expand--inline type__expand--reveal">
-                  <span
-                    onClick={() => onSelectServiceModal && onSelectServiceModal(srv)}
-                    className="type__expand-img"
-                    title="Click for preview"
-                  >
-                    <span
-                      className="type__expand-img-inner"
-                      style={{ backgroundImage: `url(${srv.image})` }}
-                    />
-                  </span>
-                  <span className="anim skewed">outdoor</span>
-                </span>
-                <br />
-                living sanctuaries.
               </h2>
             )}
 
