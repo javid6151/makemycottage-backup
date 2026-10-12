@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import * as THREE from 'three';
-import { HiArrowNarrowRight, HiSparkles } from 'react-icons/hi';
+import { HiArrowNarrowRight } from 'react-icons/hi';
 import CursorGrid from './CursorGrid';
 
 // Vibrant, ultra-clear high-res imagery of luxury wooden homes, cottages, and timber architecture
@@ -318,12 +318,6 @@ export const CurvedRibbonShowcase = () => {
 
       {/* 3. Foreground Editorial Content & Headline (Exact styling from Screenshot) */}
       <div className="relative z-20 max-w-4xl mx-auto px-4 sm:px-6 text-center mt-[360px] sm:mt-[380px] md:mt-[400px]">
-        {/* Eyebrow Pill */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#e3e3de] text-xs font-semibold text-[#141517] mb-6 shadow-sm">
-          <HiSparkles className="w-3.5 h-3.5 text-[#ff4b18]" />
-          <span>Bespoke Architecture &amp; Prefab Timber</span>
-        </div>
-
         {/* Big Editorial Headline */}
         <h2 className="font-heading font-serif text-4xl sm:text-6xl md:text-7xl lg:text-[5.2rem] font-normal tracking-tight text-[#141517] leading-[1.0] mb-6">
           The picture in your head,<br />by lunch.
