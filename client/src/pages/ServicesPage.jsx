@@ -339,31 +339,7 @@ const ServicesPage = () => {
         )}
       </AnimatePresence>
 
-      {/* =========================================================================
-          06 — BOTTOM CALL TO ACTION
-      ========================================================================= */}
-      <section className="bg-[#141517] text-white py-24 md:py-36 px-6 md:px-12 text-center">
-        <AnimatedSection className="max-w-3xl mx-auto flex flex-col items-center">
-          <SectionLabel text="GET STARTED" />
-          <h2 className="font-sans text-3xl sm:text-5xl md:text-6xl text-white font-normal leading-[1.1] tracking-tight mt-4 mb-8">
-            Let&apos;s build your bespoke wooden space.
-          </h2>
-          <p className="font-sans text-white/70 font-light text-base md:text-lg mb-10 max-w-xl">
-            Contact Make My Cottage Infra Pvt. Ltd. today for architectural consultation, 3D renders, and turnkey site feasibility.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <CTAButton to="/contact" variant="accent">
-              Start Project &rarr;
-            </CTAButton>
-            <a
-              href={`tel:${BUSINESS_INFO.phone}`}
-              className="inline-flex items-center justify-center px-8 py-3.5 rounded-full bg-white/10 text-white hover:bg-white hover:text-black text-xs uppercase tracking-widest font-semibold transition-all"
-            >
-              Call {BUSINESS_INFO.phone}
-            </a>
-          </div>
-        </AnimatedSection>
-      </section>
+
     </div>
   );
 };
