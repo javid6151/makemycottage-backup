@@ -136,8 +136,8 @@ const GalleryPage = () => {
         <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
       </Helmet>
 
-      {/* Architectural Hero Banner (Includes Navbar at Top, Sticky Depth Parallax Transition) */}
-      <div className="sticky top-3 sm:top-4 z-10 px-3 sm:px-5 md:px-8 max-w-[1560px] mx-auto">
+      {/* Pinned Hero Image Background Layer (Stays pinned while content moves over it) */}
+      <div className="sticky top-3 sm:top-4 z-10 px-3 sm:px-5 md:px-8 max-w-[1560px] mx-auto pointer-events-none">
         <motion.div
           style={{
             scale: heroScale,
@@ -146,22 +146,23 @@ const GalleryPage = () => {
           }}
           className="relative w-full h-[calc(86vh-2rem)] min-h-[500px] max-h-[660px] origin-top"
         >
-          {/* Component 1: Hero Image Banner Component */}
+          {/* Component 1: Hero Image Banner */}
           <GalleryHeroImage
             src="/images/gallery-hero.png"
             alt="Snow covered modern glass cottage - MakeMyCottage Gallery"
           />
-
-          {/* Component 2: Our Projects / Our Gallery Card Component */}
-          <div className="absolute bottom-0 left-0 z-20 pointer-events-auto">
-            <OurProjectsCard title="Our Gallery" />
-          </div>
         </motion.div>
       </div>
 
-      {/* Down Objects Container: Seamless zero-gap connection, smoothly slides UP OVER hero on scroll */}
-      <section className="relative z-20 bg-white mt-0 rounded-t-[36px] sm:rounded-t-[48px] shadow-[0_-20px_50px_-15px_rgba(0,0,0,0.08)] pt-2 sm:pt-3">
-        <div className="max-w-[1560px] mx-auto px-4 sm:px-6 md:px-10">
+      {/* Moving Foreground Layer: Starts from OurProjectsCard and moves UP on the hero image on scroll */}
+      <div className="relative z-20 w-full max-w-[1560px] mx-auto px-3 sm:px-5 md:px-8 -mt-28 sm:-mt-32 md:-mt-36">
+        {/* Component 2: Our Projects / Gallery Cutout Card - Moves UP ON the hero image */}
+        <div className="inline-block pointer-events-auto">
+          <OurProjectsCard title="Our Gallery" />
+        </div>
+
+        {/* Content Sheet with Filters and Continuous Grid smoothly rolling over hero */}
+        <div className="bg-white pt-2 sm:pt-3">
           {/* Category Filter Pills (Sticky below navbar while browsing all 51 projects) */}
           <div className="sticky top-20 sm:top-24 z-30 bg-white/95 backdrop-blur-md py-3 sm:py-4 mb-6 sm:mb-8 flex flex-wrap items-center gap-2.5 sm:gap-3 border-b border-gray-100/80">
             {categories.map((category) => {
@@ -261,7 +262,7 @@ const GalleryPage = () => {
         </AnimatedSection>
       </div>
     </div>
-  </section>
+  </div>
 
       {/* Fullscreen Interactive Lightbox Modal */}
       <AnimatePresence>

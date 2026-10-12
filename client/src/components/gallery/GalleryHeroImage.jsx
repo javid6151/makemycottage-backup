@@ -11,7 +11,7 @@ const GalleryHeroImage = ({
 }) => {
   return (
     <div
-      className={`absolute inset-0 w-full h-full rounded-[30px] rounded-bl-none overflow-hidden bg-[#e9ecf2] shadow-lg pointer-events-none ${className}`}
+      className={`absolute inset-0 w-full h-full rounded-[30px] overflow-hidden bg-[#e9ecf2] shadow-lg pointer-events-none ${className}`}
     >
       <img
         src={src}
