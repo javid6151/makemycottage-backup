@@ -91,13 +91,14 @@ export const CurvedRibbonShowcase = () => {
 
     // 2. Texture Loader with sRGBColorSpace
     const textureLoader = new THREE.TextureLoader();
-    const cardWidth = 2.45;
-    const cardHeight = 2.45;
-    const cardRadius = 0.45;
+    // Calibrated card dimensions for elegant ribbon cascade
+    const cardWidth = 2.10;
+    const cardHeight = 2.10;
+    const cardRadius = 0.40;
 
     const cardGeometry = createRoundedPlaneGeometry(cardWidth, cardHeight, cardRadius, 16);
-    const borderGeometry = createRoundedPlaneGeometry(cardWidth + 0.08, cardHeight + 0.08, cardRadius + 0.04, 16);
-    const shadowGeometry = createRoundedPlaneGeometry(cardWidth + 0.16, cardHeight + 0.16, cardRadius + 0.08, 16);
+    const borderGeometry = createRoundedPlaneGeometry(cardWidth + 0.07, cardHeight + 0.07, cardRadius + 0.035, 16);
+    const shadowGeometry = createRoundedPlaneGeometry(cardWidth + 0.14, cardHeight + 0.14, cardRadius + 0.07, 16);
 
     const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
 
@@ -111,8 +112,28 @@ export const CurvedRibbonShowcase = () => {
       return tex;
     });
 
-    // 3. Dense Card Stream (28 cards for smooth, continuous cascading ribbon)
-    const totalCards = 28;
+    // Dedicated White Shade Gradient Texture for ethereal bottom-fade in the trough
+    const createWhiteShadeTexture = () => {
+      const c = document.createElement('canvas');
+      c.width = 256;
+      c.height = 256;
+      const ctx = c.getContext('2d');
+      const grad = ctx.createLinearGradient(0, 256, 0, 0);
+      grad.addColorStop(0.0, 'rgba(255, 255, 255, 0.98)');
+      grad.addColorStop(0.32, 'rgba(255, 255, 255, 0.88)');
+      grad.addColorStop(0.58, 'rgba(255, 255, 255, 0.50)');
+      grad.addColorStop(0.82, 'rgba(255, 255, 255, 0.15)');
+      grad.addColorStop(1.0, 'rgba(255, 255, 255, 0.0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 256, 256);
+      const tex = new THREE.CanvasTexture(c);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      return tex;
+    };
+    const whiteShadeTexture = createWhiteShadeTexture();
+
+    // 3. Dense Continuous Ribbon Stream (32 cards for uninterrupted flowing ribbon)
+    const totalCards = 32;
     const cardMeshes = [];
     const ribbonGroup = new THREE.Group();
     scene.add(ribbonGroup);
@@ -120,7 +141,7 @@ export const CurvedRibbonShowcase = () => {
     for (let i = 0; i < totalCards; i++) {
       const tex = textures[i % textures.length];
 
-      // White backing plate for crisp separation
+      // White backing plate for crisp card frame
       const borderMaterial = new THREE.MeshBasicMaterial({
         color: 0xffffff,
         transparent: true,
@@ -144,10 +165,19 @@ export const CurvedRibbonShowcase = () => {
         side: THREE.DoubleSide,
       });
 
+      // White shade overlay material that activates when card dips into the trough
+      const whiteShadeMaterial = new THREE.MeshBasicMaterial({
+        map: whiteShadeTexture,
+        transparent: true,
+        opacity: 0.0,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+      });
+
       const cardGroup = new THREE.Group();
 
       const shadowMesh = new THREE.Mesh(shadowGeometry, shadowMaterial);
-      shadowMesh.position.set(0.04, -0.06, -0.025);
+      shadowMesh.position.set(0.035, -0.05, -0.025);
       cardGroup.add(shadowMesh);
 
       const borderMesh = new THREE.Mesh(borderGeometry, borderMaterial);
@@ -157,6 +187,10 @@ export const CurvedRibbonShowcase = () => {
       const imgMesh = new THREE.Mesh(cardGeometry, imgMaterial);
       cardGroup.add(imgMesh);
 
+      const whiteShadeMesh = new THREE.Mesh(cardGeometry, whiteShadeMaterial);
+      whiteShadeMesh.position.z = 0.005;
+      cardGroup.add(whiteShadeMesh);
+
       ribbonGroup.add(cardGroup);
 
       cardMeshes.push({
@@ -164,35 +198,37 @@ export const CurvedRibbonShowcase = () => {
         imgMesh,
         borderMesh,
         shadowMesh,
+        whiteShadeMesh,
         index: i,
         phase: i / totalCards,
       });
     }
 
-    // 4. Fixed Spatial Curve Function with Generous Headroom
-    // The curve is anchored to the screen:
-    // Left & Right Crests: peak gently at Y = 4.2 (staying well below canvas top edge 7.1)
-    // Center Trough: dips smoothly to Y = 0.6 just above the headline
-    const trackWidth = 32.0;
+    // 4. Fixed Spatial Sinusoidal Wave Track
+    // Matches the reference composition:
+    // - Center (X = 0): deep trough dipping gracefully above the headline (Y ~ 0.58)
+    // - Left & Right Crests (X ~ ±5.9): rise up to elegant peaks (Y ~ 3.52)
+    // - Outer Edges (X > ±6): curve back down towards the margins
+    const trackWidth = 34.0;
+    const waveK = Math.PI / 5.9; // crest at |x| = 5.9
+    const yMid = 2.05;
+    const yAmp = 1.47;
 
     const evaluateFixedTrack = (x) => {
-      const absX = Math.abs(x);
-      
-      const waveFreq = 0.22;
-      const angle = Math.min(Math.PI, absX * waveFreq);
-      
-      // Calibrated so highest card crest NEVER touches the top of the canvas or section
-      const troughY = 0.65;
-      const crestHeight = 3.55;
-      const y = troughY + (1.0 - Math.cos(angle)) * 0.5 * crestHeight;
+      // Sinusoidal wave: y = yMid - yAmp * cos(k * x)
+      const angle = waveK * x;
+      const cosVal = Math.cos(angle);
+      const sinVal = Math.sin(angle);
 
-      // Derivative for accurate tangent alignment
-      const dy_dx = Math.sign(x) * 0.5 * crestHeight * waveFreq * Math.sin(angle);
-      const tiltZ = Math.atan(dy_dx) * 0.74;
-      const tiltY = -Math.sign(x) * Math.sin(angle) * 0.16;
+      const y = yMid - yAmp * cosVal;
 
-      // Layered Z-depth: center cards push slightly forward for immersive depth
-      const z = (1.0 - (absX / 16.0)) * 1.5 - 0.4;
+      // Tangent derivative dy/dx = yAmp * k * sin(k * x)
+      const dy_dx = yAmp * waveK * sinVal;
+      const tiltZ = Math.atan(dy_dx) * 0.82;
+      const tiltY = -sinVal * 0.16;
+
+      // 3D Depth arch: center cards bow slightly forward into the room
+      const z = Math.cos(angle * 0.5) * 1.2 - 0.2;
 
       return { y, z, tiltZ, tiltY };
     };
@@ -207,8 +243,8 @@ export const CurvedRibbonShowcase = () => {
       const rect = container.getBoundingClientRect();
       const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
       const ny = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
-      targetMouseX = nx * 0.35;
-      targetMouseY = ny * 0.18;
+      targetMouseX = nx * 0.30;
+      targetMouseY = ny * 0.15;
     };
 
     container.addEventListener('mousemove', onMouseMove, { passive: true });
@@ -225,7 +261,7 @@ export const CurvedRibbonShowcase = () => {
       lastTimestamp = timestamp;
 
       // Smooth horizontal travel speed (slows down gracefully on hover)
-      const flowSpeed = isHovered ? 0.024 : 0.050;
+      const flowSpeed = isHovered ? 0.022 : 0.046;
       time += delta * flowSpeed;
 
       // Smooth mouse follow
@@ -254,19 +290,26 @@ export const CurvedRibbonShowcase = () => {
         item.group.rotation.x = -0.04;
 
         // Subtle scale enhancement for center cards
-        const centerProximity = 1.0 - Math.min(1.0, Math.abs(x) / 14.0);
-        const cardScale = 0.95 + centerProximity * 0.14;
+        const centerProximity = 1.0 - Math.min(1.0, Math.abs(x) / 13.0);
+        const cardScale = 0.94 + centerProximity * 0.12;
         item.group.scale.set(cardScale, cardScale, 1);
 
-        // Soft horizontal fade near the track edges so cards enter and exit seamlessly without touching edges
+        // Soft horizontal fade near outer track edges so cards enter and exit seamlessly
         const absX = Math.abs(x);
         let alpha = 1.0;
-        if (absX > 10.5) {
-          alpha = Math.max(0, 1.0 - (absX - 10.5) / 3.5);
+        if (absX > 10.2) {
+          alpha = Math.max(0, 1.0 - (absX - 10.2) / 3.4);
         }
-        item.imgMesh.material.opacity = alpha;
-        item.borderMesh.material.opacity = alpha * 0.96;
-        item.shadowMesh.material.opacity = alpha * 0.12;
+
+        // White Shade effect in the trough:
+        // When cards dip below Y = 2.1 toward the trough (Y = 0.58), the white shade appears
+        const troughDepth = Math.max(0, Math.min(1.0, (2.1 - pt.y) / (2.1 - 0.58)));
+        const whiteShadeIntensity = Math.pow(troughDepth, 1.15) * 0.92;
+
+        item.imgMesh.material.opacity = alpha * (1.0 - whiteShadeIntensity * 0.15);
+        item.whiteShadeMesh.material.opacity = alpha * whiteShadeIntensity;
+        item.borderMesh.material.opacity = alpha * (0.96 - whiteShadeIntensity * 0.20);
+        item.shadowMesh.material.opacity = alpha * (0.12 - whiteShadeIntensity * 0.07);
       }
 
       renderer.render(scene, camera);
@@ -297,11 +340,13 @@ export const CurvedRibbonShowcase = () => {
       cardGeometry.dispose();
       borderGeometry.dispose();
       shadowGeometry.dispose();
+      whiteShadeTexture.dispose();
       textures.forEach((t) => t.dispose());
       cardMeshes.forEach((c) => {
         c.imgMesh.material.dispose();
         c.borderMesh.material.dispose();
         c.shadowMesh.material.dispose();
+        c.whiteShadeMesh.material.dispose();
       });
     };
   }, [isHovered]);
@@ -345,6 +390,14 @@ export const CurvedRibbonShowcase = () => {
         <canvas ref={canvasRef} className="block w-full h-full" />
       </div>
 
+      {/* 2b. Luminous White Shade Mist Layer kissing the bottom of the dipped cards */}
+      <div 
+        className="absolute left-0 right-0 top-[280px] sm:top-[310px] md:top-[330px] h-[190px] sm:h-[220px] pointer-events-none z-15"
+        style={{
+          background: 'linear-gradient(to bottom, transparent 0%, rgba(251,251,250,0.35) 40%, rgba(251,251,250,0.92) 80%, #fbfbfa 100%)',
+        }}
+      />
+
       {/* 3. Foreground Editorial Content & Headline */}
       <div className="relative z-20 max-w-4xl mx-auto px-4 sm:px-6 text-center mt-[370px] sm:mt-[400px] md:mt-[430px]">
         {/* Big Editorial Headline */}
@@ -354,7 +407,7 @@ export const CurvedRibbonShowcase = () => {
 
         {/* Subtitle */}
         <p className="font-body text-sm sm:text-base md:text-lg text-[#666] font-light max-w-xl mx-auto leading-relaxed mb-10">
-          Start on your dream plan, bring a real brief, and see your custom timber sanctuary designed with master craftsmanship. No hassle needed.
+          Start on the free plan, bring a real brief, and see the first take.
         </p>
 
         {/* CTA Button Duo */}
