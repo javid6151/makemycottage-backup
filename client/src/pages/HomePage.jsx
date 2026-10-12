@@ -450,16 +450,15 @@ const HomePage = () => {
       ========================================================================= */}
       <InstagramCurvedSection />
 
-
       {/* =========================================================================
-          10 — 3D CURVED RIBBON SHOWCASE (Exact RBP Imageworks Sinusoidal Card Stream)
-      ========================================================================= */}
-      <CurvedRibbonShowcase />
-
-      {/* =========================================================================
-          11 — FAQ SECTION (Got Questions? We Have Answers)
+          10 — FAQ SECTION (Got Questions? We Have Answers)
       ========================================================================= */}
       <FAQSection />
+
+      {/* =========================================================================
+          11 — 3D CURVED RIBBON SHOWCASE (Exact RBP Imageworks Sinusoidal Card Stream)
+      ========================================================================= */}
+      <CurvedRibbonShowcase />
 
     </div>
   );
