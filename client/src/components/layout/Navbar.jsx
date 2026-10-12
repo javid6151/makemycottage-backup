@@ -51,131 +51,142 @@ const Navbar = () => {
 
   return (
     <>
-      <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 sm:px-12 ${
-          isScrolled 
-            ? 'py-3.5 bg-black/85 backdrop-blur-xl border-b border-white/10 shadow-lg' 
-            : 'py-5 sm:py-7 bg-transparent'
-        }`}
-      >
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          
-          {/* Logo with Brick / Cottage Icon */}
-          <Link
-            to="/"
-            className={`flex items-center gap-2.5 group z-50 transition-colors ${
-              isDarkNav ? 'text-white hover:opacity-90' : 'text-[#141517] hover:opacity-80'
+      {(() => {
+        const isHomePage = location.pathname === '/';
+        const isDarkTheme = isHomePage;
+
+        return (
+          <header
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 sm:px-12 ${
+              isScrolled
+                ? isDarkTheme
+                  ? 'py-3.5 bg-black/85 backdrop-blur-xl border-b border-white/10 shadow-lg'
+                  : 'py-3.5 bg-white/90 backdrop-blur-xl border-b border-black/10 shadow-sm'
+                : 'py-5 sm:py-7 bg-transparent'
             }`}
           >
-            <div className={`w-7 h-7 flex items-center justify-center transition-colors ${isDarkNav ? 'text-white' : 'text-[#141517]'}`}>
-              <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 3L2 10V21H22V10L12 3ZM4 19V11.2L12 5.6L20 11.2V19H4Z" />
-                <path d="M6 13H10V15H6V13ZM14 13H18V15H14V13ZM10 16H14V18H10V16ZM6 16H9V18H6V16ZM15 16H18V18H15V16Z" opacity="0.85" />
-              </svg>
+            <div className="max-w-7xl mx-auto flex items-center justify-between">
+              
+              {/* Logo with Brick / Cottage Icon */}
+              <Link
+                to="/"
+                className={`flex items-center gap-2.5 group z-50 transition-opacity hover:opacity-85 ${
+                  isDarkTheme ? 'text-white' : 'text-[#1B1915]'
+                }`}
+              >
+                <div className={`w-7 h-7 flex items-center justify-center ${
+                  isDarkTheme ? 'text-white' : 'text-[#1B1915]'
+                }`}>
+                  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 3L2 10V21H22V10L12 3ZM4 19V11.2L12 5.6L20 11.2V19H4Z" />
+                    <path d="M6 13H10V15H6V13ZM14 13H18V15H14V13ZM10 16H14V18H10V16ZM6 16H9V18H6V16ZM15 16H18V18H15V16Z" opacity="0.85" />
+                  </svg>
+                </div>
+                <span className={`font-sans text-xl sm:text-2xl font-semibold tracking-tight transition-colors ${
+                  isDarkTheme ? 'text-white' : 'text-[#1B1915]'
+                }`}>
+                  Make My Cottage.
+                </span>
+              </Link>
+
+              {/* Floating Center Pill Nav */}
+              <nav className={`hidden md:flex items-center gap-8 px-7 py-2.5 rounded-full backdrop-blur-md shadow-sm transition-all duration-300 ${
+                isDarkTheme
+                  ? 'border border-white/20 bg-white/10'
+                  : 'border border-[#1B1915]/15 bg-[#1B1915]/[0.05]'
+              }`}>
+                <Link 
+                  to="/" 
+                  className={`text-sm font-medium transition-colors ${
+                    location.pathname === '/' 
+                      ? (isDarkTheme ? 'text-white font-semibold' : 'text-[#1B1915] font-semibold')
+                      : (isDarkTheme ? 'text-white/85 hover:text-white' : 'text-[#1B1915]/70 hover:text-[#1B1915]')
+                  }`}
+                >
+                  Home
+                </Link>
+                <Link 
+                  to="/about" 
+                  className={`text-sm font-medium transition-colors ${
+                    location.pathname === '/about' 
+                      ? (isDarkTheme ? 'text-white font-semibold' : 'text-[#1B1915] font-semibold')
+                      : (isDarkTheme ? 'text-white/85 hover:text-white' : 'text-[#1B1915]/70 hover:text-[#1B1915]')
+                  }`}
+                >
+                  About
+                </Link>
+                <Link 
+                  to="/services" 
+                  className={`text-sm font-medium transition-colors ${
+                    location.pathname === '/services' 
+                      ? (isDarkTheme ? 'text-white font-semibold' : 'text-[#1B1915] font-semibold')
+                      : (isDarkTheme ? 'text-white/85 hover:text-white' : 'text-[#1B1915]/70 hover:text-[#1B1915]')
+                  }`}
+                >
+                  Services
+                </Link>
+                <Link 
+                  to="/projects" 
+                  className={`text-sm font-medium transition-colors ${
+                    location.pathname.startsWith('/projects') 
+                      ? (isDarkTheme ? 'text-white font-semibold' : 'text-[#1B1915] font-semibold')
+                      : (isDarkTheme ? 'text-white/85 hover:text-white' : 'text-[#1B1915]/70 hover:text-[#1B1915]')
+                  }`}
+                >
+                  Projects
+                </Link>
+                <Link 
+                  to="/gallery" 
+                  className={`text-sm font-medium transition-colors ${
+                    location.pathname === '/gallery' 
+                      ? (isDarkTheme ? 'text-white font-semibold' : 'text-[#1B1915] font-semibold')
+                      : (isDarkTheme ? 'text-white/85 hover:text-white' : 'text-[#1B1915]/70 hover:text-[#1B1915]')
+                  }`}
+                >
+                  Gallery
+                </Link>
+                <Link 
+                  to="/contact" 
+                  className={`text-sm font-medium transition-colors ${
+                    location.pathname === '/contact' 
+                      ? (isDarkTheme ? 'text-white font-semibold' : 'text-[#1B1915] font-semibold')
+                      : (isDarkTheme ? 'text-white/85 hover:text-white' : 'text-[#1B1915]/70 hover:text-[#1B1915]')
+                  }`}
+                >
+                  Contact
+                </Link>
+              </nav>
+
+              {/* Right Action Button */}
+              <div className="hidden sm:flex items-center gap-3 z-50">
+                <Link
+                  to="/contact"
+                  className={`px-6 py-2.5 rounded-full font-semibold text-sm hover:scale-105 transition-all duration-300 shadow-md ${
+                    isDarkTheme
+                      ? 'bg-white text-black hover:bg-white/90'
+                      : 'bg-[#1B1915] text-[#FCF6E9] hover:bg-black'
+                  }`}
+                >
+                  Let’s Build
+                </Link>
+              </div>
+
+              {/* Mobile Menu Trigger */}
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className={`md:hidden z-50 p-2 rounded-full backdrop-blur-md transition-all focus:outline-none ${
+                  isDarkTheme
+                    ? 'bg-white/10 text-white border border-white/20 hover:bg-white/20'
+                    : 'bg-[#1B1915]/5 text-[#1B1915] border border-[#1B1915]/10 hover:bg-[#1B1915]/10'
+                }`}
+                aria-label="Toggle navigation menu"
+              >
+                {isMobileMenuOpen ? <HiX className="w-6 h-6" /> : <HiMenu className="w-6 h-6" />}
+              </button>
             </div>
-            <span className={`font-sans text-xl sm:text-2xl font-semibold tracking-tight transition-colors ${
-              isDarkNav ? 'text-white' : 'text-[#141517]'
-            }`}>
-              Make My Cottage.
-            </span>
-          </Link>
-
-          {/* Floating Pill Nav Capsule */}
-          <nav className={`hidden md:flex items-center gap-8 px-7 py-2.5 rounded-full backdrop-blur-md shadow-sm transition-all duration-300 ${
-            isDarkNav
-              ? 'border border-white/20 bg-white/10'
-              : 'border border-black/10 bg-black/[0.04]'
-          }`}>
-            <Link 
-              to="/" 
-              className={`text-sm font-medium transition-colors ${
-                location.pathname === '/' 
-                  ? (isDarkNav ? 'text-white font-semibold' : 'text-[#141517] font-semibold')
-                  : (isDarkNav ? 'text-white/85 hover:text-white' : 'text-[#141517]/70 hover:text-[#141517]')
-              }`}
-            >
-              Home
-            </Link>
-            <Link 
-              to="/about" 
-              className={`text-sm font-medium transition-colors ${
-                location.pathname === '/about' 
-                  ? (isDarkNav ? 'text-white font-semibold' : 'text-[#141517] font-semibold')
-                  : (isDarkNav ? 'text-white/85 hover:text-white' : 'text-[#141517]/70 hover:text-[#141517]')
-              }`}
-            >
-              About
-            </Link>
-            <Link 
-              to="/services" 
-              className={`text-sm font-medium transition-colors ${
-                location.pathname === '/services' 
-                  ? (isDarkNav ? 'text-white font-semibold' : 'text-[#141517] font-semibold')
-                  : (isDarkNav ? 'text-white/85 hover:text-white' : 'text-[#141517]/70 hover:text-[#141517]')
-              }`}
-            >
-              Services
-            </Link>
-            <Link 
-              to="/projects" 
-              className={`text-sm font-medium transition-colors ${
-                location.pathname.startsWith('/projects') 
-                  ? (isDarkNav ? 'text-white font-semibold' : 'text-[#141517] font-semibold')
-                  : (isDarkNav ? 'text-white/85 hover:text-white' : 'text-[#141517]/70 hover:text-[#141517]')
-              }`}
-            >
-              Projects
-            </Link>
-            <Link 
-              to="/gallery" 
-              className={`text-sm font-medium transition-colors ${
-                location.pathname === '/gallery' 
-                  ? (isDarkNav ? 'text-white font-semibold' : 'text-[#141517] font-semibold')
-                  : (isDarkNav ? 'text-white/85 hover:text-white' : 'text-[#141517]/70 hover:text-[#141517]')
-              }`}
-            >
-              Gallery
-            </Link>
-            <Link 
-              to="/contact" 
-              className={`text-sm font-medium transition-colors ${
-                location.pathname === '/contact' 
-                  ? (isDarkNav ? 'text-white font-semibold' : 'text-[#141517] font-semibold')
-                  : (isDarkNav ? 'text-white/85 hover:text-white' : 'text-[#141517]/70 hover:text-[#141517]')
-              }`}
-            >
-              Contact
-            </Link>
-          </nav>
-
-          {/* Right Action Button */}
-          <div className="hidden sm:flex items-center gap-3 z-50">
-            <Link
-              to="/contact"
-              className={`px-6 py-2.5 rounded-full font-semibold text-sm hover:scale-105 transition-all duration-300 shadow-md ${
-                isDarkNav
-                  ? 'bg-white text-black hover:bg-white/90'
-                  : 'bg-[#141517] text-white hover:bg-black/85'
-              }`}
-            >
-              Let’s Build
-            </Link>
-          </div>
-
-          {/* Mobile Menu Trigger */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className={`md:hidden z-50 p-2 rounded-full backdrop-blur-md transition-all focus:outline-none ${
-              isDarkNav
-                ? 'bg-white/10 text-white border border-white/20 hover:bg-white/20'
-                : 'bg-black/5 text-[#141517] border border-black/10 hover:bg-black/10'
-            }`}
-            aria-label="Toggle navigation menu"
-          >
-            {isMobileMenuOpen ? <HiX className="w-6 h-6" /> : <HiMenu className="w-6 h-6" />}
-          </button>
-        </div>
-      </header>
+          </header>
+        );
+      })()}
 
       {/* Mobile Drawer Overlay */}
       <div

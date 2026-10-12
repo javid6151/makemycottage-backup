@@ -246,7 +246,7 @@ const AboutPage = () => {
   const historyLineHeight = useTransform(historyProgress, [0, 1], ['0%', '100%']);
 
   return (
-    <div className="bg-[#FAF7F0] text-[#1B1915] min-h-screen font-sans selection:bg-[#FAE1A6] selection:text-[#271E07]">
+    <div className="bg-white min-h-screen w-full pt-32 pb-24 text-[#141517]">
       <Helmet>
         <title>About Us | Make My Cottage - Turning Complicated Plans Into Clear Execution</title>
         <meta
