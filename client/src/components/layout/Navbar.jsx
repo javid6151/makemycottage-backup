@@ -46,6 +46,9 @@ const Navbar = () => {
     }
   }, [location]);
 
+  const isHome = location.pathname === '/';
+  const isDarkNav = isHome || isScrolled;
+
   return (
     <>
       <header
@@ -57,28 +60,38 @@ const Navbar = () => {
       >
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           
-          {/* Logo with Brick / Cottage Icon (Exact Bildora Layout from screenshot) */}
+          {/* Logo with Brick / Cottage Icon */}
           <Link
             to="/"
-            className="flex items-center gap-2.5 group z-50 text-white hover:opacity-90 transition-opacity"
+            className={`flex items-center gap-2.5 group z-50 transition-colors ${
+              isDarkNav ? 'text-white hover:opacity-90' : 'text-[#141517] hover:opacity-80'
+            }`}
           >
-            <div className="w-7 h-7 flex items-center justify-center text-white">
+            <div className={`w-7 h-7 flex items-center justify-center transition-colors ${isDarkNav ? 'text-white' : 'text-[#141517]'}`}>
               <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 3L2 10V21H22V10L12 3ZM4 19V11.2L12 5.6L20 11.2V19H4Z" />
                 <path d="M6 13H10V15H6V13ZM14 13H18V15H14V13ZM10 16H14V18H10V16ZM6 16H9V18H6V16ZM15 16H18V18H15V16Z" opacity="0.85" />
               </svg>
             </div>
-            <span className="font-sans text-xl sm:text-2xl font-semibold text-white tracking-tight">
+            <span className={`font-sans text-xl sm:text-2xl font-semibold tracking-tight transition-colors ${
+              isDarkNav ? 'text-white' : 'text-[#141517]'
+            }`}>
               Make My Cottage.
             </span>
           </Link>
 
-          {/* Floating Translucent Pill Nav (Exact center capsule from screenshot) */}
-          <nav className="hidden md:flex items-center gap-8 px-7 py-2.5 rounded-full border border-white/20 bg-white/10 backdrop-blur-md shadow-sm">
+          {/* Floating Pill Nav Capsule */}
+          <nav className={`hidden md:flex items-center gap-8 px-7 py-2.5 rounded-full backdrop-blur-md shadow-sm transition-all duration-300 ${
+            isDarkNav
+              ? 'border border-white/20 bg-white/10'
+              : 'border border-black/10 bg-black/[0.04]'
+          }`}>
             <Link 
               to="/" 
               className={`text-sm font-medium transition-colors ${
-                location.pathname === '/' ? 'text-white font-semibold' : 'text-white/85 hover:text-white'
+                location.pathname === '/' 
+                  ? (isDarkNav ? 'text-white font-semibold' : 'text-[#141517] font-semibold')
+                  : (isDarkNav ? 'text-white/85 hover:text-white' : 'text-[#141517]/70 hover:text-[#141517]')
               }`}
             >
               Home
@@ -86,7 +99,9 @@ const Navbar = () => {
             <Link 
               to="/about" 
               className={`text-sm font-medium transition-colors ${
-                location.pathname === '/about' ? 'text-white font-semibold' : 'text-white/85 hover:text-white'
+                location.pathname === '/about' 
+                  ? (isDarkNav ? 'text-white font-semibold' : 'text-[#141517] font-semibold')
+                  : (isDarkNav ? 'text-white/85 hover:text-white' : 'text-[#141517]/70 hover:text-[#141517]')
               }`}
             >
               About
@@ -94,7 +109,9 @@ const Navbar = () => {
             <Link 
               to="/services" 
               className={`text-sm font-medium transition-colors ${
-                location.pathname === '/services' ? 'text-white font-semibold' : 'text-white/85 hover:text-white'
+                location.pathname === '/services' 
+                  ? (isDarkNav ? 'text-white font-semibold' : 'text-[#141517] font-semibold')
+                  : (isDarkNav ? 'text-white/85 hover:text-white' : 'text-[#141517]/70 hover:text-[#141517]')
               }`}
             >
               Services
@@ -102,7 +119,9 @@ const Navbar = () => {
             <Link 
               to="/projects" 
               className={`text-sm font-medium transition-colors ${
-                location.pathname.startsWith('/projects') ? 'text-white font-semibold' : 'text-white/85 hover:text-white'
+                location.pathname.startsWith('/projects') 
+                  ? (isDarkNav ? 'text-white font-semibold' : 'text-[#141517] font-semibold')
+                  : (isDarkNav ? 'text-white/85 hover:text-white' : 'text-[#141517]/70 hover:text-[#141517]')
               }`}
             >
               Projects
@@ -110,7 +129,9 @@ const Navbar = () => {
             <Link 
               to="/gallery" 
               className={`text-sm font-medium transition-colors ${
-                location.pathname === '/gallery' ? 'text-white font-semibold' : 'text-white/85 hover:text-white'
+                location.pathname === '/gallery' 
+                  ? (isDarkNav ? 'text-white font-semibold' : 'text-[#141517] font-semibold')
+                  : (isDarkNav ? 'text-white/85 hover:text-white' : 'text-[#141517]/70 hover:text-[#141517]')
               }`}
             >
               Gallery
@@ -118,18 +139,24 @@ const Navbar = () => {
             <Link 
               to="/contact" 
               className={`text-sm font-medium transition-colors ${
-                location.pathname === '/contact' ? 'text-white font-semibold' : 'text-white/85 hover:text-white'
+                location.pathname === '/contact' 
+                  ? (isDarkNav ? 'text-white font-semibold' : 'text-[#141517] font-semibold')
+                  : (isDarkNav ? 'text-white/85 hover:text-white' : 'text-[#141517]/70 hover:text-[#141517]')
               }`}
             >
               Contact
             </Link>
           </nav>
 
-          {/* Right White Pill Action Button (Exact "Let's Build" from screenshot) */}
+          {/* Right Action Button */}
           <div className="hidden sm:flex items-center gap-3 z-50">
             <Link
               to="/contact"
-              className="px-6 py-2.5 rounded-full bg-white text-black font-semibold text-sm hover:bg-white/90 hover:scale-105 transition-all duration-300 shadow-md"
+              className={`px-6 py-2.5 rounded-full font-semibold text-sm hover:scale-105 transition-all duration-300 shadow-md ${
+                isDarkNav
+                  ? 'bg-white text-black hover:bg-white/90'
+                  : 'bg-[#141517] text-white hover:bg-black/85'
+              }`}
             >
               Let’s Build
             </Link>
@@ -138,7 +165,11 @@ const Navbar = () => {
           {/* Mobile Menu Trigger */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden z-50 p-2 rounded-full bg-white/10 backdrop-blur-md text-white border border-white/20 hover:bg-white/20 transition-all focus:outline-none"
+            className={`md:hidden z-50 p-2 rounded-full backdrop-blur-md transition-all focus:outline-none ${
+              isDarkNav
+                ? 'bg-white/10 text-white border border-white/20 hover:bg-white/20'
+                : 'bg-black/5 text-[#141517] border border-black/10 hover:bg-black/10'
+            }`}
             aria-label="Toggle navigation menu"
           >
             {isMobileMenuOpen ? <HiX className="w-6 h-6" /> : <HiMenu className="w-6 h-6" />}
