@@ -12,6 +12,7 @@ import FoldText from '../components/common/FoldText';
 import ScrollRevealText from '../components/common/ScrollRevealText';
 import ScrollTimeline from '../components/common/ScrollTimeline';
 import ServicesTextRotate from '../components/common/ServicesTextRotate';
+import Services3DProjection from '../components/services3d/Services3DProjection';
 import TestimonialsSection from '../components/common/TestimonialsSection';
 import FAQSection from '../components/common/FAQSection';
 import { 
@@ -222,12 +223,12 @@ const HomePage = () => {
     </section>
 
       {/* =========================================================================
-          03 — SERVICES SHOWCASE SECTION (Interactive Text Rotate)
+          03 — SERVICES 3D PROJECTION SHOWCASE (HTML to Canvas 3D Architecture)
       ========================================================================= */}
       <section id="services" className="scroll-mt-24 w-full bg-white border-t border-[#e3e3de] relative">
         <div id="projects" className="absolute -top-24 left-0 pointer-events-none" />
-        {/* INTERACTIVE TEXT ROTATE SERVICES SHOWCASE */}
-        <ServicesTextRotate onSelectServiceModal={setSelectedServiceModal} />
+        {/* 3D PROJECTION SHOWCASE MATCHING 3D-2 REFERENCE */}
+        <Services3DProjection />
       </section>
 
       {/* =========================================================================

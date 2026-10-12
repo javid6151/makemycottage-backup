@@ -16,6 +16,7 @@ import SectionLabel from '../components/common/SectionLabel';
 import CTAButton from '../components/common/CTAButton';
 import ServicesExpandTypography from '../components/common/ServicesExpandTypography';
 import ServicesTextRotate from '../components/common/ServicesTextRotate';
+import Services3DProjection from '../components/services3d/Services3DProjection';
 import { SERVICES, BUSINESS_INFO } from '../utils/constants';
 
 // Detailed specifications for each of our 6 turnkey service offerings
@@ -157,7 +158,14 @@ const ServicesPage = () => {
       </section>
 
       {/* =========================================================================
-          02 — INTERACTIVE SERVICES TEXT ROTATE & ARCHITECTURAL SLIDER (All 6 Services)
+          02 — 3D HTML-TO-CANVAS PROJECTION SHOWCASE (Matching 3D-2 Reference)
+      ========================================================================= */}
+      <section className="w-full bg-white border-y border-[#e3e3de] mb-24 md:mb-32">
+        <Services3DProjection />
+      </section>
+
+      {/* =========================================================================
+          03 — INTERACTIVE SERVICES TEXT ROTATE & ARCHITECTURAL SLIDER (All 6 Services)
       ========================================================================= */}
       <section className="w-full bg-white border-y border-[#e3e3de] mb-24 md:mb-32">
         <ServicesTextRotate onSelectServiceModal={setSelectedServiceModal} />
