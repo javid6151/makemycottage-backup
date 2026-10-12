@@ -49,6 +49,10 @@ const Navbar = () => {
   const isDarkHeroPage = location.pathname === '/' || location.pathname === '/projects';
   const isDarkTheme = isDarkHeroPage;
 
+  if (location.pathname === '/services') {
+    return null;
+  }
+
   return (
     <>
       <header
