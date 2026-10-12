@@ -11,7 +11,7 @@ import CurvedSlider from '../components/common/CurvedSlider';
 import FoldText from '../components/common/FoldText';
 import ScrollRevealText from '../components/common/ScrollRevealText';
 import ScrollTimeline from '../components/common/ScrollTimeline';
-import Services3DProjection from '../components/services3d/Services3DProjection';
+import ServicesTextRotate from '../components/common/ServicesTextRotate';
 import TestimonialsSection from '../components/common/TestimonialsSection';
 import FAQSection from '../components/common/FAQSection';
 import { 
@@ -222,12 +222,12 @@ const HomePage = () => {
     </section>
 
       {/* =========================================================================
-          03 — SERVICES 3D PROJECTION SHOWCASE (HTML to Canvas 3D Architecture)
+          03 — PROJECTS SHOWCASE SECTION (Interactive Text Rotate)
       ========================================================================= */}
-      <section id="services" className="scroll-mt-24 w-full bg-white border-t border-[#e3e3de] relative">
-        <div id="projects" className="absolute -top-24 left-0 pointer-events-none" />
-        {/* 3D PROJECTION SHOWCASE MATCHING 3D-2 REFERENCE */}
-        <Services3DProjection />
+      <section id="projects" className="scroll-mt-24 w-full bg-white border-t border-[#e3e3de] relative">
+        <div id="services" className="absolute -top-24 left-0 pointer-events-none" />
+        {/* INTERACTIVE TEXT ROTATE PROJECTS SHOWCASE */}
+        <ServicesTextRotate onSelectServiceModal={setSelectedServiceModal} />
       </section>
 
       {/* =========================================================================
