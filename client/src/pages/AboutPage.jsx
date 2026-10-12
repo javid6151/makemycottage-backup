@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ArrowUpRight, Award, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
 
 const groundRules = [
   {
@@ -168,25 +168,32 @@ const AboutPage = () => {
     offset: ['start start', 'end end']
   });
 
-  // Background blur and dimming over the panoramic rebar image
-  const bgBlur = useTransform(stackProgress, [0, 0.2, 0.8], [0, 8, 12]);
-  const bgOpacity = useTransform(stackProgress, [0, 0.25], [0, 0.45]);
+  // Background blur and dimming over the panoramic foundation image
+  const bgBlur = useTransform(stackProgress, [0, 0.15, 0.85], [0, 10, 14]);
+  const bgDim = useTransform(stackProgress, [0, 0.15], [0, 0.25]);
 
-  // Card 1 (Future Expectation) motion values
-  // Scrolls in, stays pinned, and scales down when Card 2 arrives
-  const card1Y = useTransform(stackProgress, [0, 0.25, 0.5, 0.8], [120, 0, 0, -20]);
-  const card1Scale = useTransform(stackProgress, [0.4, 0.75], [1, 0.94]);
-  const card1Opacity = useTransform(stackProgress, [0.45, 0.8], [1, 0.65]);
+  // Card 1 ("Future Expectation") Scroll Animation
+  // - Enters from below between 0.0 and 0.15
+  // - Remains centered and fully readable between 0.15 and 0.45
+  // - As Card 2 rises (0.45 to 0.60), Card 1 subtly scales down to 0.92 and dims out
+  const card1Y = useTransform(stackProgress, [0, 0.15, 0.45, 0.65], ['80vh', '0vh', '0vh', '-4vh']);
+  const card1Scale = useTransform(stackProgress, [0.45, 0.65], [1, 0.92]);
+  const card1Opacity = useTransform(stackProgress, [0, 0.12, 0.52, 0.68], [0, 1, 1, 0]);
 
-  // Card 2 (Working standard) motion values
-  // Scrolls in from below and overlays on top of Card 1
-  const card2Y = useTransform(stackProgress, [0.35, 0.7, 1], [300, 0, 0]);
-  const card2Scale = useTransform(stackProgress, [0.35, 0.7], [0.95, 1]);
+  // Card 2 ("Working standard") Scroll Animation
+  // - Stays below viewport between 0.0 and 0.45
+  // - Rises up smoothly between 0.45 and 0.60 directly into the center
+  // - Remains centered and fully readable between 0.60 and 0.85
+  // - Scrolls up naturally at the end (0.85 to 1.0)
+  const card2Y = useTransform(stackProgress, [0, 0.45, 0.62, 0.88, 1], ['100vh', '100vh', '0vh', '0vh', '-10vh']);
+  const card2Opacity = useTransform(stackProgress, [0.45, 0.58], [0, 1]);
+  const card2Scale = useTransform(stackProgress, [0.45, 0.62], [0.94, 1]);
 
-  // Smooth springs for buttery smooth card motion
-  const smoothCard1Y = useSpring(card1Y, { damping: 28, stiffness: 90 });
-  const smoothCard1Scale = useSpring(card1Scale, { damping: 28, stiffness: 90 });
-  const smoothCard2Y = useSpring(card2Y, { damping: 28, stiffness: 90 });
+  // Smooth springs for fluid, responsive scroll response
+  const smoothCard1Y = useSpring(card1Y, { damping: 30, stiffness: 100 });
+  const smoothCard1Scale = useSpring(card1Scale, { damping: 30, stiffness: 100 });
+  const smoothCard2Y = useSpring(card2Y, { damping: 30, stiffness: 100 });
+  const smoothCard2Scale = useSpring(card2Scale, { damping: 30, stiffness: 100 });
 
   return (
     <div className="bg-[#FAF7F0] text-[#1B1915] min-h-screen font-sans selection:bg-[#FAE1A6] selection:text-[#271E07]">
@@ -244,12 +251,15 @@ const AboutPage = () => {
       {/* ========================================================================= */}
       {/* 2. STICKY BLURRED HERO BANNER + STACKING FEATURE CARDS (Screenshot 1 & 2) */}
       {/* ========================================================================= */}
-      {/* This container has extra height to allow the cards to stack on scroll over the sticky blurred rebar image */}
-      <section ref={stackedSectionRef} className="relative h-[220vh] w-full">
+      {/* Container height provides ample scroll distance for smooth two-card progression */}
+      <section ref={stackedSectionRef} className="relative h-[260vh] w-full">
         {/* Sticky Background Panoramic Foundation Banner */}
         <div className="sticky top-0 h-screen w-full overflow-hidden z-0">
           <img
-            src="https://framerusercontent.com/images/J9MqEXKjA7McbiNo1TApI5zUMQQ.jpg"
+            src="/images/about/hero-foundation.jpg"
+            onError={(e) => {
+              e.currentTarget.src = "https://framerusercontent.com/images/J9MqEXKjA7McbiNo1TApI5zUMQQ.jpg";
+            }}
             alt="Make My Cottage construction foundation execution"
             className="w-full h-full object-cover"
             loading="eager"
@@ -259,79 +269,88 @@ const AboutPage = () => {
             style={{
               backdropFilter: useTransform(bgBlur, b => `blur(${b}px)`),
               WebkitBackdropFilter: useTransform(bgBlur, b => `blur(${b}px)`),
-              backgroundColor: useTransform(bgOpacity, o => `rgba(20, 18, 14, ${o})`)
+              backgroundColor: useTransform(bgDim, d => `rgba(20, 18, 14, ${d})`)
             }}
-            className="absolute inset-0 transition-colors pointer-events-none"
+            className="absolute inset-0 pointer-events-none transition-colors"
           />
         </div>
 
-        {/* Foreground Cards that Stack Over the Sticky Blurred Image */}
+        {/* Sticky Foreground Cards Viewport */}
         <div className="sticky top-0 h-screen w-full flex items-center justify-center px-4 sm:px-8 pointer-events-none z-10 -mt-[100vh]">
-          <div className="relative w-full max-w-5xl h-[460px] sm:h-[400px] pointer-events-auto">
-            {/* Card 1: Future Expectation */}
+          <div className="relative w-full max-w-4xl min-h-[420px] pointer-events-auto flex items-center justify-center">
+
+            {/* ---------------- CARD 1: Future Expectation ---------------- */}
             <motion.div
               style={{
                 y: smoothCard1Y,
                 scale: smoothCard1Scale,
                 opacity: card1Opacity
               }}
-              className="absolute inset-0 bg-[#F5EFE3] border border-[#E7DECC] rounded-3xl p-6 sm:p-10 shadow-2xl flex flex-col justify-center"
+              className="absolute w-full bg-[#F9F0DA] border border-[#E0D5BD] rounded-3xl p-6 sm:p-10 lg:p-12 shadow-2xl"
             >
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 items-center">
+              <div className="flex flex-col md:flex-row items-center gap-6 sm:gap-8 lg:gap-10">
                 {/* Left Image: Tower crane at golden hour */}
-                <div className="md:col-span-5 h-[200px] sm:h-[260px] rounded-2xl overflow-hidden shadow-sm bg-[#E2DAC8]">
+                <div className="w-full md:w-[260px] lg:w-[280px] h-[220px] sm:h-[260px] md:h-[290px] shrink-0 rounded-2xl overflow-hidden shadow-sm bg-[#E8DFC8]">
                   <img
-                    src="https://framerusercontent.com/images/U52rM7F785xH79QyF4i4P0yB2g.jpg"
-                    alt="Architectural construction crane skyline"
+                    src="/images/about/future-expectation.png"
+                    onError={(e) => {
+                      e.currentTarget.src = "https://framerusercontent.com/images/NBBlbWROSapSp6qQF3L5diW5o.png?width=1064&height=1260";
+                    }}
+                    alt="Construction workers on building site"
                     className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                   />
                 </div>
                 {/* Right Text Content */}
-                <div className="md:col-span-7 space-y-4">
-                  <h2 className="text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight text-[#1B1915]">
+                <div className="flex-1 space-y-4">
+                  <h2 className="text-3xl sm:text-4xl lg:text-[2.6rem] font-medium tracking-tight text-[#1B1915]">
                     Future Expectation
                   </h2>
-                  <p className="text-sm sm:text-base text-[#504732] leading-relaxed font-normal">
+                  <p className="text-sm sm:text-base lg:text-lg text-[#504732] leading-relaxed font-normal">
                     Make My Cottage is reshaping how clients experience major renovations, timber architecture, and custom cottage retreats by making construction feel transparent, predictable, and professionally managed instead of stressful, confusing, and reactive.
                   </p>
-                  <p className="text-sm sm:text-base text-[#504732] leading-relaxed font-normal">
+                  <p className="text-sm sm:text-base lg:text-lg text-[#504732] leading-relaxed font-normal">
                     Raising project communication standards so clients no longer expect delays, silence, or uncertainty.
                   </p>
                 </div>
               </div>
             </motion.div>
 
-            {/* Card 2: Working standard (Overlays directly on Card 1 on scroll) */}
+            {/* ---------------- CARD 2: Working standard ---------------- */}
             <motion.div
               style={{
                 y: smoothCard2Y,
-                scale: card2Scale
+                scale: smoothCard2Scale,
+                opacity: card2Opacity
               }}
-              className="absolute inset-0 bg-[#F5EFE3] border border-[#E7DECC] rounded-3xl p-6 sm:p-10 shadow-2xl flex flex-col justify-center"
+              className="absolute w-full bg-[#F9F0DA] border border-[#E0D5BD] rounded-3xl p-6 sm:p-10 lg:p-12 shadow-2xl"
             >
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 items-center">
-                {/* Left Image: Timber craftsmanship */}
-                <div className="md:col-span-5 h-[200px] sm:h-[260px] rounded-2xl overflow-hidden shadow-sm bg-[#E2DAC8]">
+              <div className="flex flex-col md:flex-row items-center gap-6 sm:gap-8 lg:gap-10">
+                {/* Left Image: Timber craftsmanship & workers */}
+                <div className="w-full md:w-[260px] lg:w-[280px] h-[220px] sm:h-[260px] md:h-[290px] shrink-0 rounded-2xl overflow-hidden shadow-sm bg-[#E8DFC8]">
                   <img
-                    src="https://images.unsplash.com/photo-1541888946425-d0fbb186f5f8?w=1000&q=80"
-                    alt="Precision wooden structure and timber craft"
+                    src="/images/about/working-standard.png"
+                    onError={(e) => {
+                      e.currentTarget.src = "https://framerusercontent.com/images/FYMD4tETcedhyjeJ74hNQBZZu2U.png?width=1064&height=1260";
+                    }}
+                    alt="Workers measuring timber structure"
                     className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                   />
                 </div>
                 {/* Right Text Content */}
-                <div className="md:col-span-7 space-y-4">
-                  <h2 className="text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight text-[#1B1915]">
+                <div className="flex-1 space-y-4">
+                  <h2 className="text-3xl sm:text-4xl lg:text-[2.6rem] font-medium tracking-tight text-[#1B1915]">
                     Working standard
                   </h2>
-                  <p className="text-sm sm:text-base text-[#504732] leading-relaxed font-normal">
-                    Every joint, timber truss, and foundation is engineered to exacting specifications. We maintain rigorous on-site quality controls, certified kiln-dried lumber sourcing, and zero compromise on safety or architectural elegance.
+                  <p className="text-sm sm:text-base lg:text-lg text-[#504732] leading-relaxed font-normal">
+                    Make My Cottage delivers organized, clearly managed spaces where clients always know what happens next, what decisions matter, and how timelines, costs, and site activity are being controlled from day one through final handover.
                   </p>
-                  <p className="text-sm sm:text-base text-[#504732] leading-relaxed font-normal">
-                    Strict moisture-barrier integrity and calibrated pressure-treated lumber protect your investment against humidity, termites, and seasonal thermal shift for generations.
+                  <p className="text-sm sm:text-base lg:text-lg text-[#504732] leading-relaxed font-normal">
+                    Manages complex timber structures through disciplined planning, direct communication, and accountable on-site coordination.
                   </p>
                 </div>
               </div>
             </motion.div>
+
           </div>
         </div>
       </section>
@@ -485,7 +504,10 @@ const AboutPage = () => {
           <div className="lg:col-span-5 hidden lg:block lg:sticky lg:top-20">
             <div className="h-[753px] rounded-xl overflow-hidden shadow-2xl border border-black/5 relative group bg-[#1B1915]">
               <img
-                src="https://framerusercontent.com/images/efmBUaPsdR45OdRoi5sOpflVXrM.jpg"
+                src="/images/about/history-sunset.jpg"
+                onError={(e) => {
+                  e.currentTarget.src = "https://framerusercontent.com/images/efmBUaPsdR45OdRoi5sOpflVXrM.jpg";
+                }}
                 alt="Tower cranes silhouettes during dramatic orange sunset"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
@@ -540,10 +562,10 @@ const AboutPage = () => {
                 stiffness: 90,
                 delay: idx * 0.08
               }}
-              className="bg-[#F5EFE3] border border-[#E7DECC] rounded-2xl p-6 group hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+              className="bg-[#F9F0DA] border border-[#E0D5BD] rounded-2xl p-6 group hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
             >
               <div>
-                <div className="aspect-[4/5] rounded-xl overflow-hidden mb-6 bg-[#E2DAC8]">
+                <div className="aspect-[4/5] rounded-xl overflow-hidden mb-6 bg-[#E8DFC8]">
                   <img
                     src={member.image}
                     alt={member.name}
@@ -607,7 +629,7 @@ const AboutPage = () => {
                 stiffness: 90,
                 delay: idx * 0.08
               }}
-              className="py-6 sm:py-8 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-center group hover:bg-[#F5EFE3]/50 transition-colors px-3 sm:px-4 rounded-xl"
+              className="py-6 sm:py-8 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-center group hover:bg-[#F9F0DA]/60 transition-colors px-3 sm:px-4 rounded-xl"
             >
               <div className="md:col-span-2 flex items-center gap-4">
                 <span className="text-xs font-mono text-[#897F6C]">{item.id}</span>
@@ -622,7 +644,7 @@ const AboutPage = () => {
                 </p>
               </div>
               <div className="md:col-span-4 md:text-right">
-                <span className="inline-block bg-[#F5EFE3] border border-[#E7DECC] text-[#271E07] text-xs font-medium px-3.5 py-1.5 rounded-full shadow-sm">
+                <span className="inline-block bg-[#F9F0DA] border border-[#E0D5BD] text-[#271E07] text-xs font-medium px-3.5 py-1.5 rounded-full shadow-sm">
                   {item.awardedBy}
                 </span>
               </div>
