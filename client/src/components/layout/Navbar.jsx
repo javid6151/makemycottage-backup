@@ -53,7 +53,8 @@ const Navbar = () => {
     <>
       {(() => {
         const isHomePage = location.pathname === '/';
-        const isDarkTheme = isHomePage;
+        const isGalleryPage = location.pathname === '/gallery';
+        const isDarkTheme = isHomePage || isGalleryPage;
 
         return (
           <header
