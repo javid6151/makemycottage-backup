@@ -136,30 +136,35 @@ const GalleryPage = () => {
         <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
       </Helmet>
 
-      {/* Unified Gallery Section: Hero Banner + Filter Controls + Project Grid */}
-      <section className="w-full max-w-[1560px] mx-auto px-3 sm:px-5 md:px-8">
-        {/* Architectural Hero Banner */}
+      {/* Pinned Hero Image Background Layer (Stays pinned while content moves over it) */}
+      <div className="sticky top-3 sm:top-4 z-10 px-3 sm:px-5 md:px-8 max-w-[1560px] mx-auto pointer-events-none">
         <motion.div
           style={{
             scale: heroScale,
             opacity: heroOpacity,
+            y: heroY,
           }}
-          className="relative w-full h-[calc(86vh-2rem)] min-h-[500px] max-h-[660px] mb-8 sm:mb-10 origin-top"
+          className="relative w-full h-[calc(86vh-2rem)] min-h-[500px] max-h-[660px] origin-top"
         >
-          {/* Component 1: Hero Image Banner Component */}
+          {/* Component 1: Hero Image Banner */}
           <GalleryHeroImage
             src="/images/gallery-hero.png"
             alt="Snow covered modern glass cottage - MakeMyCottage Gallery"
           />
-
-          {/* Component 2: Our Projects / Our Gallery Card Component */}
-          <div className="absolute bottom-0 left-0 z-20 pointer-events-auto">
-            <OurProjectsCard title="Our Gallery" />
-          </div>
         </motion.div>
+      </div>
 
-        {/* Category Filter Pills (Sticky below navbar while browsing all 51 projects) */}
-        <div className="sticky top-20 sm:top-24 z-30 bg-white/95 backdrop-blur-md py-3 sm:py-4 mb-6 sm:mb-8 flex flex-wrap items-center gap-2.5 sm:gap-3 border-b border-gray-100/80">
+      {/* Moving Foreground Layer: Starts from OurProjectsCard and moves UP on the hero image on scroll */}
+      <div className="relative z-20 w-full max-w-[1560px] mx-auto px-3 sm:px-5 md:px-8 -mt-28 sm:-mt-32 md:-mt-36">
+        {/* Component 2: Our Projects / Gallery Cutout Card - Moves UP ON the hero image */}
+        <div className="inline-block pointer-events-auto">
+          <OurProjectsCard title="Our Gallery" />
+        </div>
+
+        {/* Content Sheet with Filters and Continuous Grid smoothly rolling over hero */}
+        <div className="bg-white pt-2 sm:pt-3">
+          {/* Category Filter Pills (Sticky below navbar while browsing all 51 projects) */}
+          <div className="sticky top-20 sm:top-24 z-30 bg-white/95 backdrop-blur-md py-3 sm:py-4 mb-6 sm:mb-8 flex flex-wrap items-center gap-2.5 sm:gap-3 border-b border-gray-100/80">
             {categories.map((category) => {
               const displayName = category === 'All' ? 'All Images' : category;
               const count = category === 'All' 
@@ -256,7 +261,8 @@ const GalleryPage = () => {
           )}
         </AnimatedSection>
       </div>
-    </section>
+    </div>
+  </div>
 
       {/* Fullscreen Interactive Lightbox Modal */}
       <AnimatePresence>
