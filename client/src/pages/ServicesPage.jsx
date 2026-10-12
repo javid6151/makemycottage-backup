@@ -95,25 +95,9 @@ const SERVICE_SPECS = {
 
 const ServicesPage = () => {
   const [selectedServiceModal, setSelectedServiceModal] = useState(null);
-  const [activeFilter, setActiveFilter] = useState('All');
-
-  const filterOptions = [
-    { label: 'All Services', value: 'All' },
-    ...SERVICES.map((s) => ({ label: s.title, value: s.id }))
-  ];
-
-  const handleFilterClick = (filterValue) => {
-    setActiveFilter(filterValue);
-    if (filterValue !== 'All') {
-      const el = document.getElementById(filterValue);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    }
-  };
 
   return (
-    <div className="bg-[#f5f2f2] min-h-screen w-full pt-32 pb-24 text-[#141517] overflow-x-clip selection:bg-black selection:text-white">
+    <div className="bg-[#f5f2f2] min-h-screen w-full pt-20 pb-24 text-[#141517] overflow-x-clip selection:bg-black selection:text-white">
       <Helmet>
         <title>Services | Make My Cottage - Premium Handcrafted Wooden Home Construction</title>
         <meta 
@@ -123,42 +107,9 @@ const ServicesPage = () => {
       </Helmet>
 
       {/* =========================================================================
-          01 — HERO HEADER WITH EDITORIAL TYPOGRAPHY & CATEGORY NAVIGATION
+          01 — 3D HTML-TO-CANVAS PROJECTION SHOWCASE (Matching 3D-2 Reference)
       ========================================================================= */}
-      <section className="max-w-7xl mx-auto px-6 md:px-12 mb-16 md:mb-24">
-        <AnimatedSection className="max-w-4xl">
-          <SectionLabel text="OUR CAPABILITIES" />
-          <h1 className="font-heading text-5xl sm:text-7xl md:text-8xl text-[#141517] uppercase leading-[0.92] mt-6 mb-8">
-            What We Build.
-          </h1>
-          <p className="font-sans text-black/75 text-base sm:text-lg font-light leading-relaxed max-w-2xl mb-10">
-            From initial site topography analysis and 3D architectural renders to foundation work, timber erection, and turnkey key handover across India.
-          </p>
-
-          {/* Quick Jump & Filter Pills */}
-          <div className="flex flex-wrap items-center gap-2 pt-2">
-            {filterOptions.map((opt) => (
-              <button
-                key={opt.value}
-                type="button"
-                onClick={() => handleFilterClick(opt.value)}
-                className={`px-4 py-2 rounded-full text-xs uppercase tracking-wider transition-all duration-300 ${
-                  activeFilter === opt.value
-                    ? 'bg-[#141517] text-white font-semibold shadow-md scale-105'
-                    : 'bg-white text-[#555] hover:text-[#141517] border border-[#e3e3de] hover:border-[#141517]'
-                }`}
-              >
-                {opt.label}
-              </button>
-            ))}
-          </div>
-        </AnimatedSection>
-      </section>
-
-      {/* =========================================================================
-          02 — 3D HTML-TO-CANVAS PROJECTION SHOWCASE (Matching 3D-2 Reference)
-      ========================================================================= */}
-      <section className="w-full bg-white border-y border-[#e3e3de] mb-24 md:mb-32">
+      <section className="w-full bg-white border-b border-[#e3e3de] mb-24 md:mb-32">
         <Services3DProjection />
       </section>
 
