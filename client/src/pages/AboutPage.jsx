@@ -80,38 +80,10 @@ const teamMembers = [
   },
   {
     name: 'Lucas Bennett',
-    role: 'Construction Operations Lead',
+    role: 'Co-Founder & Technical Director',
     experience: '14+ yrs experience',
     image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=800&q=80',
     bio: 'Oversees site logistics, contractor scheduling, and rapid prefabrication assembly across remote and urban sites.'
-  },
-  {
-    name: 'Nathan Brooks',
-    role: 'Senior Project Manager',
-    experience: '12+ yrs experience',
-    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=800&q=80',
-    bio: 'Direct bridge between client expectations, material procurement, and precise weekly milestone delivery.'
-  },
-  {
-    name: 'Carter Hayes',
-    role: 'Structural Timber Engineer',
-    experience: '11+ yrs experience',
-    image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=800&q=80',
-    bio: 'Specialist in seismic calculation, heavy timber truss design, and tropical wood seasoning physics.'
-  },
-  {
-    name: 'Ethan Cole',
-    role: 'Commercial & Procurement Director',
-    experience: '10+ yrs experience',
-    image: 'https://framerusercontent.com/images/fhpdFIl7wf60J9GCqWjftufk.png?width=1660&height=1580',
-    bio: 'Manages international lumber supply chains, transparent cost projections, and zero hidden price variability.'
-  },
-  {
-    name: 'Mason Reed',
-    role: 'Site Safety & Quality Officer',
-    experience: '9+ yrs experience',
-    image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&q=80',
-    bio: 'Enforces rigorous European safety codes, moisture barrier validation, and finish tolerance inspections.'
   }
 ];
 
@@ -594,7 +566,7 @@ const AboutPage = () => {
         </div>
 
         {/* Team Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-4xl mx-auto">
           {teamMembers.map((member, idx) => (
             <motion.div
               key={idx}
