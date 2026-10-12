@@ -188,6 +188,22 @@ const AboutPage = () => {
   const card2Opacity = useTransform(stackProgress, [0, 0.40, 0.48, 0.88, 1], [0, 0, 1, 1, 0]);
   const card2Scale = useTransform(stackProgress, [0.40, 0.52], [0.92, 1]);
 
+  // =========================================================================
+  // Ground Rules Scroll-Driven Line Shrinking (One by One)
+  // Each line starts tall (254px) and shrinks to 133px progressively on scroll
+  // =========================================================================
+  const groundRulesRef = useRef(null);
+  const { scrollYProgress: groundProgress } = useScroll({
+    target: groundRulesRef,
+    offset: ['start 70%', 'end 30%']
+  });
+
+  const col1Height = useTransform(groundProgress, [0.05, 0.28], [254, 133]);
+  const col2Height = useTransform(groundProgress, [0.25, 0.48], [254, 133]);
+  const col3Height = useTransform(groundProgress, [0.45, 0.68], [254, 133]);
+  const col4Height = useTransform(groundProgress, [0.65, 0.88], [254, 133]);
+  const colHeights = [col1Height, col2Height, col3Height, col4Height];
+
   return (
     <div className="bg-[#FAF7F0] text-[#1B1915] min-h-screen font-sans selection:bg-[#FAE1A6] selection:text-[#271E07]">
       <Helmet>
@@ -245,7 +261,7 @@ const AboutPage = () => {
       {/* 2. STICKY BLURRED HERO BANNER + STACKING FEATURE CARDS (Screenshot 1 & 2) */}
       {/* ========================================================================= */}
       <section ref={stackedSectionRef} className="relative h-[240vh] w-full">
-        {/* Unified Sticky Viewport (Both background image and foreground cards share this container) */}
+        {/* Unified Sticky Viewport */}
         <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center px-4 sm:px-8">
           {/* Panoramic Foundation Background Image */}
           <img
@@ -348,9 +364,12 @@ const AboutPage = () => {
       </section>
 
       {/* ========================================================================= */}
-      {/* 3. GROUND RULES - 4 EXPANDING PROGRESS PILLARS (Screenshot 3 & 4) */}
+      {/* 3. GROUND RULES - 4 SCROLL-SHRINKING TIMELINE PILLARS (Screenshot 1 vs 2) */}
       {/* ========================================================================= */}
-      <section className="py-24 md:py-32 px-6 md:px-12 lg:px-16 max-w-7xl mx-auto border-t border-[#EAE3D2] relative z-10 bg-[#FAF7F0]">
+      <section
+        ref={groundRulesRef}
+        className="py-28 md:py-40 px-6 md:px-12 lg:px-16 max-w-7xl mx-auto border-t border-[#EAE3D2] relative z-10 bg-[#FAF7F0]"
+      >
         {/* Section Tag */}
         <div className="flex items-center gap-2 mb-4">
           <span className="w-2.5 h-2.5 bg-[#DE5533] rounded-[2px]" />
@@ -360,56 +379,35 @@ const AboutPage = () => {
         </div>
 
         {/* Section Heading */}
-        <motion.h2
-          initial={{ opacity: 0, y: 25 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-[-0.03em] leading-[1.05] text-[#1B1915] max-w-3xl mb-16 md:mb-20"
-        >
+        <h2 className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-[-0.03em] leading-[1.05] text-[#1B1915] max-w-3xl mb-20 md:mb-28">
           Standards built through difficult site experience
-        </motion.h2>
+        </h2>
 
-        {/* 4 Animated Columns with Expanding Vertical Lines */}
+        {/* 4 Animated Columns whose timeline lines shrink one by one on scroll */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 items-start">
           {groundRules.map((rule, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.7, delay: idx * 0.12 }}
-              className="flex flex-col"
-            >
+            <div key={idx} className="flex flex-col">
               {/* Number (01, 02, 03, 04) */}
               <div className="text-4xl sm:text-5xl font-light text-[#BAB3A2] tracking-tight mb-4">
                 {rule.number}
               </div>
 
-              {/* Dynamic Expanding Timeline Line (grows from 133px to 254px on scroll inView) */}
+              {/* Dynamic Scroll-Linked Timeline Line (shrinks from 254px to 133px one by one) */}
               <div className="relative w-8 mb-6 flex flex-col items-center">
                 {/* Top Dot */}
-                <div className="w-2.5 h-2.5 rounded-full bg-[#1B1915] z-10 shadow-sm" />
+                <div className="w-2.5 h-2.5 rounded-full bg-[#1B1915] z-10 shadow-sm shrink-0" />
 
-                {/* Vertical Line Track */}
+                {/* Animated Vertical Line that shrinks progressively on scroll */}
                 <motion.div
-                  initial={{ height: 133 }}
-                  whileInView={{ height: 254 }}
-                  viewport={{ once: true, amount: 0.3 }}
-                  transition={{
-                    type: 'spring',
-                    bounce: 0,
-                    duration: 1.2,
-                    delay: 0.2 + idx * 0.15
-                  }}
+                  style={{ height: colHeights[idx] }}
                   className="w-[2px] bg-[#1B1915] relative origin-top"
                 />
 
                 {/* Bottom Dot */}
-                <div className="w-2.5 h-2.5 rounded-full bg-[#1B1915] z-10 shadow-sm" />
+                <div className="w-2.5 h-2.5 rounded-full bg-[#1B1915] z-10 shadow-sm shrink-0" />
               </div>
 
-              {/* Amber Pill Badge */}
+              {/* Amber Pill Badge (glides upward as line shrinks) */}
               <div className="mb-4">
                 <span className="inline-block bg-[#FAE1A6] text-[#271E07] px-3.5 py-1.5 rounded-md text-xs font-medium tracking-wide shadow-sm">
                   {rule.badge}
@@ -425,7 +423,7 @@ const AboutPage = () => {
               <p className="text-sm text-[#504732] leading-relaxed font-normal">
                 {rule.description}
               </p>
-            </motion.div>
+            </div>
           ))}
         </div>
       </section>
