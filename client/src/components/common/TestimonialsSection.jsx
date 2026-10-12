@@ -82,27 +82,29 @@ export const TestimonialsSection = () => {
 
   return (
     <section 
-      id="stories" 
-      aria-labelledby="stories-heading" 
-      className="scroll-mt-20 py-24 sm:py-32 px-4 sm:px-6 md:px-10 max-w-7xl mx-auto border-t border-[#e3e3de]"
+      id="testimonials" 
+      aria-labelledby="testimonials-heading" 
+      className="scroll-mt-20 py-24 sm:py-32 px-4 sm:px-6 md:px-10 max-w-7xl mx-auto border-t border-[#e3e3de] relative"
     >
-      {/* Header matching RBP Imageworks Stories */}
+      <div id="stories" className="absolute -top-24 left-0 pointer-events-none" />
+
+      {/* Header: Prominent Testimonials & Client Stories */}
       <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between mb-12 lg:mb-14">
         <div>
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#141517] text-white text-xs uppercase tracking-wider font-semibold mb-6 shadow-sm">
             <span className="w-1.5 h-1.5 rounded-full bg-[#ff4b18]" />
-            <span>Stories &amp; Reviews</span>
+            <span>Testimonials &amp; Client Stories</span>
           </div>
 
           <h2 
-            id="stories-heading" 
+            id="testimonials-heading" 
             className="max-w-3xl font-heading font-serif text-3xl sm:text-5xl lg:text-6xl text-[#141517] font-normal leading-[1.02] tracking-tight"
           >
-            Stories from the timber sanctuaries we built.
+            What Our Clients Say About Us
           </h2>
 
           <p className="mt-4 max-w-xl text-[15px] sm:text-base leading-7 text-[#666] font-light">
-            Homeowners, estate developers, and retreat owners on what changed once timber matched their architectural vision.
+            Real experiences from homeowners, estate developers, and retreat owners on what changed once timber matched their architectural vision.
           </p>
         </div>
       </div>
