@@ -180,7 +180,7 @@ const TextRotate = forwardRef<TextRotateRef, TextRotateProps>(
         layout
         transition={transition}
       >
-        <span className="sr-only">{texts[currentTextIndex]}</span>
+        <span className="sr-only hidden" style={{ display: "none" }}>{texts[currentTextIndex]}</span>
 
         <AnimatePresence
           mode={animatePresenceMode}

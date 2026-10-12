@@ -93,37 +93,50 @@ const FAQSection = () => {
           </div>
         </div>
 
-        {/* Right Column: Clean Smooth Animated FAQ Accordion */}
-        <div className="lg:col-span-7 divide-y divide-[#e3e3de] border-t border-b border-[#e3e3de]">
+        {/* Right Column: Individual Rounded Pill Card Accordion (Exact RBP Imageworks Clone) */}
+        <div className="lg:col-span-7 flex flex-col gap-3 sm:gap-3.5">
           {FAQS.map((faq, index) => {
             const isOpen = openIndex === index;
 
             return (
-              <div key={faq.question} className="transition-colors">
-                <button
-                  type="button"
-                  onClick={() => toggleFaq(index)}
-                  className="w-full py-6 sm:py-7 flex items-start gap-4 text-left group cursor-pointer select-none"
-                  aria-expanded={isOpen}
-                >
-                  <span
-                    className={`text-2xl font-light leading-none shrink-0 transition-transform duration-300 transform select-none ${
-                      isOpen
-                        ? 'rotate-45 text-[#ff4b18]'
-                        : 'text-[#141517] group-hover:text-[#ff4b18]'
-                    }`}
+              <div 
+                key={faq.question} 
+                className="rounded-2xl bg-[#f2f1ee] hover:bg-[#eae8e4] transition-colors overflow-hidden"
+              >
+                <h3>
+                  <button
+                    type="button"
+                    onClick={() => toggleFaq(index)}
+                    className="group flex w-full items-center justify-between gap-6 rounded-2xl px-5 py-5 sm:px-6 sm:py-6 text-left text-[16px] sm:text-[17px] leading-6 font-medium text-[#141517] cursor-pointer select-none"
+                    aria-expanded={isOpen}
                   >
-                    +
-                  </span>
-
-                  <span
-                    className={`font-heading text-lg sm:text-xl font-medium tracking-tight transition-colors duration-200 ${
-                      isOpen ? 'text-[#ff4b18]' : 'text-[#141517] group-hover:text-[#ff4b18]'
-                    }`}
-                  >
-                    {faq.question}
-                  </span>
-                </button>
+                    <span className="transition-colors group-hover:text-[#141517]/85 font-heading">
+                      {faq.question}
+                    </span>
+                    <span 
+                      aria-hidden="true" 
+                      className={`flex h-5 w-5 shrink-0 items-center justify-center text-[#141517]/70 transition-transform duration-300 transform select-none ${
+                        isOpen ? 'rotate-45 text-[#141517]' : 'group-hover:text-[#141517]'
+                      }`}
+                    >
+                      <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        width="24" 
+                        height="24" 
+                        viewBox="0 0 24 24" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        strokeWidth="2" 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        className="h-[18px] w-[18px]"
+                      >
+                        <path d="M5 12h14" />
+                        <path d="M12 5v14" />
+                      </svg>
+                    </span>
+                  </button>
+                </h3>
 
                 <AnimatePresence initial={false}>
                   {isOpen && (
@@ -132,12 +145,12 @@ const FAQSection = () => {
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                      transition={{ duration: 0.30, ease: [0.16, 1, 0.3, 1] }}
                       className="overflow-hidden"
                     >
-                      <div className="pb-6 pl-9 pr-2 text-sm sm:text-base text-[#666] font-light leading-relaxed">
+                      <p className="max-w-2xl px-5 pb-6 text-[14px] sm:text-[15px] leading-7 text-[#666] font-light sm:px-6 sm:pb-7">
                         {faq.answer}
-                      </div>
+                      </p>
                     </motion.div>
                   )}
                 </AnimatePresence>

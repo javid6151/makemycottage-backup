@@ -200,10 +200,10 @@ export function Preview() {
             {projects.map((project, index) => (
               <div
                 key={project.id}
-                className="h-screen w-full flex-shrink-0 flex justify-center items-center"
+                className="h-screen w-full flex-shrink-0 flex justify-center items-center px-4"
               >
                 <div
-                  className="group relative w-36 h-36 sm:w-48 sm:h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 aspect-square rounded-none overflow-hidden shadow-lg hover:scale-105 transition-transform duration-300 cursor-pointer bg-neutral-100 border border-neutral-200"
+                  className="group relative w-40 h-40 sm:w-56 sm:h-56 md:w-72 md:h-72 lg:w-96 lg:h-96 aspect-square rounded-xl sm:rounded-2xl overflow-hidden shadow-xl hover:scale-[1.03] transition-all duration-300 cursor-pointer bg-neutral-100 border border-neutral-200"
                   onClick={() => {
                     if (index === activeIndex) {
                       navigate(`/projects/${project.slug}`)
@@ -220,8 +220,8 @@ export function Preview() {
                     loading="lazy"
                   />
                   {/* Subtle hover overlay badge */}
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-200 flex items-center justify-center">
-                    <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-white text-[10px] sm:text-[11px] font-sans uppercase tracking-widest font-semibold bg-black/75 px-3 py-1.5 backdrop-blur-sm shadow">
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-colors duration-200 flex items-center justify-center">
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-white text-[10px] sm:text-[11px] font-sans uppercase tracking-widest font-semibold bg-black/80 px-3.5 py-1.5 rounded-full backdrop-blur-sm shadow-md">
                       View Project &rarr;
                     </span>
                   </div>
@@ -232,7 +232,7 @@ export function Preview() {
         </div>
 
         {/* RIGHT COLUMN: Rotating Project Name Text */}
-        <div className="w-1/2 h-full flex flex-col items-start justify-center pl-6 sm:pl-14 md:pl-20 select-none">
+        <div className="w-1/2 h-full flex flex-col items-start justify-center pl-4 sm:pl-10 md:pl-16 pr-8 sm:pr-12 select-none">
           <div
             className="cursor-pointer group flex flex-col items-start max-w-full"
             onClick={() => {
@@ -244,20 +244,20 @@ export function Preview() {
               ref={textRotateRef}
               texts={projects.map((project) => project.name.toUpperCase())}
               mainClassName="text-xl sm:text-3xl md:text-5xl lg:text-6xl font-sans uppercase font-medium tracking-normal text-[#141517] group-hover:opacity-75 transition-opacity"
-              splitLevelClassName="overflow-hidden pb-2"
+              splitLevelClassName="overflow-hidden pb-1 sm:pb-2"
               staggerFrom={"first"}
               animatePresenceMode="wait"
               loop={false}
               auto={false}
               staggerDuration={0.005}
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -50 }}
-              transition={{ type: "spring", duration: 0.6, bounce: 0 }}
+              exit={{ opacity: 0, y: -40 }}
+              transition={{ type: "spring", duration: 0.5, bounce: 0 }}
             />
 
             {/* Subtle metadata and view link */}
-            <div className="mt-2 sm:mt-3 flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-[#777]">
+            <div className="mt-3 flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm text-[#777]">
               <span className="font-mono text-[10px] sm:text-[11px] tracking-wider text-[#999]">
                 {currentProject.num} / 0{projects.length}
               </span>
@@ -275,7 +275,7 @@ export function Preview() {
         </div>
 
         {/* Subtle navigation dots indicator on right edge */}
-        <div className="absolute right-6 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-10">
+        <div className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-10">
           {projects.map((_, i) => (
             <button
               key={i}
