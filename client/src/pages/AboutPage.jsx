@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 const groundRules = [
   {
@@ -671,48 +671,61 @@ const AboutPage = () => {
       </section>
 
       {/* ========================================================================= */}
-      {/* 7. BOTTOM CONSULTATION CTA CARD */}
+      {/* 7. BOTTOM CONSULTATION CTA SECTION (FULL-WIDTH IMMERSIVE) */}
       {/* ========================================================================= */}
-      <section className="py-24 md:py-32 px-6 md:px-12 lg:px-16 max-w-7xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="bg-[#1B1915] text-[#FAF7F0] rounded-3xl p-8 sm:p-14 lg:p-20 relative overflow-hidden shadow-2xl"
-        >
-          {/* Subtle background glow */}
-          <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-[#DE5533]/20 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -left-20 -top-20 w-80 h-80 bg-[#FAE1A6]/10 rounded-full blur-3xl pointer-events-none" />
+      <section id="consultation-cta" className="relative w-full overflow-hidden bg-[#030000] py-28 sm:py-36 md:py-48 lg:py-64 flex items-center min-h-[640px] md:min-h-[780px] lg:min-h-[872px]">
+        {/* Photographic Background - Construction Site at Sunset */}
+        <div className="absolute inset-0 z-0">
+          <img
+            src="/images/about/cta-sunset-site.webp"
+            alt="Construction worker looking at sunset site"
+            className="w-full h-full object-cover object-[75%_center] md:object-center"
+          />
+          {/* Subtle gradient scrim on the left for text contrast */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/35 to-transparent pointer-events-none" />
+          {/* Seamless gradient into the black footer */}
+          <div className="absolute inset-x-0 bottom-0 h-44 sm:h-64 md:h-80 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none" />
+        </div>
 
-          <div className="relative z-10 max-w-3xl">
-            <span className="text-xs tracking-[0.25em] uppercase text-[#FAE1A6] font-medium mb-4 inline-block">
-              Start Your Journey
-            </span>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight text-white leading-[1.05] mb-6">
+        {/* Content Container */}
+        <div className="relative z-10 max-w-[1320px] mx-auto px-6 sm:px-12 md:px-16 lg:px-20 w-full">
+          <div className="max-w-[490px]">
+            <motion.h2
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="text-4xl sm:text-5xl lg:text-[56px] font-medium tracking-[-0.02em] leading-[1.08] text-[#FCF6E9] mb-6"
+            >
               Talk through your ideas clearly.
-            </h2>
-            <p className="text-base sm:text-lg text-white/70 leading-relaxed font-light mb-10 max-w-2xl">
-              Stay informed on costs, architectural blueprints, and realistic delivery timelines with Make My Cottage. We provide single-point accountability from foundation to final key handover.
-            </p>
-            <div className="flex flex-wrap items-center gap-4">
+            </motion.h2>
+
+            <motion.p
+              initial={{ opacity: 0, y: 25 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+              className="text-base sm:text-lg text-[#BAB3A2] leading-relaxed font-normal mb-10"
+            >
+              You’ll get a clear understanding of cost range, timeline expectations, and what your space realistically requires.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+            >
               <Link
                 to="/contact"
-                className="inline-flex items-center gap-3 bg-[#FAE1A6] hover:bg-[#F5D88E] text-[#271E07] px-8 py-4 rounded-full font-medium text-sm md:text-base transition-all duration-300 hover:scale-[1.03] shadow-md group"
+                className="inline-flex items-center gap-2.5 bg-[#FCF6E9] hover:bg-white text-[#1B1915] px-7 py-3.5 rounded-full font-medium text-sm md:text-base transition-all duration-300 hover:scale-[1.02] shadow-lg group"
               >
-                <span>Book a consultation</span>
+                <span>Book a call</span>
                 <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
-              <Link
-                to="/projects"
-                className="inline-flex items-center gap-2 border border-white/20 hover:border-white text-white px-7 py-4 rounded-full font-medium text-sm md:text-base transition-colors duration-300"
-              >
-                <span>View Our Completed Cottages</span>
-                <ArrowUpRight className="w-4 h-4" />
-              </Link>
-            </div>
+            </motion.div>
           </div>
-        </motion.div>
+        </div>
       </section>
     </div>
   );
