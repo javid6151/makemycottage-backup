@@ -309,12 +309,6 @@ export const Services3DProjection = () => {
             className="w-full h-full block touch-none"
             style={{ width: "100%", height: "100%" }}
           />
-
-          {/* Floating UI prompt while scrolling */}
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 rounded-full bg-black/5 backdrop-blur-sm border border-black/10 text-[#141517] text-[11px] uppercase tracking-[0.2em] font-semibold pointer-events-none select-none">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#fd453a] animate-pulse" />
-            <span>Scroll to orbit 3D architecture</span>
-          </div>
         </div>
       </div>
     </div>
