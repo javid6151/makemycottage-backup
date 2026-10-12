@@ -353,20 +353,13 @@ const ServicesExpandTypography = ({ onSelectServiceModal }) => {
 
         return (
           <div key={srv.id} className={`content ${srv.typeClass}`}>
-            {/* Meta Eyebrow with Direct Service Link */}
+            {/* Meta Eyebrow */}
             <div
-              className={`meta flex items-center justify-between ${
+              className={`meta ${
                 isEffect2 ? 'w-full max-w-4xl mx-auto' : ''
               }`}
             >
               <span>{srv.meta}</span>
-              <Link
-                to={`/services#${srv.id}`}
-                className="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest font-semibold text-[#888] hover:text-[#ff4b18] transition-colors"
-              >
-                <span>Explore Full Service</span>
-                <HiArrowNarrowRight className="w-3.5 h-3.5" />
-              </Link>
             </div>
 
             {/* EFFECT 1: Project 01 — Wooden Homes */}

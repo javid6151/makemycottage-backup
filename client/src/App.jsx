@@ -73,6 +73,8 @@ function App() {
       touchMultiplier: 1.2,
     });
 
+    window.lenis = lenis;
+
     lenis.on('scroll', ScrollTrigger.update);
 
     const tickerCallback = (time) => {
@@ -82,9 +84,25 @@ function App() {
     gsap.ticker.add(tickerCallback);
     gsap.ticker.lagSmoothing(0);
 
+    // Debounced ResizeObserver on document body to keep ScrollTrigger accurate on image loads
+    let resizeTimer;
+    let resizeObserver;
+    if (window.ResizeObserver) {
+      resizeObserver = new ResizeObserver(() => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          ScrollTrigger.refresh();
+        }, 100);
+      });
+      resizeObserver.observe(document.body);
+    }
+
     return () => {
+      clearTimeout(resizeTimer);
+      if (resizeObserver) resizeObserver.disconnect();
       gsap.ticker.remove(tickerCallback);
       lenis.destroy();
+      delete window.lenis;
     };
   }, []);
 

@@ -8,12 +8,12 @@
   width: 100%;
 }
 
-/* Timeline center spine */
+/* Timeline center spine (Tracks strictly behind wood & cottage) */
 .timeline-spine {
   position: absolute;
   width: 2px;
   pointer-events: none;
-  z-index: 1;
+  z-index: 10; /* Strictly BEHIND milestone wood nodes and cottages */
 }
 
 /* Background subtle grey track */
@@ -23,6 +23,7 @@
   width: 2px;
   background-color: #e5e7eb;
   border-radius: 9999px;
+  z-index: 1;
 }
 
 /* Active animated orange line */
@@ -37,48 +38,749 @@
   will-change: height;
   box-shadow: 0 0 10px rgba(255, 75, 24, 0.5);
   pointer-events: none;
+  z-index: 2;
 }
 
-/* Glowing luminous tracer tip bead that leads the scroll line */
-.timeline-progress-tip {
+/* =========================================================================
+   Animated MakeMyCottage Timber Lorry (Vehicle Scroll Indicator)
+========================================================================= */
+
+/* Lorry Track Spine (Rides on top of wood nodes) */
+.timeline-lorry-track {
   position: absolute;
-  bottom: -4px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 10px;
-  height: 10px;
-  border-radius: 9999px;
-  background-color: #ff4b18;
-  border: 2px solid #ffffff;
-  box-shadow: 0 0 14px 3px rgba(255, 75, 24, 0.95);
+  width: 2px;
   pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.25s ease;
+  z-index: 40; /* Lorry rides on top of cards and nodes */
 }
 
-/* Milestone Dot Node */
-.timeline-dot {
+.timeline-lorry {
+  position: absolute;
+  top: 0%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 36px;
+  height: 76px;
+  pointer-events: none;
+  z-index: 50; /* Lorry is always in front */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform, top;
+}
+
+@media (min-width: 640px) {
+  .timeline-lorry {
+    width: 42px;
+    height: 89px;
+  }
+}
+
+@media (min-width: 768px) {
+  .timeline-lorry {
+    width: 48px;
+    height: 102px;
+  }
+}
+
+/* Lorry Body with Engine Vibration / Suspension */
+.lorry-body {
   position: relative;
-  width: 15px;
-  height: 15px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+/* Idle Engine Vibration */
+.timeline-lorry.is-idle .lorry-body {
+  animation: lorry-engine-rumble 2.4s infinite ease-in-out;
+}
+
+/* Driving Suspension Bounce when scrolling */
+.timeline-lorry.is-moving .lorry-body {
+  animation: lorry-drive-bounce 0.45s infinite ease-in-out;
+}
+
+/* Dynamic Steering Tilt */
+.timeline-lorry.is-forward .lorry-body {
+  transform: rotate(1.8deg);
+  transition: transform 0.25s ease;
+}
+
+.timeline-lorry.is-reversing .lorry-body {
+  transform: rotate(-1.8deg);
+  transition: transform 0.25s ease;
+}
+
+/* Lorry Graphic Image */
+.lorry-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.28))
+          drop-shadow(0 2px 5px rgba(255, 75, 24, 0.35));
+  transition: filter 0.3s ease;
+}
+
+.timeline-lorry.is-moving .lorry-image {
+  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.34))
+          drop-shadow(0 3px 8px rgba(255, 75, 24, 0.55));
+}
+
+/* Ground Contact Ambient Glow & Shadow */
+.lorry-ground-shadow {
+  position: absolute;
+  top: 15%;
+  bottom: 8%;
+  left: 8%;
+  right: 8%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0.45) 0%,
+    rgba(255, 75, 24, 0.3) 50%,
+    transparent 80%
+  );
+  filter: blur(6px);
+  z-index: -1;
+  pointer-events: none;
+  transform: translateY(4px);
+  transition: opacity 0.3s ease;
+}
+
+.timeline-lorry.is-moving .lorry-ground-shadow {
+  opacity: 0.95;
+  filter: blur(8px);
+}
+
+/* =========================================================================
+   Dual Headlight Cone Light Beams
+========================================================================= */
+
+.lorry-headlight-beams {
+  position: absolute;
+  top: calc(100% - 12px);
+  left: 6%;
+  right: 6%;
+  height: 65px;
+  pointer-events: none;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 3px;
+}
+
+@media (min-width: 768px) {
+  .lorry-headlight-beams {
+    height: 80px;
+  }
+}
+
+.headlight-beam {
+  width: 14px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 245, 210, 0.8) 0%,
+    rgba(255, 185, 80, 0.4) 35%,
+    rgba(255, 120, 20, 0.15) 70%,
+    transparent 100%
+  );
+  clip-path: polygon(25% 0%, 75% 0%, 100% 100%, 0% 100%);
+  filter: blur(2.5px);
+  transform-origin: top center;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  opacity: 0.55;
+}
+
+.timeline-lorry.is-moving .headlight-beam {
+  opacity: 0.95;
+  transform: scaleY(1.22);
+  filter: blur(2px);
+}
+
+.timeline-lorry.is-reversing .headlight-beam {
+  opacity: 0.22;
+  transform: scaleY(0.65);
+}
+
+/* Front Headlight Flares on Bumper */
+.lorry-front-flares {
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  right: 0;
+  height: 8px;
+  pointer-events: none;
+}
+
+.front-flare {
+  position: absolute;
+  bottom: 1px;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background-color: #fffef0;
+  box-shadow: 0 0 6px 2px rgba(255, 200, 80, 0.95),
+              0 0 12px 4px rgba(255, 75, 24, 0.7);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.front-flare.flare-left {
+  left: 17%;
+}
+
+.front-flare.flare-right {
+  right: 17%;
+}
+
+.timeline-lorry.is-moving .front-flare {
+  transform: scale(1.3);
+  box-shadow: 0 0 8px 3px rgba(255, 230, 120, 1),
+              0 0 16px 6px rgba(255, 75, 24, 0.9);
+}
+
+/* =========================================================================
+   Rear Tail / Reverse Flares
+========================================================================= */
+
+.lorry-rear-flares {
+  position: absolute;
+  top: 4px;
+  left: 0;
+  right: 0;
+  height: 6px;
+  pointer-events: none;
+}
+
+.tail-flare {
+  position: absolute;
+  top: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 9999px;
+  background-color: #8b1818;
+  opacity: 0.35;
+  transition: all 0.2s ease;
+}
+
+.tail-flare.flare-left {
+  left: 15%;
+}
+
+.tail-flare.flare-right {
+  right: 15%;
+}
+
+/* Reversing / Braking when scrolling up */
+.timeline-lorry.is-reversing .tail-flare {
+  opacity: 1;
+  background-color: #ff2222;
+  box-shadow: 0 0 8px 3px rgba(255, 34, 34, 0.95),
+              0 0 16px 5px rgba(255, 0, 0, 0.6);
+  transform: scale(1.4);
+}
+
+/* =========================================================================
+   Micro Exhaust Smoke Puffs
+========================================================================= */
+
+.lorry-exhaust-wrap {
+  position: absolute;
+  top: 28%;
+  right: 1px;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.exhaust-puff {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(160, 160, 160, 0.6) 0%, rgba(200, 200, 200, 0.2) 60%, transparent 100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.timeline-lorry.is-moving .exhaust-puff.puff-1 {
+  animation: exhaust-drift 1.1s infinite 0s ease-out;
+}
+
+.timeline-lorry.is-moving .exhaust-puff.puff-2 {
+  animation: exhaust-drift 1.1s infinite 0.35s ease-out;
+}
+
+.timeline-lorry.is-moving .exhaust-puff.puff-3 {
+  animation: exhaust-drift 1.1s infinite 0.7s ease-out;
+}
+
+@keyframes exhaust-drift {
+  0% {
+    opacity: 0.75;
+    transform: translate(0, 0) scale(0.4);
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(8px, -22px) scale(1.8);
+  }
+}
+
+/* =========================================================================
+   Keyframe Animations for Body
+========================================================================= */
+
+@keyframes lorry-engine-rumble {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  25% {
+    transform: translateY(-0.6px) rotate(0.12deg);
+  }
+  50% {
+    transform: translateY(0.4px) rotate(-0.12deg);
+  }
+  75% {
+    transform: translateY(-0.3px) rotate(0.08deg);
+  }
+}
+
+@keyframes lorry-drive-bounce {
+  0%, 100% {
+    transform: translateY(0) scaleY(1);
+  }
+  25% {
+    transform: translateY(-1.5px) scaleY(1.015);
+  }
+  50% {
+    transform: translateY(0.8px) scaleY(0.99);
+  }
+  75% {
+    transform: translateY(-0.7px) scaleY(1.008);
+  }
+}
+
+/* =========================================================================
+   Milestone Node: Delivered Fallen Timber Wood (Replaces Red Dot)
+========================================================================= */
+
+.timeline-wood-node {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+  z-index: 20; /* In front of the vertical spine line */
+}
+
+@media (min-width: 768px) {
+  .timeline-wood-node {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+/* Base landing spot marker (clean minimal marker before wood falls) */
+.wood-base-marker {
+  position: absolute;
+  width: 14px;
+  height: 14px;
   border-radius: 9999px;
   background-color: #ffffff;
   border: 2px solid #d1d5db;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              background-color 0.3s ease,
-              border-color 0.3s ease,
-              box-shadow 0.35s ease;
-  will-change: transform, background-color, border-color, box-shadow;
+  transition: all 0.35s ease;
+  z-index: 1;
 }
 
-/* Active Milestone Dot Node (Vivid Orange & Glow) */
-.timeline-dot.is-active {
+/* When near and wood falls, the base marker glows warm */
+.timeline-wood-node.is-active .wood-base-marker {
+  border-color: #ff4b18;
   background-color: #ff4b18;
-  border-color: #ffffff;
-  transform: scale(1.35);
-  box-shadow: 0 0 0 4px rgba(255, 75, 24, 0.25),
-              0 0 18px rgba(255, 75, 24, 0.85);
+  box-shadow: 0 0 12px rgba(255, 75, 24, 0.6);
+  transform: scale(0.9);
+}
+
+/* =========================================================================
+   Delivered Fallen Timber Wood Image Wrap & Drop Animation
+========================================================================= */
+
+.fallen-wood-wrap {
+  position: absolute;
+  inset: -6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-45px) scale(1.35) rotate(-14deg);
+  transition: opacity 0.2s ease;
+  z-index: 2;
+}
+
+@media (min-width: 768px) {
+  .fallen-wood-wrap {
+    inset: -8px;
+  }
+}
+
+.fallen-wood-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.28))
+          drop-shadow(0 2px 5px rgba(255, 75, 24, 0.35));
+}
+
+/* ACTIVE STATE: The wood falls from the lorry, bounces, then morphs into cottage */
+.timeline-wood-node.is-active .fallen-wood-wrap {
+  animation: wood-fall-bounce 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+             wood-morph-out 0.4s 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes wood-fall-bounce {
+  0% {
+    opacity: 0;
+    transform: translateY(-55px) scale(1.45) rotate(-15deg);
+    filter: drop-shadow(0 26px 20px rgba(0, 0, 0, 0.4));
+  }
+  48% {
+    opacity: 1;
+    transform: translateY(4px) scale(1.12, 0.88) rotate(3deg);
+    filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.32));
+  }
+  68% {
+    transform: translateY(-5px) scale(0.95, 1.05) rotate(-2deg);
+    filter: drop-shadow(0 12px 14px rgba(0, 0, 0, 0.3));
+  }
+  84% {
+    transform: translateY(2px) scale(1.03, 0.98) rotate(1deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1, 1) rotate(0deg);
+    filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.28))
+            drop-shadow(0 2px 5px rgba(255, 75, 24, 0.35));
+  }
+}
+
+@keyframes wood-morph-out {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(0deg);
+  }
+  50% {
+    opacity: 0.5;
+    transform: translateY(-6px) scale(0.85) rotate(4deg);
+    filter: drop-shadow(0 0 10px rgba(255, 75, 24, 0.6));
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.3) rotate(-6deg);
+    pointer-events: none;
+    visibility: hidden;
+  }
+}
+
+/* =========================================================================
+   Transformed Wooden Cottage Miniature & Construction Animation
+========================================================================= */
+
+.transformed-cottage-wrap {
+  position: absolute;
+  inset: -12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(14px) scale(0.4);
+  z-index: 5;
+}
+
+@media (min-width: 768px) {
+  .transformed-cottage-wrap {
+    inset: -16px;
+  }
+}
+
+.timeline-wood-node.is-active .transformed-cottage-wrap {
+  animation: cottage-build-in 0.75s 1.02s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.cottage-model-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cottage-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.32))
+          drop-shadow(0 2px 6px rgba(255, 75, 24, 0.4));
+  transition: transform 0.3s ease;
+}
+
+@keyframes cottage-build-in {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.4) rotate(4deg);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  }
+  45% {
+    opacity: 1;
+    transform: translateY(-5px) scale(1.16) rotate(-2deg);
+    filter: drop-shadow(0 14px 20px rgba(0, 0, 0, 0.38))
+            drop-shadow(0 0 16px rgba(255, 140, 20, 0.6));
+  }
+  75% {
+    transform: translateY(2px) scale(0.96) rotate(1deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(0deg);
+    filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.32))
+            drop-shadow(0 2px 6px rgba(255, 75, 24, 0.4));
+  }
+}
+
+/* Transformation Flash Burst */
+.transform-burst {
+  position: absolute;
+  width: 38px;
+  height: 38px;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 220, 100, 0.95) 0%,
+    rgba(255, 120, 20, 0.6) 45%,
+    transparent 72%
+  );
+  opacity: 0;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.timeline-wood-node.is-active .transform-burst {
+  animation: transform-burst-flash 0.65s 0.95s ease-out forwards;
+}
+
+@keyframes transform-burst-flash {
+  0% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+  35% {
+    opacity: 1;
+    transform: scale(1.6);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.4);
+  }
+}
+
+/* Transformation Golden Sparks */
+.transform-spark {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 9999px;
+  background: #f59e0b;
+  box-shadow: 0 0 6px #ff4b18;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.timeline-wood-node.is-active .transform-spark.spark-1 {
+  animation: spark-drift-1 0.65s 0.98s ease-out forwards;
+}
+.timeline-wood-node.is-active .transform-spark.spark-2 {
+  animation: spark-drift-2 0.65s 1.02s ease-out forwards;
+}
+.timeline-wood-node.is-active .transform-spark.spark-3 {
+  animation: spark-drift-3 0.65s 0.96s ease-out forwards;
+}
+.timeline-wood-node.is-active .transform-spark.spark-4 {
+  animation: spark-drift-4 0.65s 1.04s ease-out forwards;
+}
+
+@keyframes spark-drift-1 {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(-18px, -16px) scale(0.2); }
+}
+@keyframes spark-drift-2 {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(20px, -14px) scale(0.2); }
+}
+@keyframes spark-drift-3 {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(-14px, 16px) scale(0.2); }
+}
+@keyframes spark-drift-4 {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(16px, 18px) scale(0.2); }
+}
+
+/* Chimney Smoke on Built Cottage */
+.cottage-chimney-smoke {
+  position: absolute;
+  top: 1px;
+  right: 21%;
+  width: 10px;
+  height: 12px;
+  pointer-events: none;
+  z-index: 8;
+}
+
+.chimney-puff {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(210, 210, 210, 0.75) 0%, rgba(230, 230, 230, 0.25) 60%, transparent 100%);
+  opacity: 0;
+}
+
+.timeline-wood-node.is-active .chimney-puff.cp-1 {
+  animation: chimney-drift 2.2s infinite 1.7s ease-out;
+}
+
+.timeline-wood-node.is-active .chimney-puff.cp-2 {
+  animation: chimney-drift 2.2s infinite 2.8s ease-out;
+}
+
+@keyframes chimney-drift {
+  0% {
+    opacity: 0.8;
+    transform: translate(0, 0) scale(0.5);
+  }
+  60% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(6px, -18px) scale(2);
+  }
+}
+
+/* =========================================================================
+   Impact Ground Shockwave Ripple
+========================================================================= */
+
+.wood-impact-ripple {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 1;
+}
+
+.timeline-wood-node.is-active .wood-impact-ripple {
+  animation: wood-shockwave-pulse 0.75s ease-out forwards;
+}
+
+@keyframes wood-shockwave-pulse {
+  0% {
+    opacity: 0.95;
+    transform: scale(0.4);
+    border-color: rgba(255, 75, 24, 0.95);
+    box-shadow: 0 0 12px rgba(255, 75, 24, 0.75);
+  }
+  40% {
+    opacity: 0.7;
+    border-color: rgba(255, 140, 20, 0.7);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.6);
+    border-color: rgba(255, 75, 24, 0);
+    box-shadow: 0 0 0 transparent;
+  }
+}
+
+/* =========================================================================
+   Wood Chips / Dust Sparks Burst on Impact
+========================================================================= */
+
+.wood-chip {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 9999px;
+  background-color: #d97706;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.timeline-wood-node.is-active .wood-chip.chip-1 {
+  animation: wood-chip-1 0.55s ease-out forwards;
+}
+
+.timeline-wood-node.is-active .wood-chip.chip-2 {
+  animation: wood-chip-2 0.55s ease-out forwards;
+}
+
+.timeline-wood-node.is-active .wood-chip.chip-3 {
+  animation: wood-chip-3 0.55s ease-out forwards;
+}
+
+@keyframes wood-chip-1 {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-16px, -12px) scale(0.4);
+  }
+}
+
+@keyframes wood-chip-2 {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(18px, -10px) scale(0.4);
+  }
+}
+
+@keyframes wood-chip-3 {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(8px, 14px) scale(0.4);
+  }
 }
 
 /* Image Card Styling */
