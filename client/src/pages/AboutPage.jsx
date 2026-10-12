@@ -207,6 +207,17 @@ const AboutPage = () => {
   const col4Height = useTransform(groundProgress, [0.50, 0.65], [254, 133]);
   const colHeights = [col1Height, col2Height, col3Height, col4Height];
 
+  // =========================================================================
+  // History Timeline Scroll-Driven Black Progress Line
+  // Black line extends downwards along the timeline as the user scrolls
+  // =========================================================================
+  const historyTimelineRef = useRef(null);
+  const { scrollYProgress: historyProgress } = useScroll({
+    target: historyTimelineRef,
+    offset: ['start 75%', 'end 55%']
+  });
+  const historyLineHeight = useTransform(historyProgress, [0, 1], ['0%', '100%']);
+
   return (
     <div className="bg-[#FAF7F0] text-[#1B1915] min-h-screen font-sans selection:bg-[#FAE1A6] selection:text-[#271E07]">
       <Helmet>
@@ -458,32 +469,38 @@ const AboutPage = () => {
 
         {/* 2-Column Layout with Sticky Sunset Image */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-          {/* Left Column: Vertical Timeline Milestones */}
-          <div className="lg:col-span-7 relative pl-8 md:pl-12 border-l-[2px] border-[#DDD5C2] space-y-16 md:space-y-24 py-4">
+          {/* Left Column: Vertical Timeline Milestones with Scroll-Driven Black Progress Line */}
+          <div ref={historyTimelineRef} className="lg:col-span-7 relative pl-8 md:pl-12 space-y-16 md:space-y-24 py-4">
+            {/* Base background beige line */}
+            <div className="absolute left-0 top-3 bottom-6 w-[4px] bg-[#DDD5C2] rounded-full" />
+
+            {/* Dynamic black progress line that extends downwards on scroll */}
+            <motion.div
+              style={{ height: historyLineHeight }}
+              className="absolute left-0 top-3 w-[4px] bg-[#1B1915] rounded-full z-10 origin-top"
+            />
+
             {timelineMilestones.map((item, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, y: 60 }}
+                initial={{ opacity: 0, y: 35 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={springTransition}
-                className="relative group"
+                viewport={{ once: true, amount: 0.25 }}
+                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                className="relative"
               >
-                {/* Timeline Dot Indicator */}
-                <span className="absolute -left-[41px] md:-left-[57px] top-2.5 w-4 h-4 rounded-full bg-[#FAF7F0] border-[3px] border-[#1B1915] group-hover:scale-125 transition-transform duration-300" />
-
                 {/* Year & Badge Header */}
                 <div className="flex items-center gap-3 mb-3">
                   <span className="text-3xl sm:text-4xl md:text-5xl font-medium text-[#1B1915] tracking-tight">
                     {item.year}
                   </span>
-                  <span className="bg-[#FAE1A6] text-[#271E07] px-3 py-1 rounded-md text-xs font-medium shadow-sm">
+                  <span className="bg-[#FAE1A6] text-[#271E07] px-3 py-1 rounded-[4px] text-xs font-medium shadow-sm">
                     {item.badge}
                   </span>
                 </div>
 
                 {/* Title */}
-                <h3 className="text-2xl sm:text-3xl font-medium tracking-tight text-[#1B1915] mb-3">
+                <h3 className="text-2xl sm:text-3xl font-medium tracking-tight text-[#1B1915] mb-2.5">
                   {item.title}
                 </h3>
 
