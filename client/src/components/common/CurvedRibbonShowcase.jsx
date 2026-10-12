@@ -4,20 +4,20 @@ import * as THREE from 'three';
 import { HiArrowNarrowRight } from 'react-icons/hi';
 import CursorGrid from './CursorGrid';
 
-// Vibrant, ultra-clear high-res imagery of luxury wooden homes, cottages, and timber architecture
+// Vibrant, crystal-clear high-res imagery (1:1 square aspect ratio for razor-sharp, undistorted rendering)
 const SHOWCASE_CARDS = [
-  { id: 1, title: 'Woodland Timber Retreat', image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=900&auto=format&fit=crop&q=85' },
-  { id: 2, title: 'Alpine Pine Cottage', image: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=900&auto=format&fit=crop&q=85' },
-  { id: 3, title: 'Heritage Farmstead Villa', image: 'https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=900&auto=format&fit=crop&q=85' },
-  { id: 4, title: 'Cedar A-Frame Sanctuary', image: 'https://images.unsplash.com/photo-1587061949409-02df41d5e562?w=900&auto=format&fit=crop&q=85' },
-  { id: 5, title: 'Lakefront Timber Residence', image: 'https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=900&auto=format&fit=crop&q=85' },
-  { id: 6, title: 'Eco Resort Wooden Cabin', image: 'https://images.unsplash.com/photo-1605146769289-440113cc3d00?w=900&auto=format&fit=crop&q=85' },
-  { id: 7, title: 'Prefab Modular Timber Villa', image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=900&auto=format&fit=crop&q=85' },
-  { id: 8, title: 'Warm Wood Living Interior', image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=900&auto=format&fit=crop&q=85' },
-  { id: 9, title: 'Precision Master Joinery', image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=900&auto=format&fit=crop&q=85' },
-  { id: 10, title: 'Forest Log Sanctuary', image: 'https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=900&auto=format&fit=crop&q=85' },
-  { id: 11, title: 'Glass & Cedar Modern Villa', image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=900&auto=format&fit=crop&q=85' },
-  { id: 12, title: 'Timber Structural Framing', image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=900&auto=format&fit=crop&q=85' },
+  { id: 1, title: 'Woodland Timber Retreat', image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1200&h=1200&auto=format&fit=crop&crop=entropy&q=95' },
+  { id: 2, title: 'Alpine Pine Cottage', image: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=1200&h=1200&auto=format&fit=crop&crop=entropy&q=95' },
+  { id: 3, title: 'Heritage Farmstead Villa', image: 'https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=1200&h=1200&auto=format&fit=crop&crop=entropy&q=95' },
+  { id: 4, title: 'Cedar A-Frame Sanctuary', image: 'https://images.unsplash.com/photo-1587061949409-02df41d5e562?w=1200&h=1200&auto=format&fit=crop&crop=entropy&q=95' },
+  { id: 5, title: 'Lakefront Timber Residence', image: 'https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=1200&h=1200&auto=format&fit=crop&crop=entropy&q=95' },
+  { id: 6, title: 'Eco Resort Wooden Cabin', image: 'https://images.unsplash.com/photo-1605146769289-440113cc3d00?w=1200&h=1200&auto=format&fit=crop&crop=entropy&q=95' },
+  { id: 7, title: 'Prefab Modular Timber Villa', image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&h=1200&auto=format&fit=crop&crop=entropy&q=95' },
+  { id: 8, title: 'Warm Wood Living Interior', image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&h=1200&auto=format&fit=crop&crop=entropy&q=95' },
+  { id: 9, title: 'Precision Master Joinery', image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=1200&h=1200&auto=format&fit=crop&crop=entropy&q=95' },
+  { id: 10, title: 'Forest Log Sanctuary', image: 'https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=1200&h=1200&auto=format&fit=crop&crop=entropy&q=95' },
+  { id: 11, title: 'Glass & Cedar Modern Villa', image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&h=1200&auto=format&fit=crop&crop=entropy&q=95' },
+  { id: 12, title: 'Timber Structural Framing', image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1200&h=1200&auto=format&fit=crop&crop=entropy&q=95' },
 ];
 
 /**
@@ -62,7 +62,8 @@ function createRoundedPlaneGeometry(width, height, radius, segments = 16) {
 export const CurvedRibbonShowcase = () => {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
-  const [isHovered, setIsHovered] = useState(false);
+  // Using ref instead of state to guarantee uninterrupted, buttery-smooth 60-120fps animation
+  const isHoveredRef = useRef(false);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -112,20 +113,20 @@ export const CurvedRibbonShowcase = () => {
       return tex;
     });
 
-    // Dedicated White Shade Gradient Texture for ethereal bottom-fade in the trough
+    // Subtle White Shade Gradient Texture — only feathers the bottom 25% of trough cards
     const createWhiteShadeTexture = () => {
       const c = document.createElement('canvas');
-      c.width = 256;
+      c.width = 128;
       c.height = 256;
       const ctx = c.getContext('2d');
       const grad = ctx.createLinearGradient(0, 256, 0, 0);
-      grad.addColorStop(0.0, 'rgba(255, 255, 255, 0.98)');
-      grad.addColorStop(0.32, 'rgba(255, 255, 255, 0.88)');
-      grad.addColorStop(0.58, 'rgba(255, 255, 255, 0.50)');
-      grad.addColorStop(0.82, 'rgba(255, 255, 255, 0.15)');
+      grad.addColorStop(0.0, 'rgba(255, 255, 255, 0.92)');
+      grad.addColorStop(0.12, 'rgba(255, 255, 255, 0.50)');
+      grad.addColorStop(0.24, 'rgba(255, 255, 255, 0.10)');
+      grad.addColorStop(0.35, 'rgba(255, 255, 255, 0.0)');
       grad.addColorStop(1.0, 'rgba(255, 255, 255, 0.0)');
       ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, 256, 256);
+      ctx.fillRect(0, 0, 128, 256);
       const tex = new THREE.CanvasTexture(c);
       tex.colorSpace = THREE.SRGBColorSpace;
       return tex;
@@ -252,17 +253,19 @@ export const CurvedRibbonShowcase = () => {
     // 6. Animation Loop (Continuous smooth flow through the fixed track)
     let animationFrameId;
     let time = 0;
+    let currentFlowSpeed = 0.044;
     let lastTimestamp = performance.now();
 
     const animate = (timestamp) => {
       animationFrameId = requestAnimationFrame(animate);
 
-      const delta = Math.min((timestamp - lastTimestamp) / 1000, 0.1);
+      const delta = Math.min((timestamp - lastTimestamp) / 1000, 0.05);
       lastTimestamp = timestamp;
 
-      // Smooth horizontal travel speed (slows down gracefully on hover)
-      const flowSpeed = isHovered ? 0.022 : 0.046;
-      time += delta * flowSpeed;
+      // Silky-smooth speed lerp on hover (no frame drops, no scene tearing)
+      const targetFlowSpeed = isHoveredRef.current ? 0.016 : 0.044;
+      currentFlowSpeed += (targetFlowSpeed - currentFlowSpeed) * 0.06;
+      time += delta * currentFlowSpeed;
 
       // Smooth mouse follow
       currentMouseX += (targetMouseX - currentMouseX) * 0.06;
@@ -301,15 +304,19 @@ export const CurvedRibbonShowcase = () => {
           alpha = Math.max(0, 1.0 - (absX - 10.2) / 3.4);
         }
 
-        // White Shade effect in the trough:
-        // When cards dip below Y = 2.1 toward the trough (Y = 0.58), the white shade appears
-        const troughDepth = Math.max(0, Math.min(1.0, (2.1 - pt.y) / (2.1 - 0.58)));
-        const whiteShadeIntensity = Math.pow(troughDepth, 1.15) * 0.92;
+        // Crystal clarity: image material stays 100% full saturation & sharpness
+        item.imgMesh.material.opacity = alpha;
+        item.borderMesh.material.opacity = alpha * 0.96;
+        item.shadowMesh.material.opacity = alpha * 0.12;
 
-        item.imgMesh.material.opacity = alpha * (1.0 - whiteShadeIntensity * 0.15);
-        item.whiteShadeMesh.material.opacity = alpha * whiteShadeIntensity;
-        item.borderMesh.material.opacity = alpha * (0.96 - whiteShadeIntensity * 0.20);
-        item.shadowMesh.material.opacity = alpha * (0.12 - whiteShadeIntensity * 0.07);
+        // Delicate white shade: only feathers the bottom 25% of cards directly in the bottom dip
+        if (pt.y < 1.15) {
+          const troughDepth = (1.15 - pt.y) / (1.15 - 0.58);
+          const whiteShadeIntensity = Math.pow(troughDepth, 1.6) * 0.70;
+          item.whiteShadeMesh.material.opacity = alpha * whiteShadeIntensity;
+        } else {
+          item.whiteShadeMesh.material.opacity = 0.0;
+        }
       }
 
       renderer.render(scene, camera);
@@ -349,14 +356,14 @@ export const CurvedRibbonShowcase = () => {
         c.whiteShadeMesh.material.dispose();
       });
     };
-  }, [isHovered]);
+  }, []); // Run once on mount: NEVER teardown and rebuild Three.js on hover
 
   return (
     <section 
       id="ribbon-showcase"
       ref={containerRef}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={() => { isHoveredRef.current = true; }}
+      onMouseLeave={() => { isHoveredRef.current = false; }}
       className="relative w-full min-h-[960px] lg:min-h-[1020px] bg-[#fbfbfa] text-[#141517] flex flex-col items-center justify-start overflow-hidden pt-12 sm:pt-16 pb-24 sm:pb-32 border-t border-[#e3e3de]"
     >
       {/* 1. Interactive CursorGrid Background */}
@@ -389,14 +396,6 @@ export const CurvedRibbonShowcase = () => {
       >
         <canvas ref={canvasRef} className="block w-full h-full" />
       </div>
-
-      {/* 2b. Luminous White Shade Mist Layer kissing the bottom of the dipped cards */}
-      <div 
-        className="absolute left-0 right-0 top-[280px] sm:top-[310px] md:top-[330px] h-[190px] sm:h-[220px] pointer-events-none z-15"
-        style={{
-          background: 'linear-gradient(to bottom, transparent 0%, rgba(251,251,250,0.35) 40%, rgba(251,251,250,0.92) 80%, #fbfbfa 100%)',
-        }}
-      />
 
       {/* 3. Foreground Editorial Content & Headline */}
       <div className="relative z-20 max-w-4xl mx-auto px-4 sm:px-6 text-center mt-[370px] sm:mt-[400px] md:mt-[430px]">
