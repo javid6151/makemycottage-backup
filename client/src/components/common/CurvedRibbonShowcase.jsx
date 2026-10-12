@@ -18,12 +18,10 @@ const SHOWCASE_CARDS = [
   { id: 10, title: 'Forest Log Sanctuary', image: 'https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=900&auto=format&fit=crop&q=85' },
   { id: 11, title: 'Glass & Cedar Modern Villa', image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=900&auto=format&fit=crop&q=85' },
   { id: 12, title: 'Timber Structural Framing', image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=900&auto=format&fit=crop&q=85' },
-  { id: 13, title: 'Hilltop Cottage Haven', image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=900&auto=format&fit=crop&q=85' },
-  { id: 14, title: 'Scandinavian Wood Haven', image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=900&auto=format&fit=crop&q=85' },
 ];
 
 /**
- * Creates rounded rectangle geometry with normalized UVs [0, 1]
+ * Creates custom rounded rectangle plane geometry with normalized UVs [0, 1]
  */
 function createRoundedPlaneGeometry(width, height, radius, segments = 16) {
   const shape = new THREE.Shape();
@@ -44,9 +42,8 @@ function createRoundedPlaneGeometry(width, height, radius, segments = 16) {
   shape.quadraticCurveTo(x, y, x + r, y);
 
   const geom = new THREE.ShapeGeometry(shape, segments);
-
-  // Compute exact normalized UVs [0, 1] for distortion-free textures
   geom.computeBoundingBox();
+
   const { min, max } = geom.boundingBox;
   const posAttr = geom.attributes.position;
   const uvArray = new Float32Array(posAttr.count * 2);
@@ -72,13 +69,14 @@ export const CurvedRibbonShowcase = () => {
     const canvas = canvasRef.current;
     if (!container || !canvas) return;
 
-    let width = container.clientWidth;
-    let height = container.clientHeight;
+    const canvasParent = canvas.parentElement;
+    let width = canvasParent.clientWidth || window.innerWidth;
+    let height = canvasParent.clientHeight || 600;
 
     // 1. Three.js Scene, Camera, Renderer
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(36, width / height, 0.1, 100);
-    camera.position.set(0, 2.2, 16.5);
+    const camera = new THREE.PerspectiveCamera(35, width / height, 0.1, 100);
+    camera.position.set(0, 1.8, 16.5);
 
     const renderer = new THREE.WebGLRenderer({
       canvas,
@@ -89,9 +87,9 @@ export const CurvedRibbonShowcase = () => {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(width, height);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.toneMapping = THREE.NoToneMapping; // Preserve exact image contrast & colors without washout
+    renderer.toneMapping = THREE.NoToneMapping;
 
-    // 2. Texture Loader with sRGBColorSpace for pristine, vibrant clarity
+    // 2. Texture Loader with sRGBColorSpace
     const textureLoader = new THREE.TextureLoader();
     const cardWidth = 2.45;
     const cardHeight = 2.45;
@@ -99,6 +97,7 @@ export const CurvedRibbonShowcase = () => {
 
     const cardGeometry = createRoundedPlaneGeometry(cardWidth, cardHeight, cardRadius, 16);
     const borderGeometry = createRoundedPlaneGeometry(cardWidth + 0.08, cardHeight + 0.08, cardRadius + 0.04, 16);
+    const shadowGeometry = createRoundedPlaneGeometry(cardWidth + 0.16, cardHeight + 0.16, cardRadius + 0.08, 16);
 
     const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
 
@@ -112,36 +111,49 @@ export const CurvedRibbonShowcase = () => {
       return tex;
     });
 
-    // 3. Dense Card Stream (28 cards for distinct, perfectly separated cascading ribbon)
+    // 3. Dense Card Stream (28 cards for smooth, continuous cascading ribbon)
     const totalCards = 28;
     const cardMeshes = [];
     const ribbonGroup = new THREE.Group();
     scene.add(ribbonGroup);
 
-    const borderMaterial = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
-      transparent: true,
-      opacity: 0.95,
-      side: THREE.DoubleSide,
-    });
-
     for (let i = 0; i < totalCards; i++) {
       const tex = textures[i % textures.length];
 
-      // MeshBasicMaterial gives 100% faithful, razor-sharp photographic reproduction
+      // White backing plate for crisp separation
+      const borderMaterial = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.96,
+        side: THREE.DoubleSide,
+      });
+
+      // Subtle drop shadow plate for realistic physical layering
+      const shadowMaterial = new THREE.MeshBasicMaterial({
+        color: 0x000000,
+        transparent: true,
+        opacity: 0.12,
+        side: THREE.DoubleSide,
+      });
+
+      // Main photographic image material
       const imgMaterial = new THREE.MeshBasicMaterial({
         map: tex,
+        transparent: true,
+        opacity: 1.0,
         side: THREE.DoubleSide,
       });
 
       const cardGroup = new THREE.Group();
 
-      // Backing / border plate for crisp separation when cards overlap
+      const shadowMesh = new THREE.Mesh(shadowGeometry, shadowMaterial);
+      shadowMesh.position.set(0.04, -0.06, -0.025);
+      cardGroup.add(shadowMesh);
+
       const borderMesh = new THREE.Mesh(borderGeometry, borderMaterial);
       borderMesh.position.z = -0.01;
       cardGroup.add(borderMesh);
 
-      // Main image mesh
       const imgMesh = new THREE.Mesh(cardGeometry, imgMaterial);
       cardGroup.add(imgMesh);
 
@@ -149,36 +161,37 @@ export const CurvedRibbonShowcase = () => {
 
       cardMeshes.push({
         group: cardGroup,
+        imgMesh,
+        borderMesh,
+        shadowMesh,
         index: i,
         phase: i / totalCards,
       });
     }
 
-    // 4. Fixed Spatial Curve Function (Matches Exact Arc Ribbon from Screenshot)
+    // 4. Fixed Spatial Curve Function with Generous Headroom
     // The curve is anchored to the screen:
-    // Left: high crest (~7.0)
-    // Center: graceful dip trough (~1.8) dipping just above the headline
-    // Right: high crest (~7.0)
+    // Left & Right Crests: peak gently at Y = 4.2 (staying well below canvas top edge 7.1)
+    // Center Trough: dips smoothly to Y = 0.6 just above the headline
     const trackWidth = 32.0;
 
     const evaluateFixedTrack = (x) => {
       const absX = Math.abs(x);
       
-      // Fixed spatial curve: center trough at x = 0, rising up on left & right
       const waveFreq = 0.22;
       const angle = Math.min(Math.PI, absX * waveFreq);
       
-      // Smooth cosine valley: lowest at x = 0, highest at |x| >= 14
-      const troughY = 1.6;
-      const crestHeight = 5.2;
+      // Calibrated so highest card crest NEVER touches the top of the canvas or section
+      const troughY = 0.65;
+      const crestHeight = 3.55;
       const y = troughY + (1.0 - Math.cos(angle)) * 0.5 * crestHeight;
 
-      // Derivative for accurate tangent tilt
+      // Derivative for accurate tangent alignment
       const dy_dx = Math.sign(x) * 0.5 * crestHeight * waveFreq * Math.sin(angle);
-      const tiltZ = Math.atan(dy_dx) * 0.78;
-      const tiltY = -Math.sign(x) * Math.sin(angle) * 0.18;
+      const tiltZ = Math.atan(dy_dx) * 0.74;
+      const tiltY = -Math.sign(x) * Math.sin(angle) * 0.16;
 
-      // Z-depth: center cards push slightly forward for layered 3D depth
+      // Layered Z-depth: center cards push slightly forward for immersive depth
       const z = (1.0 - (absX / 16.0)) * 1.5 - 0.4;
 
       return { y, z, tiltZ, tiltY };
@@ -195,7 +208,7 @@ export const CurvedRibbonShowcase = () => {
       const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
       const ny = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
       targetMouseX = nx * 0.35;
-      targetMouseY = ny * 0.2;
+      targetMouseY = ny * 0.18;
     };
 
     container.addEventListener('mousemove', onMouseMove, { passive: true });
@@ -211,8 +224,8 @@ export const CurvedRibbonShowcase = () => {
       const delta = Math.min((timestamp - lastTimestamp) / 1000, 0.1);
       lastTimestamp = timestamp;
 
-      // Smooth horizontal travel speed
-      const flowSpeed = isHovered ? 0.025 : 0.052;
+      // Smooth horizontal travel speed (slows down gracefully on hover)
+      const flowSpeed = isHovered ? 0.024 : 0.050;
       time += delta * flowSpeed;
 
       // Smooth mouse follow
@@ -220,8 +233,8 @@ export const CurvedRibbonShowcase = () => {
       currentMouseY += (targetMouseY - currentMouseY) * 0.06;
 
       camera.position.x = currentMouseX;
-      camera.position.y = 2.4 + currentMouseY;
-      camera.lookAt(0, 2.4, 0);
+      camera.position.y = 1.8 + currentMouseY;
+      camera.lookAt(0, 1.8, 0);
 
       // Place cards along the fixed spatial track
       for (let i = 0; i < cardMeshes.length; i++) {
@@ -242,8 +255,18 @@ export const CurvedRibbonShowcase = () => {
 
         // Subtle scale enhancement for center cards
         const centerProximity = 1.0 - Math.min(1.0, Math.abs(x) / 14.0);
-        const cardScale = 0.94 + centerProximity * 0.14;
+        const cardScale = 0.95 + centerProximity * 0.14;
         item.group.scale.set(cardScale, cardScale, 1);
+
+        // Soft horizontal fade near the track edges so cards enter and exit seamlessly without touching edges
+        const absX = Math.abs(x);
+        let alpha = 1.0;
+        if (absX > 10.5) {
+          alpha = Math.max(0, 1.0 - (absX - 10.5) / 3.5);
+        }
+        item.imgMesh.material.opacity = alpha;
+        item.borderMesh.material.opacity = alpha * 0.96;
+        item.shadowMesh.material.opacity = alpha * 0.12;
       }
 
       renderer.render(scene, camera);
@@ -251,13 +274,13 @@ export const CurvedRibbonShowcase = () => {
 
     animationFrameId = requestAnimationFrame(animate);
 
-    // 7. Resize Handler
+    // 7. Responsive Resize Handler
     const handleResize = () => {
-      if (!canvas) return;
-      width = canvas.parentElement.clientWidth;
-      height = canvas.parentElement.clientHeight;
+      if (!canvasParent) return;
+      width = canvasParent.clientWidth || window.innerWidth;
+      height = canvasParent.clientHeight || 600;
       camera.aspect = width / height;
-      camera.fov = width < 768 ? 46 : 36;
+      camera.fov = width < 768 ? 44 : 35;
       camera.updateProjectionMatrix();
       renderer.setSize(width, height);
     };
@@ -273,10 +296,12 @@ export const CurvedRibbonShowcase = () => {
       renderer.dispose();
       cardGeometry.dispose();
       borderGeometry.dispose();
-      borderMaterial.dispose();
+      shadowGeometry.dispose();
       textures.forEach((t) => t.dispose());
       cardMeshes.forEach((c) => {
-        c.group.children.forEach((child) => child.material?.dispose());
+        c.imgMesh.material.dispose();
+        c.borderMesh.material.dispose();
+        c.shadowMesh.material.dispose();
       });
     };
   }, [isHovered]);
@@ -287,14 +312,14 @@ export const CurvedRibbonShowcase = () => {
       ref={containerRef}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="relative w-full min-h-[920px] lg:min-h-[980px] bg-[#fbfbfa] text-[#141517] flex flex-col items-center justify-start overflow-hidden pt-4 pb-24 sm:pb-32 border-t border-[#e3e3de]"
+      className="relative w-full min-h-[960px] lg:min-h-[1020px] bg-[#fbfbfa] text-[#141517] flex flex-col items-center justify-start overflow-hidden pt-12 sm:pt-16 pb-24 sm:pb-32 border-t border-[#e3e3de]"
     >
-      {/* 1. Interactive CursorGrid Background + Subtle Dot Pattern */}
+      {/* 1. Interactive CursorGrid Background */}
       <div className="absolute inset-0 z-0">
         <CursorGrid
           cellSize={64}
           color="#141517"
-          radius={150}
+          radius={160}
           falloff="smooth"
           holdTime={350}
           fadeDuration={700}
@@ -309,15 +334,19 @@ export const CurvedRibbonShowcase = () => {
         />
       </div>
 
-      {/* 2. Three.js Curved Ribbon of Floating 3D Cards */}
+      {/* 2. Three.js Curved Ribbon of Floating 3D Cards with Generous Edge Margins & Side Masks */}
       <div 
-        className="absolute top-0 left-0 w-full h-[520px] sm:h-[560px] pointer-events-none z-10"
+        className="absolute top-10 sm:top-14 md:top-16 left-0 w-full h-[580px] sm:h-[620px] md:h-[660px] pointer-events-none z-10"
+        style={{
+          maskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
+          WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
+        }}
       >
         <canvas ref={canvasRef} className="block w-full h-full" />
       </div>
 
-      {/* 3. Foreground Editorial Content & Headline (Exact styling from Screenshot) */}
-      <div className="relative z-20 max-w-4xl mx-auto px-4 sm:px-6 text-center mt-[360px] sm:mt-[380px] md:mt-[400px]">
+      {/* 3. Foreground Editorial Content & Headline */}
+      <div className="relative z-20 max-w-4xl mx-auto px-4 sm:px-6 text-center mt-[370px] sm:mt-[400px] md:mt-[430px]">
         {/* Big Editorial Headline */}
         <h2 className="font-heading font-serif text-4xl sm:text-6xl md:text-7xl lg:text-[5.2rem] font-normal tracking-tight text-[#141517] leading-[1.0] mb-6">
           The picture in your head,<br />by lunch.
