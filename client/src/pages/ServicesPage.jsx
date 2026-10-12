@@ -8,7 +8,6 @@ import {
   HiOutlineCheck, 
   HiOutlineInformationCircle 
 } from 'react-icons/hi';
-import AnimatedSection from '../components/common/AnimatedSection';
 import SectionLabel from '../components/common/SectionLabel';
 import CTAButton from '../components/common/CTAButton';
 import Services3DProjection from '../components/services3d/Services3DProjection';
@@ -132,118 +131,129 @@ const ServicesPage = () => {
             const specs = SERVICE_SPECS[srv.id] || SERVICE_SPECS['wooden-homes'];
 
             return (
-              <AnimatedSection key={srv.id}>
-                <div 
-                  id={srv.id} 
-                  className={`scroll-mt-32 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center ${
-                    isReversed ? 'lg:flex-row-reverse' : ''
-                  }`}
+              <div 
+                key={srv.id}
+                id={srv.id} 
+                className={`scroll-mt-32 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center ${
+                  isReversed ? 'lg:flex-row-reverse' : ''
+                }`}
+              >
+                {/* Image Column with Left/Right Motion Interaction */}
+                <motion.div 
+                  initial={{ opacity: 0, x: isReversed ? 60 : -60 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: '-60px' }}
+                  transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+                  className={`lg:col-span-6 ${isReversed ? 'lg:order-2' : 'lg:order-1'}`}
                 >
-                  {/* Image Column with Hover Interaction */}
-                  <div className={`lg:col-span-6 ${isReversed ? 'lg:order-2' : 'lg:order-1'}`}>
-                    <div 
-                      onClick={() => setSelectedServiceModal(srv)}
-                      className="group relative cursor-pointer rounded-3xl overflow-hidden aspect-[16/11] bg-black/5 shadow-xl border border-[#e3e3de]"
-                    >
-                      <img 
-                        src={srv.image} 
-                        alt={srv.title} 
-                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
-                      
-                      {/* Floating Badge */}
-                      <div className="absolute top-5 left-5 right-5 flex items-center justify-between pointer-events-none">
-                        <span className="px-3.5 py-1.5 rounded-full text-[11px] font-sans font-medium uppercase tracking-wider bg-white/90 backdrop-blur-md text-[#141517] shadow-sm">
-                          {srv.title}
-                        </span>
-                        <span className="font-sans text-sm text-white/90 font-medium">
-                          {srv.num}
-                        </span>
-                      </div>
-
-                      {/* Hover action prompt */}
-                      <div className="absolute bottom-5 right-5 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-                        <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#141517] text-white text-xs uppercase tracking-wider font-semibold shadow-md">
-                          <span>Quick Preview</span>
-                          <HiArrowNarrowRight className="w-3.5 h-3.5" />
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Text & Specs Column */}
-                  <div className={`lg:col-span-6 ${isReversed ? 'lg:order-1' : 'lg:order-2'} space-y-6`}>
-                    <div className="flex items-center gap-3">
-                      <span className="font-sans text-3xl sm:text-4xl text-[#ff4b18] font-light">
+                  <div 
+                    onClick={() => setSelectedServiceModal(srv)}
+                    className="group relative cursor-pointer rounded-3xl overflow-hidden aspect-[16/11] bg-black/5 shadow-xl border border-[#e3e3de]"
+                  >
+                    <img 
+                      src={srv.image} 
+                      alt={srv.title} 
+                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+                    
+                    {/* Floating Badge */}
+                    <div className="absolute top-5 left-5 right-5 flex items-center justify-between pointer-events-none">
+                      <span className="px-3.5 py-1.5 rounded-full text-[11px] font-sans font-medium uppercase tracking-wider bg-white/90 backdrop-blur-md text-[#141517] shadow-sm">
+                        {srv.title}
+                      </span>
+                      <span className="font-sans text-sm text-white/90 font-medium">
                         {srv.num}
                       </span>
-                      <span className="w-12 h-[1px] bg-black/10" />
-                      <span className="text-xs uppercase tracking-widest text-[#777] font-medium font-sans">
-                        Turnkey Timber Architecture
+                    </div>
+
+                    {/* Hover action prompt */}
+                    <div className="absolute bottom-5 right-5 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                      <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#141517] text-white text-xs uppercase tracking-wider font-semibold shadow-md">
+                        <span>Quick Preview</span>
+                        <HiArrowNarrowRight className="w-3.5 h-3.5" />
                       </span>
-                    </div>
-
-                    <h3 className="font-sans text-2xl sm:text-3xl md:text-4xl text-[#141517] font-medium tracking-tight">
-                      {srv.title}
-                    </h3>
-
-                    <p className="font-sans text-[#555] text-base font-light leading-relaxed">
-                      {srv.description}
-                    </p>
-
-                    {/* Specification Grid */}
-                    <div className="grid grid-cols-2 gap-4 py-4 border-y border-black/10 text-xs">
-                      <div>
-                        <span className="text-[#888] uppercase tracking-wider block text-[10px] font-semibold mb-1">
-                          Timeline
-                        </span>
-                        <span className="font-medium text-[#141517]">{specs.leadTime}</span>
-                      </div>
-                      <div>
-                        <span className="text-[#888] uppercase tracking-wider block text-[10px] font-semibold mb-1">
-                          Warranty
-                        </span>
-                        <span className="font-medium text-[#141517]">{specs.warranty}</span>
-                      </div>
-                      <div className="col-span-2">
-                        <span className="text-[#888] uppercase tracking-wider block text-[10px] font-semibold mb-1">
-                          Wood Species &amp; Construction
-                        </span>
-                        <span className="font-medium text-[#141517]">{specs.woodSpecies} &middot; {specs.construction}</span>
-                      </div>
-                    </div>
-
-                    {/* Deliverables Checklist */}
-                    <div className="space-y-2">
-                      <span className="text-[11px] uppercase tracking-wider font-semibold text-[#141517] block mb-2">
-                        Key Inclusions:
-                      </span>
-                      {specs.deliverables.map((item, idx) => (
-                        <div key={idx} className="flex items-start gap-2.5 text-xs text-[#555]">
-                          <HiOutlineCheck className="w-4 h-4 text-accent-terracotta shrink-0 mt-0.5" />
-                          <span>{item}</span>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div className="flex items-center gap-3 pt-4">
-                      <CTAButton to="/contact" variant="dark">
-                        Enquire for {srv.title}
-                      </CTAButton>
-                      <button
-                        type="button"
-                        onClick={() => setSelectedServiceModal(srv)}
-                        className="inline-flex items-center gap-1.5 px-5 py-3 rounded-full border border-[#e3e3de] hover:border-[#141517] text-xs uppercase tracking-wider font-semibold text-[#141517] shadow-sm transition-all"
-                      >
-                        <HiOutlineInformationCircle className="w-4 h-4 text-[#888]" />
-                        <span>Quick Overview</span>
-                      </button>
                     </div>
                   </div>
-                </div>
-              </AnimatedSection>
+                </motion.div>
+
+                {/* Text & Specs Column with Opposing Left/Right Motion Interaction */}
+                <motion.div 
+                  initial={{ opacity: 0, x: isReversed ? -60 : 60 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: '-60px' }}
+                  transition={{ duration: 0.85, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+                  className={`lg:col-span-6 ${isReversed ? 'lg:order-1' : 'lg:order-2'} space-y-6`}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="font-sans text-3xl sm:text-4xl text-[#ff4b18] font-light">
+                      {srv.num}
+                    </span>
+                    <span className="w-12 h-[1px] bg-black/10" />
+                    <span className="text-xs uppercase tracking-widest text-[#777] font-medium font-sans">
+                      Turnkey Timber Architecture
+                    </span>
+                  </div>
+
+                  <h3 className="font-sans text-2xl sm:text-3xl md:text-4xl text-[#141517] font-medium tracking-tight">
+                    {srv.title}
+                  </h3>
+
+                  <p className="font-sans text-[#555] text-base font-light leading-relaxed">
+                    {srv.description}
+                  </p>
+
+                  {/* Specification Grid */}
+                  <div className="grid grid-cols-2 gap-4 py-4 border-y border-black/10 text-xs">
+                    <div>
+                      <span className="text-[#888] uppercase tracking-wider block text-[10px] font-semibold mb-1">
+                        Timeline
+                      </span>
+                      <span className="font-medium text-[#141517]">{specs.leadTime}</span>
+                    </div>
+                    <div>
+                      <span className="text-[#888] uppercase tracking-wider block text-[10px] font-semibold mb-1">
+                        Warranty
+                      </span>
+                      <span className="font-medium text-[#141517]">{specs.warranty}</span>
+                    </div>
+                    <div className="col-span-2">
+                      <span className="text-[#888] uppercase tracking-wider block text-[10px] font-semibold mb-1">
+                        Wood Species &amp; Construction
+                      </span>
+                      <span className="font-medium text-[#141517]">{specs.woodSpecies} &middot; {specs.construction}</span>
+                    </div>
+                  </div>
+
+                  {/* Deliverables Checklist */}
+                  <div className="space-y-2">
+                    <span className="text-[11px] uppercase tracking-wider font-semibold text-[#141517] block mb-2">
+                      Key Inclusions:
+                    </span>
+                    {specs.deliverables.map((item, idx) => (
+                      <div key={idx} className="flex items-start gap-2.5 text-xs text-[#555]">
+                        <HiOutlineCheck className="w-4 h-4 text-accent-terracotta shrink-0 mt-0.5" />
+                        <span>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex items-center gap-3 pt-4">
+                    <CTAButton to="/contact" variant="dark">
+                      Enquire for {srv.title}
+                    </CTAButton>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedServiceModal(srv)}
+                      className="inline-flex items-center gap-1.5 px-5 py-3 rounded-full border border-[#e3e3de] hover:border-[#141517] text-xs uppercase tracking-wider font-semibold text-[#141517] shadow-sm transition-all"
+                    >
+                      <HiOutlineInformationCircle className="w-4 h-4 text-[#888]" />
+                      <span>Quick Overview</span>
+                    </button>
+                  </div>
+                </motion.div>
+              </div>
             );
           })}
         </div>
