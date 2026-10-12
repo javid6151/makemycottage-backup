@@ -73,6 +73,15 @@ const DEFAULT_ROW_2 = [
   }
 ];
 
+const AVATAR_FALLBACKS = [
+  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80',
+  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80',
+  'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&q=80',
+  'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80',
+  'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&q=80',
+  'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&q=80',
+];
+
 const QuoteIcon = () => (
   <svg
     className="w-7 h-7 sm:w-8 sm:h-8 text-stone-300/80 shrink-0 select-none"
@@ -101,8 +110,11 @@ const TestimonialCard = ({ item }) => {
           <img
             src={item.avatar}
             alt={item.author}
-            className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl object-cover border border-stone-200 shrink-0"
+            className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl object-cover border border-stone-200 shrink-0 bg-stone-100"
             loading="lazy"
+            onError={(e) => {
+              e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(item.author || 'User')}&background=141517&color=ffffff&size=128`;
+            }}
           />
           <div>
             <h4 className="text-xs sm:text-sm font-semibold text-[#141517] leading-tight">
@@ -136,7 +148,7 @@ const TestimonialsSection = () => {
             quote: t.quote,
             author: t.customerName,
             role: t.location || 'Homeowner',
-            avatar: `https://images.unsplash.com/photo-${1500000000000 + (idx * 1000000)}?w=200&q=80`
+            avatar: t.avatar || AVATAR_FALLBACKS[idx % AVATAR_FALLBACKS.length]
           }));
           const mid = Math.ceil(formatted.length / 2);
           setRow1([...formatted.slice(0, mid), ...DEFAULT_ROW_1]);
@@ -152,23 +164,26 @@ const TestimonialsSection = () => {
   return (
     <section className="py-20 sm:py-28 w-full flex justify-center px-1 sm:px-2 md:px-4">
       {/* Container spanning 97% width of screen matching screenshot */}
-      <div className="w-[97%] max-w-[1900px] relative rounded-3xl sm:rounded-[44px] overflow-hidden pt-16 sm:pt-24 pb-16 sm:pb-24 shadow-2xl border border-white/20 bg-[#1d5fa7]">
+      <div className="w-[97%] max-w-[1900px] relative rounded-3xl sm:rounded-[44px] overflow-hidden pt-16 sm:pt-24 pb-16 sm:pb-24 shadow-2xl border border-white/20 bg-[#14477e]">
         
-        {/* Animated WebGL CloudShader background with vibrant blue sky and fluffy clouds matching screenshot */}
+        {/* Animated WebGL CloudShader background with vibrant blue sky and fluffy clouds */}
         <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden">
           <CloudShader
             className="w-full h-full"
-            speed={1.0}
-            count={4}
+            speed={0.7}
+            count={3}
             cloudColor="#ffffff"
-            skyTopColor="#185698"
-            skyBottomColor="#58a3ea"
+            skyTopColor="#0f3b6c"
+            skyBottomColor="#3b82d4"
           />
         </div>
 
+        {/* Deep sky contrast overlay protecting the header text readability */}
+        <div className="absolute top-0 inset-x-0 h-96 bg-gradient-to-b from-[#082245]/90 via-[#0d3460]/60 to-transparent pointer-events-none z-[5]" />
+
         {/* Soft edge fades for smooth entering/exiting cards */}
-        <div className="absolute top-0 bottom-0 left-0 w-16 sm:w-32 bg-gradient-to-r from-[#185698]/80 to-transparent pointer-events-none z-20" />
-        <div className="absolute top-0 bottom-0 right-0 w-16 sm:w-32 bg-gradient-to-l from-[#185698]/80 to-transparent pointer-events-none z-20" />
+        <div className="absolute top-0 bottom-0 left-0 w-16 sm:w-32 bg-gradient-to-r from-[#082245]/80 via-[#082245]/30 to-transparent pointer-events-none z-20" />
+        <div className="absolute top-0 bottom-0 right-0 w-16 sm:w-32 bg-gradient-to-l from-[#082245]/80 via-[#082245]/30 to-transparent pointer-events-none z-20" />
 
         {/* Header: Exact replica with high-contrast text against sky */}
         <div className="relative z-10 text-center max-w-3xl mx-auto px-4 mb-12 sm:mb-16">
@@ -177,11 +192,11 @@ const TestimonialsSection = () => {
             <span>TESTIMONIALS</span>
           </div>
 
-          <h2 className="font-heading font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white font-normal tracking-tight leading-[1.05] mb-5 drop-shadow-[0_3px_16px_rgba(10,30,65,0.7)]">
+          <h2 className="font-heading font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white font-normal tracking-tight leading-[1.05] mb-5 drop-shadow-[0_4px_24px_rgba(2,10,25,0.85)]">
             What Our Clients<br />Say About Us
           </h2>
 
-          <p className="text-sm sm:text-base text-white font-medium leading-relaxed max-w-xl mx-auto drop-shadow-[0_2px_10px_rgba(10,30,65,0.65)]">
+          <p className="text-sm sm:text-base text-white/95 font-medium leading-relaxed max-w-xl mx-auto drop-shadow-[0_2px_12px_rgba(2,10,25,0.75)]">
             Nothing speaks louder than the experiences of those we’ve had the privilege of designing for. Here’s what they have to say.
           </p>
         </div>

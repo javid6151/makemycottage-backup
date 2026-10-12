@@ -13,6 +13,7 @@ import ScrollRevealText from '../components/common/ScrollRevealText';
 import ScrollTimeline from '../components/common/ScrollTimeline';
 import ServicesTextRotate from '../components/common/ServicesTextRotate';
 import TestimonialsSection from '../components/common/TestimonialsSection';
+import CurvedRibbonShowcase from '../components/common/CurvedRibbonShowcase';
 import FAQSection from '../components/common/FAQSection';
 import { 
   BUSINESS_INFO, 
@@ -512,6 +513,10 @@ const HomePage = () => {
       ========================================================================= */}
       <TestimonialsSection />
 
+      {/* =========================================================================
+          10 — 3D CURVED RIBBON SHOWCASE (Exact RBP Imageworks Sinusoidal Card Stream)
+      ========================================================================= */}
+      <CurvedRibbonShowcase />
 
       {/* =========================================================================
           11 — FAQ SECTION (Got Questions? We Have Answers)
