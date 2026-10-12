@@ -118,10 +118,10 @@ const ServicesPage = () => {
       <section className="max-w-7xl mx-auto px-6 md:px-12 mb-32">
         <div className="mb-16">
           <SectionLabel text="FULL PORTFOLIO BREAKDOWN" />
-          <h2 className="font-heading text-4xl sm:text-6xl text-[#141517] uppercase leading-[0.95] mt-4 mb-4">
-            Architectural Specifications.
+          <h2 className="font-sans text-3xl sm:text-5xl md:text-6xl text-[#141517] font-normal leading-[1.1] tracking-tight mt-4 mb-4">
+            Architectural Specifications
           </h2>
-          <p className="text-[#666] font-light max-w-xl text-base">
+          <p className="font-sans text-base sm:text-lg text-[#555] font-light leading-relaxed max-w-2xl">
             Detailed engineering parameters, wood species, lead times, and turnkey handover deliverables for each building category.
           </p>
         </div>
@@ -157,7 +157,7 @@ const ServicesPage = () => {
                         <span className="px-3.5 py-1.5 rounded-full text-[11px] font-sans font-medium uppercase tracking-wider bg-white/90 backdrop-blur-md text-[#141517] shadow-sm">
                           {srv.title}
                         </span>
-                        <span className="font-heading text-lg text-white font-light">
+                        <span className="font-sans text-sm text-white/90 font-medium">
                           {srv.num}
                         </span>
                       </div>
@@ -175,20 +175,20 @@ const ServicesPage = () => {
                   {/* Text & Specs Column */}
                   <div className={`lg:col-span-6 ${isReversed ? 'lg:order-1' : 'lg:order-2'} space-y-6`}>
                     <div className="flex items-center gap-3">
-                      <span className="font-heading text-4xl text-accent-terracotta font-medium">
+                      <span className="font-sans text-3xl sm:text-4xl text-[#ff4b18] font-light">
                         {srv.num}
                       </span>
                       <span className="w-12 h-[1px] bg-black/10" />
-                      <span className="text-xs uppercase tracking-widest text-black/50 font-semibold">
+                      <span className="text-xs uppercase tracking-widest text-[#777] font-medium font-sans">
                         Turnkey Timber Architecture
                       </span>
                     </div>
 
-                    <h3 className="font-heading text-3xl sm:text-4xl text-[#141517] uppercase leading-tight">
+                    <h3 className="font-sans text-2xl sm:text-3xl md:text-4xl text-[#141517] font-medium tracking-tight">
                       {srv.title}
                     </h3>
 
-                    <p className="font-sans text-black/75 text-base font-light leading-relaxed">
+                    <p className="font-sans text-[#555] text-base font-light leading-relaxed">
                       {srv.description}
                     </p>
 
@@ -277,16 +277,16 @@ const ServicesPage = () => {
               </button>
 
               <div className="flex items-center gap-3 mb-4">
-                <span className="font-heading text-2xl text-accent-terracotta font-medium">
+                <span className="font-sans text-2xl text-[#ff4b18] font-light">
                   {selectedServiceModal.num}
                 </span>
                 <span className="w-8 h-[1px] bg-black/15" />
-                <span className="text-xs uppercase tracking-widest text-[#888]">
+                <span className="text-xs uppercase tracking-widest text-[#888] font-medium font-sans">
                   Turnkey Architectural Service
                 </span>
               </div>
 
-              <h3 className="font-heading text-3xl sm:text-4xl text-[#141517] uppercase mb-4">
+              <h3 className="font-sans text-2xl sm:text-3xl text-[#141517] font-medium tracking-tight mb-4">
                 {selectedServiceModal.title}
               </h3>
 
@@ -345,10 +345,10 @@ const ServicesPage = () => {
       <section className="bg-[#141517] text-white py-24 md:py-36 px-6 md:px-12 text-center">
         <AnimatedSection className="max-w-3xl mx-auto flex flex-col items-center">
           <SectionLabel text="GET STARTED" />
-          <h2 className="font-heading text-4xl sm:text-6xl uppercase leading-[1] mt-4 mb-8">
+          <h2 className="font-sans text-3xl sm:text-5xl md:text-6xl text-white font-normal leading-[1.1] tracking-tight mt-4 mb-8">
             Let&apos;s build your bespoke wooden space.
           </h2>
-          <p className="text-white/70 font-light text-base md:text-lg mb-10 max-w-xl">
+          <p className="font-sans text-white/70 font-light text-base md:text-lg mb-10 max-w-xl">
             Contact Make My Cottage Infra Pvt. Ltd. today for architectural consultation, 3D renders, and turnkey site feasibility.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
