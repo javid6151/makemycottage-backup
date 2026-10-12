@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
@@ -169,29 +169,24 @@ const AboutPage = () => {
   });
 
   // Background blur and dimming over the panoramic foundation image
-  const bgBlur = useTransform(stackProgress, [0, 0.2, 0.85], [4, 12, 16]);
-  const bgDim = useTransform(stackProgress, [0, 0.2], [0.1, 0.3]);
+  const bgBlur = useTransform(stackProgress, [0, 0.25, 0.85], [4, 12, 16]);
+  const bgDim = useTransform(stackProgress, [0, 0.25], [0.1, 0.35]);
 
   // Card 1 ("Future Expectation")
-  // ALWAYS VISIBLE at progress 0, stays centered from 0 to 0.35
-  // Scales down and fades out between 0.35 and 0.55 as Card 2 arrives
-  const card1Y = useTransform(stackProgress, [0, 0.35, 0.55], ['0px', '0px', '-25px']);
-  const card1Scale = useTransform(stackProgress, [0, 0.35, 0.55], [1, 1, 0.92]);
-  const card1Opacity = useTransform(stackProgress, [0, 0.38, 0.55], [1, 1, 0]);
+  // 100% centered and visible from progress 0 to 0.40
+  // Between 0.40 and 0.52: scales down slightly (1 -> 0.9) and fades out as Card 2 stacks over it
+  const card1Y = useTransform(stackProgress, [0, 0.40, 0.52], [0, 0, -30]);
+  const card1Scale = useTransform(stackProgress, [0, 0.40, 0.52], [1, 1, 0.9]);
+  const card1Opacity = useTransform(stackProgress, [0, 0.40, 0.50], [1, 1, 0]);
 
   // Card 2 ("Working standard")
-  // Hidden below from 0 to 0.35, rises smoothly between 0.35 and 0.55
-  // Stays in center from 0.55 to 0.85
-  // Scrolls up out of view between 0.85 and 1.0
-  const card2Y = useTransform(stackProgress, [0, 0.35, 0.55, 0.85, 1], ['120%', '120%', '0%', '0%', '-40%']);
-  const card2Opacity = useTransform(stackProgress, [0, 0.35, 0.52, 0.88, 1], [0, 0, 1, 1, 0]);
-  const card2Scale = useTransform(stackProgress, [0.35, 0.55], [0.94, 1]);
-
-  // Smooth springs for buttery smooth, natural scroll response
-  const smoothCard1Y = useSpring(card1Y, { damping: 28, stiffness: 90 });
-  const smoothCard1Scale = useSpring(card1Scale, { damping: 28, stiffness: 90 });
-  const smoothCard2Y = useSpring(card2Y, { damping: 28, stiffness: 90 });
-  const smoothCard2Scale = useSpring(card2Scale, { damping: 28, stiffness: 90 });
+  // Strictly off-screen below (y: 1000px) and invisible (opacity: 0) from 0 to 0.40
+  // Between 0.40 and 0.52: slides up cleanly into center (y: 0, opacity: 1, scale: 1)
+  // Stays centered from 0.52 to 0.85
+  // Scrolls out of view between 0.85 and 1.0 (y: -120px, opacity: 0)
+  const card2Y = useTransform(stackProgress, [0, 0.40, 0.52, 0.85, 1], [1000, 1000, 0, 0, -120]);
+  const card2Opacity = useTransform(stackProgress, [0, 0.40, 0.48, 0.88, 1], [0, 0, 1, 1, 0]);
+  const card2Scale = useTransform(stackProgress, [0.40, 0.52], [0.92, 1]);
 
   return (
     <div className="bg-[#FAF7F0] text-[#1B1915] min-h-screen font-sans selection:bg-[#FAE1A6] selection:text-[#271E07]">
@@ -249,8 +244,7 @@ const AboutPage = () => {
       {/* ========================================================================= */}
       {/* 2. STICKY BLURRED HERO BANNER + STACKING FEATURE CARDS (Screenshot 1 & 2) */}
       {/* ========================================================================= */}
-      {/* Container height provides ample scroll distance for smooth two-card progression */}
-      <section ref={stackedSectionRef} className="relative h-[250vh] w-full">
+      <section ref={stackedSectionRef} className="relative h-[240vh] w-full">
         {/* Unified Sticky Viewport (Both background image and foreground cards share this container) */}
         <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center px-4 sm:px-8">
           {/* Panoramic Foundation Background Image */}
@@ -280,8 +274,8 @@ const AboutPage = () => {
             {/* ---------------- CARD 1: Future Expectation ---------------- */}
             <motion.div
               style={{
-                y: smoothCard1Y,
-                scale: smoothCard1Scale,
+                y: card1Y,
+                scale: card1Scale,
                 opacity: card1Opacity
               }}
               className="absolute w-full bg-[#F9F0DA] border border-[#E0D5BD] rounded-3xl p-6 sm:p-10 lg:p-12 shadow-2xl"
@@ -316,11 +310,11 @@ const AboutPage = () => {
             {/* ---------------- CARD 2: Working standard ---------------- */}
             <motion.div
               style={{
-                y: smoothCard2Y,
-                scale: smoothCard2Scale,
+                y: card2Y,
+                scale: card2Scale,
                 opacity: card2Opacity
               }}
-              className="absolute w-full bg-[#F9F0DA] border border-[#E0D5BD] rounded-3xl p-6 sm:p-10 lg:p-12 shadow-2xl"
+              className="absolute w-full bg-[#F9F0DA] border border-[#E0D5BD] rounded-3xl p-6 sm:p-10 lg:p-12 shadow-2xl z-20"
             >
               <div className="flex flex-col md:flex-row items-center gap-6 sm:gap-8 lg:gap-10">
                 {/* Left Image: Timber craftsmanship & workers */}
