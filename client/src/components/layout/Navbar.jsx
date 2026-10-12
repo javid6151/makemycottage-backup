@@ -46,8 +46,12 @@ const Navbar = () => {
     }
   }, [location]);
 
-  const isHome = location.pathname === '/';
-  const isDarkNav = isHome || isScrolled;
+  const isDarkHeroPage = location.pathname === '/' || location.pathname === '/projects';
+  const isDarkTheme = isDarkHeroPage;
+
+  if (location.pathname === '/services') {
+    return null;
+  }
 
   return (
     <>
@@ -186,8 +190,6 @@ const Navbar = () => {
               </button>
             </div>
           </header>
-        );
-      })()}
 
       {/* Mobile Drawer Overlay */}
       <div
