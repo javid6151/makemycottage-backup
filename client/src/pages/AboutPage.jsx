@@ -169,31 +169,29 @@ const AboutPage = () => {
   });
 
   // Background blur and dimming over the panoramic foundation image
-  const bgBlur = useTransform(stackProgress, [0, 0.15, 0.85], [0, 10, 14]);
-  const bgDim = useTransform(stackProgress, [0, 0.15], [0, 0.25]);
+  const bgBlur = useTransform(stackProgress, [0, 0.2, 0.85], [4, 12, 16]);
+  const bgDim = useTransform(stackProgress, [0, 0.2], [0.1, 0.3]);
 
-  // Card 1 ("Future Expectation") Scroll Animation
-  // - Enters from below between 0.0 and 0.15
-  // - Remains centered and fully readable between 0.15 and 0.45
-  // - As Card 2 rises (0.45 to 0.60), Card 1 subtly scales down to 0.92 and dims out
-  const card1Y = useTransform(stackProgress, [0, 0.15, 0.45, 0.65], ['80vh', '0vh', '0vh', '-4vh']);
-  const card1Scale = useTransform(stackProgress, [0.45, 0.65], [1, 0.92]);
-  const card1Opacity = useTransform(stackProgress, [0, 0.12, 0.52, 0.68], [0, 1, 1, 0]);
+  // Card 1 ("Future Expectation")
+  // ALWAYS VISIBLE at progress 0, stays centered from 0 to 0.35
+  // Scales down and fades out between 0.35 and 0.55 as Card 2 arrives
+  const card1Y = useTransform(stackProgress, [0, 0.35, 0.55], ['0px', '0px', '-25px']);
+  const card1Scale = useTransform(stackProgress, [0, 0.35, 0.55], [1, 1, 0.92]);
+  const card1Opacity = useTransform(stackProgress, [0, 0.38, 0.55], [1, 1, 0]);
 
-  // Card 2 ("Working standard") Scroll Animation
-  // - Stays below viewport between 0.0 and 0.45
-  // - Rises up smoothly between 0.45 and 0.60 directly into the center
-  // - Remains centered and fully readable between 0.60 and 0.85
-  // - Scrolls up naturally at the end (0.85 to 1.0)
-  const card2Y = useTransform(stackProgress, [0, 0.45, 0.62, 0.88, 1], ['100vh', '100vh', '0vh', '0vh', '-10vh']);
-  const card2Opacity = useTransform(stackProgress, [0.45, 0.58], [0, 1]);
-  const card2Scale = useTransform(stackProgress, [0.45, 0.62], [0.94, 1]);
+  // Card 2 ("Working standard")
+  // Hidden below from 0 to 0.35, rises smoothly between 0.35 and 0.55
+  // Stays in center from 0.55 to 0.85
+  // Scrolls up out of view between 0.85 and 1.0
+  const card2Y = useTransform(stackProgress, [0, 0.35, 0.55, 0.85, 1], ['120%', '120%', '0%', '0%', '-40%']);
+  const card2Opacity = useTransform(stackProgress, [0, 0.35, 0.52, 0.88, 1], [0, 0, 1, 1, 0]);
+  const card2Scale = useTransform(stackProgress, [0.35, 0.55], [0.94, 1]);
 
-  // Smooth springs for fluid, responsive scroll response
-  const smoothCard1Y = useSpring(card1Y, { damping: 30, stiffness: 100 });
-  const smoothCard1Scale = useSpring(card1Scale, { damping: 30, stiffness: 100 });
-  const smoothCard2Y = useSpring(card2Y, { damping: 30, stiffness: 100 });
-  const smoothCard2Scale = useSpring(card2Scale, { damping: 30, stiffness: 100 });
+  // Smooth springs for buttery smooth, natural scroll response
+  const smoothCard1Y = useSpring(card1Y, { damping: 28, stiffness: 90 });
+  const smoothCard1Scale = useSpring(card1Scale, { damping: 28, stiffness: 90 });
+  const smoothCard2Y = useSpring(card2Y, { damping: 28, stiffness: 90 });
+  const smoothCard2Scale = useSpring(card2Scale, { damping: 28, stiffness: 90 });
 
   return (
     <div className="bg-[#FAF7F0] text-[#1B1915] min-h-screen font-sans selection:bg-[#FAE1A6] selection:text-[#271E07]">
@@ -252,32 +250,32 @@ const AboutPage = () => {
       {/* 2. STICKY BLURRED HERO BANNER + STACKING FEATURE CARDS (Screenshot 1 & 2) */}
       {/* ========================================================================= */}
       {/* Container height provides ample scroll distance for smooth two-card progression */}
-      <section ref={stackedSectionRef} className="relative h-[260vh] w-full">
-        {/* Sticky Background Panoramic Foundation Banner */}
-        <div className="sticky top-0 h-screen w-full overflow-hidden z-0">
+      <section ref={stackedSectionRef} className="relative h-[250vh] w-full">
+        {/* Unified Sticky Viewport (Both background image and foreground cards share this container) */}
+        <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center px-4 sm:px-8">
+          {/* Panoramic Foundation Background Image */}
           <img
             src="/images/about/hero-foundation.jpg"
             onError={(e) => {
               e.currentTarget.src = "https://framerusercontent.com/images/J9MqEXKjA7McbiNo1TApI5zUMQQ.jpg";
             }}
             alt="Make My Cottage construction foundation execution"
-            className="w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover z-0"
             loading="eager"
           />
-          {/* Animated Backdrop Blur & Tint as you scroll down */}
+
+          {/* Dynamic Backdrop Blur & Tint */}
           <motion.div
             style={{
               backdropFilter: useTransform(bgBlur, b => `blur(${b}px)`),
               WebkitBackdropFilter: useTransform(bgBlur, b => `blur(${b}px)`),
               backgroundColor: useTransform(bgDim, d => `rgba(20, 18, 14, ${d})`)
             }}
-            className="absolute inset-0 pointer-events-none transition-colors"
+            className="absolute inset-0 z-[1] pointer-events-none transition-colors"
           />
-        </div>
 
-        {/* Sticky Foreground Cards Viewport */}
-        <div className="sticky top-0 h-screen w-full flex items-center justify-center px-4 sm:px-8 pointer-events-none z-10 -mt-[100vh]">
-          <div className="relative w-full max-w-4xl min-h-[420px] pointer-events-auto flex items-center justify-center">
+          {/* Center Card Container */}
+          <div className="relative z-10 w-full max-w-4xl flex items-center justify-center min-h-[420px]">
 
             {/* ---------------- CARD 1: Future Expectation ---------------- */}
             <motion.div
@@ -289,7 +287,7 @@ const AboutPage = () => {
               className="absolute w-full bg-[#F9F0DA] border border-[#E0D5BD] rounded-3xl p-6 sm:p-10 lg:p-12 shadow-2xl"
             >
               <div className="flex flex-col md:flex-row items-center gap-6 sm:gap-8 lg:gap-10">
-                {/* Left Image: Tower crane at golden hour */}
+                {/* Left Image: Construction workers on building site */}
                 <div className="w-full md:w-[260px] lg:w-[280px] h-[220px] sm:h-[260px] md:h-[290px] shrink-0 rounded-2xl overflow-hidden shadow-sm bg-[#E8DFC8]">
                   <img
                     src="/images/about/future-expectation.png"
