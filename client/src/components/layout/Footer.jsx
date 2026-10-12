@@ -127,9 +127,9 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <a href="/#process" className="hover:text-white transition-colors duration-200 inline-block">
-                  Process
-                </a>
+                <Link to="/about" className="hover:text-white transition-colors duration-200 inline-block">
+                  About Us
+                </Link>
               </li>
               <li>
                 <Link to="/contact" className="hover:text-white transition-colors duration-200 inline-block">
