@@ -404,12 +404,11 @@
   z-index: 1;
 }
 
-/* When near and wood falls, the base marker glows warm */
+/* When near and wood falls, hide base marker so it doesn't show through the wood */
 .timeline-wood-node.is-active .wood-base-marker {
-  border-color: #ff4b18;
-  background-color: #ff4b18;
-  box-shadow: 0 0 12px rgba(255, 75, 24, 0.6);
-  transform: scale(0.9);
+  opacity: 0;
+  transform: scale(0.4);
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
 /* =========================================================================
@@ -418,7 +417,7 @@
 
 .fallen-wood-wrap {
   position: absolute;
-  inset: -6px;
+  inset: -12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -431,7 +430,7 @@
 
 @media (min-width: 768px) {
   .fallen-wood-wrap {
-    inset: -8px;
+    inset: -16px;
   }
 }
 
@@ -441,8 +440,7 @@
   object-fit: contain;
   user-select: none;
   -webkit-user-drag: none;
-  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.28))
-          drop-shadow(0 2px 5px rgba(255, 75, 24, 0.35));
+  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.24));
 }
 
 /* ACTIVE STATE: The wood falls from the lorry, bounces, then morphs into cottage */
@@ -455,25 +453,26 @@
   0% {
     opacity: 0;
     transform: translateY(-55px) scale(1.45) rotate(-15deg);
-    filter: drop-shadow(0 26px 20px rgba(0, 0, 0, 0.4));
+    filter: drop-shadow(0 26px 20px rgba(0, 0, 0, 0.35));
   }
   48% {
     opacity: 1;
     transform: translateY(4px) scale(1.12, 0.88) rotate(3deg);
-    filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.32));
+    filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.26));
   }
   68% {
+    opacity: 1;
     transform: translateY(-5px) scale(0.95, 1.05) rotate(-2deg);
-    filter: drop-shadow(0 12px 14px rgba(0, 0, 0, 0.3));
+    filter: drop-shadow(0 12px 14px rgba(0, 0, 0, 0.26));
   }
   84% {
+    opacity: 1;
     transform: translateY(2px) scale(1.03, 0.98) rotate(1deg);
   }
   100% {
     opacity: 1;
     transform: translateY(0) scale(1, 1) rotate(0deg);
-    filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.28))
-            drop-shadow(0 2px 5px rgba(255, 75, 24, 0.35));
+    filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.24));
   }
 }
 
@@ -485,7 +484,7 @@
   50% {
     opacity: 0.5;
     transform: translateY(-6px) scale(0.85) rotate(4deg);
-    filter: drop-shadow(0 0 10px rgba(255, 75, 24, 0.6));
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2));
   }
   100% {
     opacity: 0;
