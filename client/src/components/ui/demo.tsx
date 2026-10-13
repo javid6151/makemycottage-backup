@@ -3,7 +3,6 @@
 import React, { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
-import { TextRotate, TextRotateRef } from "@/components/ui/text-rotate"
 import { PROJECTS_DATA } from "@/utils/constants"
 
 export interface ProjectItem {
@@ -29,7 +28,6 @@ export interface ProjectItem {
 
 export function Preview() {
   const navigate = useNavigate()
-  const textRotateRef = useRef<TextRotateRef>(null)
   const sectionRef = useRef<HTMLDivElement>(null)
   const projects = PROJECTS_DATA.slice(0, 5)
   const [activeIndex, setActiveIndex] = useState(0)
@@ -42,7 +40,6 @@ export function Preview() {
     if (clampedIndex === activeIndexRef.current) return
     activeIndexRef.current = clampedIndex
     setActiveIndex(clampedIndex)
-    textRotateRef.current?.jumpTo(clampedIndex)
 
     if (sectionRef.current) {
       const rect = sectionRef.current.getBoundingClientRect()
@@ -75,22 +72,20 @@ export function Preview() {
             if (activeIndexRef.current !== 0) {
               activeIndexRef.current = 0
               setActiveIndex(0)
-              textRotateRef.current?.jumpTo(0)
             }
             ticking = false
             return
           }
 
           const progress = Math.max(0, Math.min(1, currentScroll / totalScrollable))
-          const newIndex = Math.min(
-            projects.length - 1,
-            Math.floor(progress * projects.length)
+          const newIndex = Math.max(
+            0,
+            Math.min(projects.length - 1, Math.round(progress * (projects.length - 1)))
           )
 
           if (newIndex !== activeIndexRef.current) {
             activeIndexRef.current = newIndex
             setActiveIndex(newIndex)
-            textRotateRef.current?.jumpTo(newIndex)
           }
           ticking = false
         })
@@ -232,26 +227,23 @@ export function Preview() {
         {/* RIGHT COLUMN: Editorial Content, Title, Dynamic Description & Specs */}
         <div className="w-full md:w-1/2 h-[55vh] md:h-full flex flex-col justify-center px-6 sm:px-10 md:px-12 lg:px-16 xl:px-20 select-none overflow-y-auto md:overflow-visible">
           <div className="max-w-xl w-full py-4 md:py-0">
-            {/* Rotating Project Title */}
+            {/* Synchronized Project Title */}
             <div
-              className="cursor-pointer group flex flex-col items-start"
+              className="cursor-pointer group flex flex-col items-start min-h-[3rem] sm:min-h-[4.5rem]"
               onClick={() => navigate(`/projects/${currentProject.slug}`)}
             >
-              <TextRotate
-                ref={textRotateRef}
-                texts={projects.map((project) => project.name.toUpperCase())}
-                mainClassName="text-2xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-sans uppercase font-bold tracking-tight text-[#141517] leading-[1.05] group-hover:text-[#ff4b18] transition-colors"
-                splitLevelClassName="overflow-hidden pb-1 sm:pb-2"
-                staggerFrom={"first"}
-                animatePresenceMode="wait"
-                loop={false}
-                auto={false}
-                staggerDuration={0.005}
-                initial={{ opacity: 0, y: 35 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -35 }}
-                transition={{ type: "spring", duration: 0.5, bounce: 0 }}
-              />
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.h2
+                  key={currentProject.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -30 }}
+                  transition={{ type: "spring", duration: 0.45, bounce: 0 }}
+                  className="text-2xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-sans uppercase font-bold tracking-tight text-[#141517] leading-[1.05] group-hover:text-[#ff4b18] transition-colors pb-1 sm:pb-2"
+                >
+                  {currentProject.name.toUpperCase()}
+                </motion.h2>
+              </AnimatePresence>
 
               {/* Subtle metadata and view link */}
               <div className="mt-3 flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm text-[#777]">
