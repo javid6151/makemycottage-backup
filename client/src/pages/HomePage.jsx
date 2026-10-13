@@ -113,16 +113,7 @@ const HomePage = () => {
         {/* Centered Content Container */}
         <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center pt-24 pb-16 px-4">
           
-          {/* Eyebrow Pill (Exact from Screenshot: • YOUR VISION. OUR CRAFT.) */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-white text-xs uppercase tracking-[0.2em] font-medium mb-8 shadow-sm"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-            <span>YOUR VISION. OUR CRAFT.</span>
-          </motion.div>
+
 
           {/* Main Headline (Exact text and typography scale from Screenshot) */}
           <motion.h1
