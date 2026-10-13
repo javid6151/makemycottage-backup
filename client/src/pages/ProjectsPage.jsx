@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   MapPin, 
   ArrowRight,
   ArrowUpRight
 } from 'lucide-react';
 import { PROJECTS_DATA, BUSINESS_INFO } from '../utils/constants';
+import SlingButton from '../components/ui/SlingButton';
 
 // Minimal Vintage Timber Project Card Component
 const VintageProjectCard = ({ project, isExpanded, onMouseEnter, onMouseLeave }) => {
@@ -122,6 +123,7 @@ const VintageProjectCard = ({ project, isExpanded, onMouseEnter, onMouseLeave })
 };
 
 const ProjectsPage = () => {
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState('All Projects');
   const [activeCardId, setActiveCardId] = useState(null);
 
@@ -350,19 +352,40 @@ const ProjectsPage = () => {
             Every great space starts with a single conversation. Let's talk about your vision and bring it to life together.
           </p>
 
-          {/* Action Button: Signature White Pill with Brown Arrow Badge */}
-          <div className="flex items-center justify-center">
-            <Link
-              to="/contact"
-              className="group inline-flex items-center gap-4 pl-8 pr-2.5 py-2.5 rounded-full bg-white text-[#141517] hover:bg-white font-sans font-medium text-base tracking-normal transition-all duration-300 shadow-[0_12px_36px_rgba(0,0,0,0.35)] hover:shadow-[0_16px_45px_rgba(0,0,0,0.45)] hover:scale-105 active:scale-95"
-            >
-              <span className="font-semibold text-black tracking-tight">
+          {/* Action Button: Interactive SlingButton from React Bits */}
+          <div className="flex flex-col items-center justify-center gap-4">
+            <div className="inline-flex items-center gap-4 pl-7 sm:pl-8 pr-2.5 py-2.5 rounded-full bg-white text-[#141517] shadow-[0_16px_40px_rgba(0,0,0,0.35)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.45)] transition-all">
+              <button
+                type="button"
+                onClick={() => navigate('/contact')}
+                className="font-sans font-semibold text-black tracking-tight text-base sm:text-lg cursor-pointer bg-transparent border-0 p-0 hover:opacity-80 transition-opacity"
+              >
                 Let's Talk
-              </span>
-              <span className="w-12 h-12 rounded-full bg-[#855836] text-white flex items-center justify-center transition-transform duration-300 group-hover:translate-x-1 shadow-sm">
-                <ArrowRight className="w-5 h-5 text-white" />
-              </span>
-            </Link>
+              </button>
+              <SlingButton
+                onSend={() => navigate('/contact')}
+                padColor="#855836"
+                iconColor="#ffffff"
+                accentColor="#855836"
+                wellColor="#27272a"
+                bandColor="#855836"
+                size={52}
+                strokeWidth={3}
+                armAt={46}
+                maxPull={150}
+                launchSpeed={2600}
+                recoil={0.2}
+                flight={120}
+                particles={16}
+                spread={60}
+                axis="any"
+                tapSends={true}
+                ariaLabel="Let's Talk - Pull to send"
+              />
+            </div>
+            <p className="text-white/40 text-[11px] sm:text-xs uppercase tracking-[0.2em] font-medium select-none">
+              Press Enter, drag &amp; release, or tap to connect
+            </p>
           </div>
         </div>
       </section>
