@@ -30,6 +30,7 @@ export default {
         }
       },
       fontFamily: {
+        playfair: ['"Playfair Display"', 'Georgia', 'serif'],
         heading: ['"Gilda Display"', 'Cormorant Garamond', 'Georgia', 'serif'],
         serif: ['"Gilda Display"', 'Cormorant Garamond', 'Georgia', 'serif'],
         body: ['Inter', 'system-ui', 'sans-serif'],

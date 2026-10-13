@@ -47,9 +47,14 @@ const Navbar = () => {
   }, [location]);
 
   const isHomePage = location.pathname === '/';
-  // Only the top hero on Home page uses the dark transparent navbar.
+  const isGalleryPage = location.pathname === '/gallery';
+  // Only the top hero on Home and Gallery banner use the dark transparent navbar when unscrolled.
   // All other pages, including /projects, use the clean white background with black text.
-  const isDarkTheme = isHomePage && !isScrolled;
+  const isDarkTheme = (isHomePage || isGalleryPage) && !isScrolled;
+
+  if (location.pathname === '/services') {
+    return null;
+  }
 
   return (
     <>
