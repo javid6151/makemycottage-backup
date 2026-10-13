@@ -46,8 +46,14 @@ const Navbar = () => {
     }
   }, [location]);
 
-  const isDarkHeroPage = location.pathname === '/' || location.pathname === '/projects';
-  const isDarkTheme = isDarkHeroPage;
+  const isHomePage = location.pathname === '/';
+  const isGalleryPage = location.pathname === '/gallery';
+  const isProjectsHeroPage = location.pathname === '/projects';
+
+  // Over the top hero image on Home, Gallery, and Projects, use transparent navbar with white items.
+  // When scrolling down, it smoothly transitions to the white background with black text.
+  const isDarkHeroPage = isHomePage || isGalleryPage || isProjectsHeroPage;
+  const isDarkTheme = isDarkHeroPage && !isScrolled;
 
   if (location.pathname === '/services') {
     return null;
@@ -55,21 +61,13 @@ const Navbar = () => {
 
   return (
     <>
-      {(() => {
-        const isHomePage = location.pathname === '/';
-        const isGalleryPage = location.pathname === '/gallery';
-        const isDarkTheme = isHomePage || (isGalleryPage && !isScrolled);
-
-        return (
-          <header
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 sm:px-12 ${
-              isScrolled
-                ? isDarkTheme
-                  ? 'py-3.5 bg-black/85 backdrop-blur-xl border-b border-white/10 shadow-lg'
-                  : 'py-3.5 bg-white/90 backdrop-blur-xl border-b border-black/10 shadow-sm'
-                : 'py-5 sm:py-7 bg-transparent'
-            }`}
-          >
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out px-6 sm:px-12 ${
+          isDarkTheme
+            ? 'py-5 sm:py-7 bg-transparent'
+            : 'py-3.5 bg-white/95 backdrop-blur-xl border-b border-black/10 shadow-sm'
+        }`}
+      >
             <div className="max-w-7xl mx-auto flex items-center justify-between">
               
               {/* Logo with Brick / Cottage Icon */}
