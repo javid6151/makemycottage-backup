@@ -256,7 +256,7 @@ export function Preview() {
               {/* Subtle metadata and view link */}
               <div className="mt-3 flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm text-[#777]">
                 <span className="font-mono text-[10px] sm:text-[11px] tracking-wider text-[#999]">
-                  {currentProject.num} / 0{projects.length}
+                  {currentProject.num}
                 </span>
                 <span className="w-1 h-1 rounded-full bg-black/25" />
                 <span className="uppercase tracking-wider text-[10px] sm:text-[11px] font-medium text-[#666]">
