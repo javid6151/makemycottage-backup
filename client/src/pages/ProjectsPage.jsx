@@ -125,25 +125,21 @@ const ProjectsPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('All Projects');
   const [activeCardId, setActiveCardId] = useState(null);
 
-  // Responsive hero dimensions: base height and shrunk height
-  const [heroDims, setHeroDims] = useState(() => {
-    if (typeof window === 'undefined') return { base: 615, shrunk: 360 };
-    const w = window.innerWidth;
-    if (w < 640) return { base: 500, shrunk: 320 };
-    if (w < 1024) return { base: 560, shrunk: 340 };
-    return { base: 615, shrunk: 360 };
-  });
+  // Responsive hero dimensions: 88% of full screen (viewport height) for base height
+  const getHeroDims = () => {
+    if (typeof window === 'undefined') return { base: 780, shrunk: 360 };
+    const vh = window.innerHeight;
+    const base = Math.round(vh * 0.88);
+    // Keep shrunk height compact and proportional
+    const shrunk = Math.max(300, Math.min(380, Math.round(base * 0.45)));
+    return { base, shrunk };
+  };
+
+  const [heroDims, setHeroDims] = useState(getHeroDims);
 
   useEffect(() => {
     const handleResize = () => {
-      const w = window.innerWidth;
-      if (w < 640) {
-        setHeroDims({ base: 500, shrunk: 320 });
-      } else if (w < 1024) {
-        setHeroDims({ base: 560, shrunk: 340 });
-      } else {
-        setHeroDims({ base: 615, shrunk: 360 });
-      }
+      setHeroDims(getHeroDims());
     };
     window.addEventListener('resize', handleResize, { passive: true });
     return () => window.removeEventListener('resize', handleResize);
@@ -185,9 +181,9 @@ const ProjectsPage = () => {
       </Helmet>
 
       {/* =========================================================================
-          1. HERO SECTION (Classic Handcrafted Timber Cottage Hero with Scroll Animation)
+          1. HERO SECTION (Classic Handcrafted Timber Cottage Hero with Scroll Animation - 88vh Full Screen Scale)
       ========================================================================= */}
-      <section className="relative w-full max-w-[1440px] mx-auto pt-20 sm:pt-24 pb-3 sm:pb-4 md:pb-5 px-3 sm:px-4 md:px-5">
+      <section className="relative w-full max-w-[1440px] mx-auto p-3 sm:p-4 md:p-5">
         {/* Pinned Hero Track */}
         <div 
           className="relative w-full"
@@ -196,9 +192,9 @@ const ProjectsPage = () => {
           {/* Shrinking Hero Card (Sticky at top, bottom shrinks upward) */}
           <motion.div
             style={{ height: cardHeight }}
-            className="sticky top-20 sm:top-24 w-full rounded-t-[28px] sm:rounded-t-[32px] rounded-br-[28px] sm:rounded-br-[32px] rounded-bl-none overflow-hidden bg-[#1c1d21] flex flex-col justify-end shadow-sm"
+            className="sticky top-3 sm:top-4 md:top-5 w-full rounded-t-[28px] sm:rounded-t-[32px] rounded-br-[28px] sm:rounded-br-[32px] rounded-bl-none overflow-hidden bg-[#1c1d21] flex flex-col justify-end shadow-sm"
           >
-            {/* Background Architectural Photo (Constant base height so image remains fixed/constant) */}
+            {/* Background Architectural Photo (Constant base height so image remains fixed/constant at 88% full-screen) */}
             <div
               style={{ height: `${heroDims.base}px` }}
               className="absolute top-0 left-0 w-full overflow-hidden pointer-events-none"
@@ -215,8 +211,8 @@ const ProjectsPage = () => {
                   className="w-full h-full object-cover"
                   loading="eager"
                 />
-                {/* Multi-Stop Gradient Overlay: Dark at top for navbar legibility, dark at bottom for notch contrast */}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/15 to-black/60 pointer-events-none" />
+                {/* Multi-Stop Gradient Overlay: Dark at top for transparent navbar mixing, dark at bottom for notch contrast */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/15 to-black/60 pointer-events-none" />
               </motion.div>
             </div>
 

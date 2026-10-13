@@ -48,9 +48,12 @@ const Navbar = () => {
 
   const isHomePage = location.pathname === '/';
   const isGalleryPage = location.pathname === '/gallery';
-  // Only the top hero on Home and Gallery banner use the dark transparent navbar when unscrolled.
-  // All other pages, including /projects, use the clean white background with black text.
-  const isDarkTheme = (isHomePage || isGalleryPage) && !isScrolled;
+  const isProjectsHeroPage = location.pathname === '/projects';
+
+  // Over the top hero image on Home, Gallery, and Projects, use transparent navbar with white items.
+  // When scrolling down, it smoothly transitions to the white background with black text.
+  const isDarkHeroPage = isHomePage || isGalleryPage || isProjectsHeroPage;
+  const isDarkTheme = isDarkHeroPage && !isScrolled;
 
   if (location.pathname === '/services') {
     return null;
@@ -59,12 +62,10 @@ const Navbar = () => {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 sm:px-12 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out px-6 sm:px-12 ${
           isDarkTheme
             ? 'py-5 sm:py-7 bg-transparent'
-            : isScrolled
-              ? 'py-3.5 bg-white/95 backdrop-blur-xl border-b border-black/10 shadow-sm'
-              : 'py-4 sm:py-5 bg-white/95 backdrop-blur-xl border-b border-black/10 shadow-sm'
+            : 'py-3.5 bg-white/95 backdrop-blur-xl border-b border-black/10 shadow-sm'
         }`}
       >
             <div className="max-w-7xl mx-auto flex items-center justify-between">
