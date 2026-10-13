@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -76,6 +76,60 @@ const HomePage = () => {
   const [lightboxIndex, setLightboxIndex] = useState(null);
   const [selectedServiceModal, setSelectedServiceModal] = useState(null);
 
+  useEffect(() => {
+    let player = null;
+
+    const createPlayer = () => {
+      if (window.YT && window.YT.Player) {
+        try {
+          player = new window.YT.Player('hero-youtube-video', {
+            events: {
+              onReady: (event) => {
+                event.target.mute();
+                event.target.playVideo();
+              },
+              onStateChange: (event) => {
+                // 0: YT.PlayerState.ENDED -> seamlessly seek back to 0 and loop
+                if (event.data === 0) {
+                  event.target.seekTo(0);
+                  event.target.playVideo();
+                }
+                // 2: YT.PlayerState.PAUSED -> auto-resume so no pause overlay or controls appear
+                if (event.data === 2) {
+                  event.target.playVideo();
+                }
+              }
+            }
+          });
+        } catch (err) {
+          // Fallback handled by iframe attributes
+        }
+      }
+    };
+
+    if (!window.YT) {
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      if (firstScriptTag && firstScriptTag.parentNode) {
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      } else {
+        document.body.appendChild(tag);
+      }
+      window.onYouTubeIframeAPIReady = createPlayer;
+    } else {
+      createPlayer();
+    }
+
+    return () => {
+      if (player && typeof player.destroy === 'function') {
+        try {
+          player.destroy();
+        } catch (e) {}
+      }
+    };
+  }, []);
+
   return (
     <div className="w-full bg-[#f5f2f2] text-[#141517] font-body selection:bg-black selection:text-white">
 
@@ -83,8 +137,8 @@ const HomePage = () => {
           01 — HERO SECTION (Exact Bildora Screenshot Clone)
       ========================================================================= */}
       <section className="relative min-h-screen w-full flex flex-col justify-center items-center text-center px-4 sm:px-6 overflow-hidden">
-        {/* Background Video Wrapper: Looping Autoplay YouTube Video */}
-        <div className="absolute inset-0 w-full h-full overflow-hidden z-0 pointer-events-none bg-black">
+        {/* Background Video Wrapper: Full bleed, perfectly centered & scaled to hide edge watermarks */}
+        <div className="absolute inset-0 w-full h-full overflow-hidden z-0 pointer-events-none select-none bg-black">
           {/* Fallback poster while video streams */}
           <div 
             className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat opacity-30"
@@ -93,19 +147,24 @@ const HomePage = () => {
             }}
           />
 
-          {/* YouTube Video Embed: Full-bleed, perfectly aligned & centered, looped, muted autoplay */}
+          {/* YouTube Video Embed:
+              - Scaled to 1.55x to push YouTube watermarks and edge titles completely offscreen
+              - playlist parameter removed to eliminate forward and backward buttons
+              - enablejsapi=1 enables seamless looping and auto-resume without pause overlays */}
           <iframe
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[177.78vh] min-w-full min-h-full h-[56.25vw] pointer-events-none select-none scale-[1.35] object-cover"
-            src="https://www.youtube-nocookie.com/embed/Ii5h19NsZw0?autoplay=1&mute=1&loop=1&playlist=Ii5h19NsZw0&controls=0&showinfo=0&rel=0&iv_load_policy=3&disablekb=1&modestbranding=1&playsinline=1"
+            id="hero-youtube-video"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[177.78vh] min-w-full min-h-full h-[56.25vw] pointer-events-none select-none scale-[1.55] object-cover origin-center"
+            src="https://www.youtube-nocookie.com/embed/Ii5h19NsZw0?enablejsapi=1&autoplay=1&mute=1&controls=0&showinfo=0&rel=0&iv_load_policy=3&disablekb=1&fs=0&modestbranding=1&playsinline=1"
             title="Make My Cottage Background Video"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             tabIndex="-1"
+            aria-hidden="true"
           />
         </div>
         
-        {/* Subtle Dark Vignette / Overlay to ensure crystal-clear text readability */}
-        <div className="absolute inset-0 bg-black/40 bg-gradient-to-b from-black/50 via-black/25 to-black/60 pointer-events-none z-0" />
+        {/* Click shield & Dark Vignette:
+            Absorbs background clicks so the user can never accidentally touch/click the YouTube iframe and trigger the pause overlay */}
+        <div className="absolute inset-0 z-[1] bg-black/40 bg-gradient-to-b from-black/55 via-black/20 to-black/65 cursor-default select-none" />
 
         {/* Centered Content Container */}
         <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center pt-24 pb-16 px-4">
