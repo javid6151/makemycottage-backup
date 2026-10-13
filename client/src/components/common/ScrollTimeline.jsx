@@ -56,6 +56,16 @@ const VALUES_DATA = [
   },
 ];
 
+// Progressive Construction Evolution across the 6 Timeline Milestones
+const STAGE_IMAGES = [
+  '/cottage-stage-1.png', // 01: Basement Foundation Slab
+  '/cottage-stage-2.png', // 02: Timber Post & Beam Skeleton
+  '/cottage-stage-3.png', // 03: Walls, Siding & Verandah Deck
+  '/cottage-stage-4.png', // 04: Roof Rafters & Window Framing
+  '/cottage-stage-5.png', // 05: Completed Exterior Shell
+  '/wooden-cottage.png',   // 06: Fully Finished Master Villa
+];
+
 const ScrollTimeline = () => {
   const containerRef = useRef(null);
   const spineRef = useRef(null);
@@ -335,19 +345,21 @@ const ScrollTimeline = () => {
                     <span className="transform-spark spark-3" />
                     <span className="transform-spark spark-4" />
 
-                    {/* Wooden Cottage Miniature */}
+                    {/* Progressive Construction Miniature per Milestone */}
                     <div className="cottage-model-inner">
                       <img
-                        src="/wooden-cottage.png"
-                        alt={`MakeMyCottage Crafted Wooden Cottage ${item.num}`}
+                        src={STAGE_IMAGES[idx] || '/wooden-cottage.png'}
+                        alt={`MakeMyCottage Construction Stage ${item.num} - ${item.title}`}
                         className="cottage-img"
                         draggable={false}
                       />
-                      {/* Chimney Smoke Puffs */}
-                      <div className="cottage-chimney-smoke">
-                        <span className="chimney-puff cp-1" />
-                        <span className="chimney-puff cp-2" />
-                      </div>
+                      {/* Chimney Smoke Puffs - only on the fully completed final villa */}
+                      {idx === VALUES_DATA.length - 1 && (
+                        <div className="cottage-chimney-smoke">
+                          <span className="chimney-puff cp-1" />
+                          <span className="chimney-puff cp-2" />
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
