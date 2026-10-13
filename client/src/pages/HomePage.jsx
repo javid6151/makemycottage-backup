@@ -3,9 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   HiArrowNarrowRight, 
-  HiX, 
-  HiOutlineChevronLeft, 
-  HiOutlineChevronRight
+  HiX
 } from 'react-icons/hi';
 import CurvedSlider from '../components/common/CurvedSlider';
 import FoldText from '../components/common/FoldText';
@@ -20,19 +18,7 @@ import {
   SERVICES 
 } from '../utils/constants';
 
-// Gallery dataset with categories for interactive lightbox
-const GALLERY_ITEMS = [
-  { id: 1, title: 'Woodland Verandah & Truss Detailing', category: 'Homes', image: 'https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=1200&q=80', location: 'Shamshabad' },
-  { id: 2, title: 'Heritage Timber Farmhouse Living', category: 'Interiors', image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80', location: 'Chevella' },
-  { id: 3, title: 'Cedar Beam Structural Joinery', category: 'Details', image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=1200&q=80', location: 'Joinery Workshop' },
-  { id: 4, title: 'Hilltop Pine Cabin Vista', category: 'Cottages', image: 'https://images.unsplash.com/photo-1587061949409-02df41d5e562?w=1200&q=80', location: 'Ananthagiri Hills' },
-  { id: 5, title: 'Lakeside Wooden Deck & Pergola', category: 'Outdoor', image: 'https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=1200&q=80', location: 'Shamirpet' },
-  { id: 6, title: 'On-Site Precision Timber Framing', category: 'Construction', image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1200&q=80', location: 'Site Work' },
-  { id: 7, title: 'Resort Cottage Glass-Wood Facade', category: 'Cottages', image: 'https://images.unsplash.com/photo-1605146769289-440113cc3d00?w=1200&q=80', location: 'Nagarjuna Sagar' },
-  { id: 8, title: 'Prefabricated Modular Timber Villa', category: 'Completed Projects', image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&q=80', location: 'Vikarabad' },
-];
-
-const VALUES = [
+export const VALUES = [
   {
     num: '01',
     label: '01 — Quality First',
@@ -73,7 +59,6 @@ const VALUES = [
 
 
 const HomePage = () => {
-  const [lightboxIndex, setLightboxIndex] = useState(null);
   const [selectedServiceModal, setSelectedServiceModal] = useState(null);
   const videoRef = useRef(null);
 
@@ -279,107 +264,8 @@ const HomePage = () => {
 
 
 
-      {/* =========================================================================
-          08 — GALLERY SECTION WITH LIGHTBOX
-      ========================================================================= */}
-      <section id="gallery" className="py-20 md:py-32 px-4 sm:px-6 md:px-10 max-w-7xl mx-auto border-t border-[#e3e3de]">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
-          <div>
-            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#141517] text-white border border-white/10 text-[11px] font-medium uppercase tracking-[0.2em] shadow-md mb-6">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#ff4b18] shadow-[0_0_8px_rgba(255,75,24,0.8)]" />
-              <span>Gallery</span>
-            </div>
-            <h2 className="font-heading text-4xl sm:text-6xl text-[#141517] uppercase leading-[0.95]">
-              A closer look.
-            </h2>
-          </div>
-
-          <Link
-            to="/gallery"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#141517] text-white hover:bg-black/80 text-xs uppercase tracking-widest font-semibold transition-all duration-300 self-start md:self-auto shadow-sm"
-          >
-            <span>Explore Full Gallery</span>
-            <HiArrowNarrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {GALLERY_ITEMS.map((item, idx) => (
-            <div
-              key={item.id}
-              onClick={() => setLightboxIndex(idx)}
-              className="group cursor-pointer rounded-3xl overflow-hidden bg-white border border-[#e3e3de] shadow-sm hover:shadow-xl transition-all duration-300 relative aspect-[4/5]"
-            >
-              <img
-                src={item.image}
-                alt={item.title}
-                loading="lazy"
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-6 text-white">
-                <span className="self-end px-3 py-1 rounded-full text-[10px] uppercase tracking-wider bg-white/20 backdrop-blur-md">
-                  {item.category}
-                </span>
-                <div>
-                  <h4 className="font-heading text-xl text-white">{item.title}</h4>
-                  <p className="text-xs text-white/70 mt-1">{item.location}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Lightbox Modal */}
+      {/* Service Details Modal */}
       <AnimatePresence>
-        {lightboxIndex !== null && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex items-center justify-center p-4 md:p-8"
-          >
-            <button
-              onClick={() => setLightboxIndex(null)}
-              className="absolute top-6 right-6 p-3 rounded-full bg-white/10 text-white hover:bg-white/20 transition-all z-50"
-              aria-label="Close Lightbox"
-            >
-              <HiX className="w-6 h-6" />
-            </button>
-
-            <button
-              onClick={() => setLightboxIndex((prev) => (prev > 0 ? prev - 1 : GALLERY_ITEMS.length - 1))}
-              className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 text-white hover:bg-white/20 transition-all z-50"
-              aria-label="Previous image"
-            >
-              <HiOutlineChevronLeft className="w-6 h-6" />
-            </button>
-
-            <button
-              onClick={() => setLightboxIndex((prev) => (prev < GALLERY_ITEMS.length - 1 ? prev + 1 : 0))}
-              className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 text-white hover:bg-white/20 transition-all z-50"
-              aria-label="Next image"
-            >
-              <HiOutlineChevronRight className="w-6 h-6" />
-            </button>
-
-            <div className="max-w-5xl max-h-[85vh] flex flex-col items-center">
-              <img
-                src={GALLERY_ITEMS[lightboxIndex].image}
-                alt={GALLERY_ITEMS[lightboxIndex].title}
-                className="max-h-[75vh] w-auto max-w-full object-contain rounded-lg shadow-2xl"
-              />
-              <div className="text-center text-white mt-4">
-                <h4 className="font-heading text-2xl">{GALLERY_ITEMS[lightboxIndex].title}</h4>
-                <p className="text-xs text-white/60 uppercase tracking-widest mt-1">
-                  {GALLERY_ITEMS[lightboxIndex].category} &middot; {GALLERY_ITEMS[lightboxIndex].location}
-                </p>
-              </div>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Service Details Modal */}
         {selectedServiceModal && (
           <motion.div
             initial={{ opacity: 0 }}
