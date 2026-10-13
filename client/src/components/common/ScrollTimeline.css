@@ -517,7 +517,7 @@
 }
 
 .timeline-wood-node.is-active .transformed-cottage-wrap {
-  animation: cottage-build-in 0.75s 1.02s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: cottage-build-in 0.65s 0.12s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 .cottage-model-inner {
@@ -578,7 +578,7 @@
 }
 
 .timeline-wood-node.is-active .transform-burst {
-  animation: transform-burst-flash 0.65s 0.95s ease-out forwards;
+  animation: transform-burst-flash 0.55s 0.08s ease-out forwards;
 }
 
 @keyframes transform-burst-flash {
@@ -610,16 +610,16 @@
 }
 
 .timeline-wood-node.is-active .transform-spark.spark-1 {
-  animation: spark-drift-1 0.65s 0.98s ease-out forwards;
+  animation: spark-drift-1 0.6s 0.1s ease-out forwards;
 }
 .timeline-wood-node.is-active .transform-spark.spark-2 {
-  animation: spark-drift-2 0.65s 1.02s ease-out forwards;
+  animation: spark-drift-2 0.6s 0.14s ease-out forwards;
 }
 .timeline-wood-node.is-active .transform-spark.spark-3 {
-  animation: spark-drift-3 0.65s 0.96s ease-out forwards;
+  animation: spark-drift-3 0.6s 0.08s ease-out forwards;
 }
 .timeline-wood-node.is-active .transform-spark.spark-4 {
-  animation: spark-drift-4 0.65s 1.04s ease-out forwards;
+  animation: spark-drift-4 0.6s 0.16s ease-out forwards;
 }
 
 @keyframes spark-drift-1 {
@@ -660,11 +660,11 @@
 }
 
 .timeline-wood-node.is-active .chimney-puff.cp-1 {
-  animation: chimney-drift 2.2s infinite 1.7s ease-out;
+  animation: chimney-drift 2.2s infinite 0.75s ease-out;
 }
 
 .timeline-wood-node.is-active .chimney-puff.cp-2 {
-  animation: chimney-drift 2.2s infinite 2.8s ease-out;
+  animation: chimney-drift 2.2s infinite 1.85s ease-out;
 }
 
 @keyframes chimney-drift {

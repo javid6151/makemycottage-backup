@@ -326,23 +326,7 @@ const ScrollTimeline = () => {
                   {/* Subtle target base landing marker */}
                   <div className="wood-base-marker" />
 
-                  {/* 1. Delivered fallen timber logs (animates dropping into place when lorry nears) */}
-                  <div className="fallen-wood-wrap">
-                    <img
-                      src="/wood-logs.png"
-                      alt={`Delivered timber wood ${item.num}`}
-                      className="fallen-wood-img"
-                      draggable={false}
-                    />
-                    {/* Shockwave impact ripple on landing */}
-                    <span className="wood-impact-ripple" />
-                    {/* Wood dust chips */}
-                    <span className="wood-chip chip-1" />
-                    <span className="wood-chip chip-2" />
-                    <span className="wood-chip chip-3" />
-                  </div>
-
-                  {/* 2. Magical Transformation into Wooden Cottage */}
+                  {/* 1. Modern Luxury Wooden Villa Cottage */}
                   <div className="transformed-cottage-wrap">
                     {/* Magical sawdust & golden construction spark burst */}
                     <span className="transform-burst" />
