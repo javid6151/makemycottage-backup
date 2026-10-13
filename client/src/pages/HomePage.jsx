@@ -75,59 +75,14 @@ const VALUES = [
 const HomePage = () => {
   const [lightboxIndex, setLightboxIndex] = useState(null);
   const [selectedServiceModal, setSelectedServiceModal] = useState(null);
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
 
   useEffect(() => {
-    let player = null;
-
-    const createPlayer = () => {
-      if (window.YT && window.YT.Player) {
-        try {
-          player = new window.YT.Player('hero-youtube-video', {
-            events: {
-              onReady: (event) => {
-                event.target.mute();
-                event.target.playVideo();
-              },
-              onStateChange: (event) => {
-                // 0: YT.PlayerState.ENDED -> seamlessly seek back to 0 and loop
-                if (event.data === 0) {
-                  event.target.seekTo(0);
-                  event.target.playVideo();
-                }
-                // 2: YT.PlayerState.PAUSED -> auto-resume so no pause overlay or controls appear
-                if (event.data === 2) {
-                  event.target.playVideo();
-                }
-              }
-            }
-          });
-        } catch (err) {
-          // Fallback handled by iframe attributes
-        }
-      }
-    };
-
-    if (!window.YT) {
-      const tag = document.createElement('script');
-      tag.src = 'https://www.youtube.com/iframe_api';
-      const firstScriptTag = document.getElementsByTagName('script')[0];
-      if (firstScriptTag && firstScriptTag.parentNode) {
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-      } else {
-        document.body.appendChild(tag);
-      }
-      window.onYouTubeIframeAPIReady = createPlayer;
-    } else {
-      createPlayer();
-    }
-
-    return () => {
-      if (player && typeof player.destroy === 'function') {
-        try {
-          player.destroy();
-        } catch (e) {}
-      }
-    };
+    // Safety fallback: ensure video layer is revealed after player has buffered
+    const timer = setTimeout(() => {
+      setIsVideoLoaded(true);
+    }, 2500);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -137,37 +92,48 @@ const HomePage = () => {
           01 — HERO SECTION (Exact Bildora Screenshot Clone)
       ========================================================================= */}
       <section className="relative min-h-screen w-full flex flex-col justify-center items-center text-center px-4 sm:px-6 overflow-hidden">
-        {/* Background Video Wrapper: Full bleed, perfectly centered & scaled to hide edge watermarks */}
-        <div className="absolute inset-0 w-full h-full overflow-hidden z-0 pointer-events-none select-none bg-black">
-          {/* Fallback poster while video streams */}
+        {/* Background Video & Poster Container */}
+        <div className="absolute inset-0 w-full h-full overflow-hidden z-0 pointer-events-none select-none bg-stone-900">
+          {/* High-Resolution Farmhouse Video Thumbnail Poster (instant load, no old photo, no black flash) */}
           <div 
-            className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat opacity-30"
+            className={`absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ease-in-out z-0 ${
+              isVideoLoaded ? 'opacity-0 pointer-events-none' : 'opacity-100'
+            }`}
             style={{
-              backgroundImage: `url('https://framerusercontent.com/images/ZFWB4UKSVPCnIlBqsZjow92egU8.jpg')`
+              backgroundImage: `url('https://img.youtube.com/vi/Ii5h19NsZw0/maxresdefault.jpg')`
             }}
           />
 
           {/* YouTube Video Embed:
-              - Scaled to 1.55x to push YouTube watermarks and edge titles completely offscreen
-              - playlist parameter removed to eliminate forward and backward buttons
-              - enablejsapi=1 enables seamless looping and auto-resume without pause overlays */}
+              - Standard youtube.com domain for fast CDN streaming without buffering
+              - Scaled to 1.45x to push corner watermarks completely offscreen
+              - Initial opacity-0 so player initialization happens invisibly behind the poster frame
+              - onLoad smoothly crossfades once video stream is ready */}
           <iframe
             id="hero-youtube-video"
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[177.78vh] min-w-full min-h-full h-[56.25vw] pointer-events-none select-none scale-[1.55] object-cover origin-center"
-            src="https://www.youtube-nocookie.com/embed/Ii5h19NsZw0?enablejsapi=1&autoplay=1&mute=1&controls=0&showinfo=0&rel=0&iv_load_policy=3&disablekb=1&fs=0&modestbranding=1&playsinline=1"
+            className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[177.78vh] min-w-full min-h-full h-[56.25vw] pointer-events-none select-none scale-[1.45] object-cover origin-center transition-opacity duration-1000 ease-in-out z-0 ${
+              isVideoLoaded ? 'opacity-100' : 'opacity-0'
+            }`}
+            src="https://www.youtube.com/embed/Ii5h19NsZw0?autoplay=1&mute=1&loop=1&playlist=Ii5h19NsZw0&controls=0&showinfo=0&rel=0&iv_load_policy=3&disablekb=1&fs=0&modestbranding=1&playsinline=1"
             title="Make My Cottage Background Video"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             tabIndex="-1"
             aria-hidden="true"
+            onLoad={() => {
+              setTimeout(() => setIsVideoLoaded(true), 600);
+            }}
           />
         </div>
         
-        {/* Click shield & Dark Vignette:
-            Absorbs background clicks so the user can never accidentally touch/click the YouTube iframe and trigger the pause overlay */}
-        <div className="absolute inset-0 z-[1] bg-black/40 bg-gradient-to-b from-black/55 via-black/20 to-black/65 cursor-default select-none" />
+        {/* Dark Vignette / Overlay to guarantee crystal-clear text contrast */}
+        <div className="absolute inset-0 z-[1] bg-black/35 bg-gradient-to-b from-black/55 via-black/20 to-black/60 pointer-events-none" />
 
-        {/* Centered Content Container */}
-        <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center pt-24 pb-16 px-4">
+        {/* Full-bleed Click Shield:
+            Catches all background pointer events at z-10 so user clicks can never touch or pause the YouTube player */}
+        <div className="absolute inset-0 z-10 bg-transparent cursor-default select-none pointer-events-auto" />
+
+        {/* Centered Content Container: Sits at z-20 so CTA button and links are 100% interactive */}
+        <div className="relative z-20 max-w-4xl mx-auto flex flex-col items-center pt-24 pb-16 px-4">
           
           {/* Eyebrow Pill (Exact from Screenshot: • YOUR VISION. OUR CRAFT.) */}
           <motion.div
