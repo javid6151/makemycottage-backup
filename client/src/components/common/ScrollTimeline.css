@@ -501,7 +501,7 @@
 
 .transformed-cottage-wrap {
   position: absolute;
-  inset: -12px;
+  inset: -16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -513,7 +513,7 @@
 
 @media (min-width: 768px) {
   .transformed-cottage-wrap {
-    inset: -16px;
+    inset: -22px;
   }
 }
 
@@ -536,8 +536,7 @@
   object-fit: contain;
   user-select: none;
   -webkit-user-drag: none;
-  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.32))
-          drop-shadow(0 2px 6px rgba(255, 75, 24, 0.4));
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.22));
   transition: transform 0.3s ease;
 }
 
@@ -545,13 +544,12 @@
   0% {
     opacity: 0;
     transform: translateY(14px) scale(0.4) rotate(4deg);
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
   }
   45% {
     opacity: 1;
-    transform: translateY(-5px) scale(1.16) rotate(-2deg);
-    filter: drop-shadow(0 14px 20px rgba(0, 0, 0, 0.38))
-            drop-shadow(0 0 16px rgba(255, 140, 20, 0.6));
+    transform: translateY(-5px) scale(1.14) rotate(-2deg);
+    filter: drop-shadow(0 14px 20px rgba(0, 0, 0, 0.28));
   }
   75% {
     transform: translateY(2px) scale(0.96) rotate(1deg);
@@ -559,8 +557,7 @@
   100% {
     opacity: 1;
     transform: translateY(0) scale(1) rotate(0deg);
-    filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.32))
-            drop-shadow(0 2px 6px rgba(255, 75, 24, 0.4));
+    filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.22));
   }
 }
 
@@ -646,8 +643,8 @@
 /* Chimney Smoke on Built Cottage */
 .cottage-chimney-smoke {
   position: absolute;
-  top: 1px;
-  right: 21%;
+  top: 13%;
+  left: 40.5%;
   width: 10px;
   height: 12px;
   pointer-events: none;
