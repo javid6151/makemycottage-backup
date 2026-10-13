@@ -1,44 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   MapPin, 
-  ChevronDown, 
   ArrowRight,
-  ArrowUpRight,
-  Phone
+  ArrowUpRight
 } from 'lucide-react';
 import { PROJECTS_DATA, BUSINESS_INFO } from '../utils/constants';
-
-// Resentii-style FAQ items customized for Make My Cottage
-const FAQ_ITEMS = [
-  {
-    question: 'How long does a typical wooden cottage project take from start to finish?',
-    answer:
-      'Depending on custom architecture and site topography, our precision prefabricated timber homes and handcrafted cottages typically take between 45 to 90 days from foundation readiness to turnkey handover.'
-  },
-  {
-    question: 'What does the Make My Cottage design and build process look like?',
-    answer:
-      'We guide you through three clear phases: First, site consultation and customized 3D architectural modeling. Second, precision CNC factory milling and timber weatherproofing. Third, rapid on-site assembly led by master carpenters.'
-  },
-  {
-    question: 'What timber species and treatments do you utilize for weather & termite resistance?',
-    answer:
-      'We use certified Canadian Cedar, Scandinavian Pine, seasoned Burma Teak, and high-density bamboo composites, pressure-treated with vacuum-pressure impregnation to deliver permanent termite, fungal, and monsoon resistance.'
-  },
-  {
-    question: 'Do you construct cottages across India and provide remote consultations?',
-    answer:
-      'Yes! We deliver turnkey projects across India — including Himachal Pradesh, Uttarakhand, Karnataka, Telangana, Goa, and Maharashtra. We offer remote 3D consultations along with dedicated on-ground engineering teams.'
-  },
-  {
-    question: 'Can cottage designs be customized for hilly slopes, water bodies, or farm lands?',
-    answer:
-      'Every project is 100% custom-engineered. Whether you require stilt foundations for hillside contours, cantilevered decks over lakes, or expansive verandahs for farmsteads, our designs adapt to your land seamlessly.'
-  }
-];
+import SlingButton from '../components/ui/SlingButton';
 
 // Minimal Vintage Timber Project Card Component
 const VintageProjectCard = ({ project, isExpanded, onMouseEnter, onMouseLeave }) => {
@@ -153,29 +123,25 @@ const VintageProjectCard = ({ project, isExpanded, onMouseEnter, onMouseLeave })
 };
 
 const ProjectsPage = () => {
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState('All Projects');
-  const [openFaqIndex, setOpenFaqIndex] = useState(0);
   const [activeCardId, setActiveCardId] = useState(null);
 
-  // Responsive hero dimensions: base height and shrunk height
-  const [heroDims, setHeroDims] = useState(() => {
-    if (typeof window === 'undefined') return { base: 615, shrunk: 360 };
-    const w = window.innerWidth;
-    if (w < 640) return { base: 500, shrunk: 320 };
-    if (w < 1024) return { base: 560, shrunk: 340 };
-    return { base: 615, shrunk: 360 };
-  });
+  // Responsive hero dimensions: 88% of full screen (viewport height) for base height
+  const getHeroDims = () => {
+    if (typeof window === 'undefined') return { base: 780, shrunk: 360 };
+    const vh = window.innerHeight;
+    const base = Math.round(vh * 0.88);
+    // Keep shrunk height compact and proportional
+    const shrunk = Math.max(300, Math.min(380, Math.round(base * 0.45)));
+    return { base, shrunk };
+  };
+
+  const [heroDims, setHeroDims] = useState(getHeroDims);
 
   useEffect(() => {
     const handleResize = () => {
-      const w = window.innerWidth;
-      if (w < 640) {
-        setHeroDims({ base: 500, shrunk: 320 });
-      } else if (w < 1024) {
-        setHeroDims({ base: 560, shrunk: 340 });
-      } else {
-        setHeroDims({ base: 615, shrunk: 360 });
-      }
+      setHeroDims(getHeroDims());
     };
     window.addEventListener('resize', handleResize, { passive: true });
     return () => window.removeEventListener('resize', handleResize);
@@ -217,7 +183,7 @@ const ProjectsPage = () => {
       </Helmet>
 
       {/* =========================================================================
-          1. HERO SECTION (Classic Handcrafted Timber Cottage Hero with Scroll Animation)
+          1. HERO SECTION (Classic Handcrafted Timber Cottage Hero with Scroll Animation - 88vh Full Screen Scale)
       ========================================================================= */}
       <section className="relative w-full max-w-[1440px] mx-auto p-3 sm:p-4 md:p-5">
         {/* Pinned Hero Track */}
@@ -230,7 +196,7 @@ const ProjectsPage = () => {
             style={{ height: cardHeight }}
             className="sticky top-3 sm:top-4 md:top-5 w-full rounded-t-[28px] sm:rounded-t-[32px] rounded-br-[28px] sm:rounded-br-[32px] rounded-bl-none overflow-hidden bg-[#1c1d21] flex flex-col justify-end shadow-sm"
           >
-            {/* Background Architectural Photo (Constant base height so image remains fixed/constant) */}
+            {/* Background Architectural Photo (Constant base height so image remains fixed/constant at 88% full-screen) */}
             <div
               style={{ height: `${heroDims.base}px` }}
               className="absolute top-0 left-0 w-full overflow-hidden pointer-events-none"
@@ -247,8 +213,8 @@ const ProjectsPage = () => {
                   className="w-full h-full object-cover"
                   loading="eager"
                 />
-                {/* Multi-Stop Gradient Overlay: Dark at top for navbar legibility, dark at bottom for notch contrast */}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/15 to-black/60 pointer-events-none" />
+                {/* Multi-Stop Gradient Overlay: Dark at top for transparent navbar mixing, dark at bottom for notch contrast */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/15 to-black/60 pointer-events-none" />
               </motion.div>
             </div>
 
@@ -352,81 +318,7 @@ const ProjectsPage = () => {
           </div>
       </section>
 
-      {/* =========================================================================
-          3. FAQ ACCORDION SECTION (Resentii FAQ Section Component)
-      ========================================================================= */}
-      <section className="bg-[#f9fafc] border-y border-black/[0.06] py-20 sm:py-28 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-          {/* FAQ Left Column: Sticky while scrolling, until right accordion finishes */}
-          <div className="lg:col-span-5">
-            <div className="lg:sticky lg:top-28">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#28282c] text-white text-[11px] uppercase tracking-widest font-semibold mb-4 shadow-sm">
-                <span>FAQ</span>
-              </div>
-              <h2 className="font-heading text-3xl sm:text-5xl uppercase text-[#141517] tracking-tight leading-[1.05] mb-5">
-                Got Questions? We Have Answers.
-              </h2>
-              <p className="font-sans text-[#555866] text-sm sm:text-base font-light leading-relaxed mb-8">
-                Everything you need to know about our handcrafted timber architecture, sustainable materials, and turnkey building process.
-              </p>
-              <div className="hidden lg:block">
-                <Link
-                  to="/contact"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#141517] text-white text-xs uppercase tracking-widest font-semibold hover:bg-black transition-all shadow-md hover:scale-105 duration-200"
-                >
-                  <span>Ask A Question</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-              </div>
-            </div>
-          </div>
 
-          {/* FAQ Right Column (Accordion List) */}
-          <div className="lg:col-span-7 flex flex-col gap-4">
-            {FAQ_ITEMS.map((faq, index) => {
-              const isOpen = openFaqIndex === index;
-              return (
-                <div
-                  key={index}
-                  className="bg-white rounded-[20px] border border-black/[0.07] overflow-hidden shadow-sm transition-all duration-200"
-                >
-                  <button
-                    onClick={() => setOpenFaqIndex(isOpen ? -1 : index)}
-                    className="w-full text-left p-6 sm:p-7 flex items-center justify-between gap-4 cursor-pointer"
-                  >
-                    <span className="font-heading text-base sm:text-lg text-[#141517] font-medium leading-snug">
-                      {faq.question}
-                    </span>
-                    <span
-                      className={`w-9 h-9 rounded-full shrink-0 flex items-center justify-center transition-transform duration-300 ${
-                        isOpen
-                          ? 'bg-[#28282c] text-white rotate-180'
-                          : 'bg-[#f0f2f5] text-[#141517]'
-                      }`}
-                    >
-                      <ChevronDown className="w-4 h-4" />
-                    </span>
-                  </button>
-                  <AnimatePresence initial={false}>
-                    {isOpen && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                      >
-                        <div className="px-6 sm:px-7 pb-6 sm:pb-7 pt-1 font-sans text-xs sm:text-sm text-[#555866] leading-relaxed font-light border-t border-black/[0.04]">
-                          {faq.answer}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
 
       {/* =========================================================================
           4. CTA BANNER (Resentii "Ready to Transform Your Space?" Component)
@@ -460,19 +352,40 @@ const ProjectsPage = () => {
             Every great space starts with a single conversation. Let's talk about your vision and bring it to life together.
           </p>
 
-          {/* Action Button: Signature White Pill with Brown Arrow Badge */}
-          <div className="flex items-center justify-center">
-            <Link
-              to="/contact"
-              className="group inline-flex items-center gap-4 pl-8 pr-2.5 py-2.5 rounded-full bg-white text-[#141517] hover:bg-white font-sans font-medium text-base tracking-normal transition-all duration-300 shadow-[0_12px_36px_rgba(0,0,0,0.35)] hover:shadow-[0_16px_45px_rgba(0,0,0,0.45)] hover:scale-105 active:scale-95"
-            >
-              <span className="font-semibold text-black tracking-tight">
+          {/* Action Button: Interactive SlingButton from React Bits */}
+          <div className="flex flex-col items-center justify-center gap-4">
+            <div className="inline-flex items-center gap-4 pl-7 sm:pl-8 pr-2.5 py-2.5 rounded-full bg-white text-[#141517] shadow-[0_16px_40px_rgba(0,0,0,0.35)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.45)] transition-all">
+              <button
+                type="button"
+                onClick={() => navigate('/contact')}
+                className="font-sans font-semibold text-black tracking-tight text-base sm:text-lg cursor-pointer bg-transparent border-0 p-0 hover:opacity-80 transition-opacity"
+              >
                 Let's Talk
-              </span>
-              <span className="w-12 h-12 rounded-full bg-[#855836] text-white flex items-center justify-center transition-transform duration-300 group-hover:translate-x-1 shadow-sm">
-                <ArrowRight className="w-5 h-5 text-white" />
-              </span>
-            </Link>
+              </button>
+              <SlingButton
+                onSend={() => navigate('/contact')}
+                padColor="#855836"
+                iconColor="#ffffff"
+                accentColor="#855836"
+                wellColor="#27272a"
+                bandColor="#855836"
+                size={52}
+                strokeWidth={3}
+                armAt={46}
+                maxPull={150}
+                launchSpeed={2600}
+                recoil={0.2}
+                flight={120}
+                particles={16}
+                spread={60}
+                axis="any"
+                tapSends={true}
+                ariaLabel="Let's Talk - Pull to send"
+              />
+            </div>
+            <p className="text-white/40 text-[11px] sm:text-xs uppercase tracking-[0.2em] font-medium select-none">
+              Press Enter, drag &amp; release, or tap to connect
+            </p>
           </div>
         </div>
       </section>
