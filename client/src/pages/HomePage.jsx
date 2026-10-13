@@ -83,16 +83,29 @@ const HomePage = () => {
           01 — HERO SECTION (Exact Bildora Screenshot Clone)
       ========================================================================= */}
       <section className="relative min-h-screen w-full flex flex-col justify-center items-center text-center px-4 sm:px-6 overflow-hidden">
-        {/* Background Image: the EXACT architectural courtyard image from Bildora screenshot */}
-        <div 
-          className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat z-0"
-          style={{
-            backgroundImage: `url('https://framerusercontent.com/images/ZFWB4UKSVPCnIlBqsZjow92egU8.jpg')`
-          }}
-        />
+        {/* Background Video Wrapper: Looping Autoplay YouTube Video */}
+        <div className="absolute inset-0 w-full h-full overflow-hidden z-0 pointer-events-none bg-black">
+          {/* Fallback poster while video streams */}
+          <div 
+            className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat opacity-30"
+            style={{
+              backgroundImage: `url('https://framerusercontent.com/images/ZFWB4UKSVPCnIlBqsZjow92egU8.jpg')`
+            }}
+          />
+
+          {/* YouTube Video Embed: Full-bleed, perfectly aligned & centered, looped, muted autoplay */}
+          <iframe
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[177.78vh] min-w-full min-h-full h-[56.25vw] pointer-events-none select-none scale-[1.35] object-cover"
+            src="https://www.youtube-nocookie.com/embed/Ii5h19NsZw0?autoplay=1&mute=1&loop=1&playlist=Ii5h19NsZw0&controls=0&showinfo=0&rel=0&iv_load_policy=3&disablekb=1&modestbranding=1&playsinline=1"
+            title="Make My Cottage Background Video"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            tabIndex="-1"
+          />
+        </div>
         
         {/* Subtle Dark Vignette / Overlay to ensure crystal-clear text readability */}
-        <div className="absolute inset-0 bg-black/25 pointer-events-none z-0" />
+        <div className="absolute inset-0 bg-black/40 bg-gradient-to-b from-black/50 via-black/25 to-black/60 pointer-events-none z-0" />
 
         {/* Centered Content Container */}
         <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center pt-24 pb-16 px-4">
