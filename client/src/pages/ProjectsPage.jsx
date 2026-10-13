@@ -4,41 +4,10 @@ import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { 
   MapPin, 
-  ChevronDown, 
   ArrowRight,
-  ArrowUpRight,
-  Phone
+  ArrowUpRight
 } from 'lucide-react';
 import { PROJECTS_DATA, BUSINESS_INFO } from '../utils/constants';
-
-// Resentii-style FAQ items customized for Make My Cottage
-const FAQ_ITEMS = [
-  {
-    question: 'How long does a typical wooden cottage project take from start to finish?',
-    answer:
-      'Depending on custom architecture and site topography, our precision prefabricated timber homes and handcrafted cottages typically take between 45 to 90 days from foundation readiness to turnkey handover.'
-  },
-  {
-    question: 'What does the Make My Cottage design and build process look like?',
-    answer:
-      'We guide you through three clear phases: First, site consultation and customized 3D architectural modeling. Second, precision CNC factory milling and timber weatherproofing. Third, rapid on-site assembly led by master carpenters.'
-  },
-  {
-    question: 'What timber species and treatments do you utilize for weather & termite resistance?',
-    answer:
-      'We use certified Canadian Cedar, Scandinavian Pine, seasoned Burma Teak, and high-density bamboo composites, pressure-treated with vacuum-pressure impregnation to deliver permanent termite, fungal, and monsoon resistance.'
-  },
-  {
-    question: 'Do you construct cottages across India and provide remote consultations?',
-    answer:
-      'Yes! We deliver turnkey projects across India — including Himachal Pradesh, Uttarakhand, Karnataka, Telangana, Goa, and Maharashtra. We offer remote 3D consultations along with dedicated on-ground engineering teams.'
-  },
-  {
-    question: 'Can cottage designs be customized for hilly slopes, water bodies, or farm lands?',
-    answer:
-      'Every project is 100% custom-engineered. Whether you require stilt foundations for hillside contours, cantilevered decks over lakes, or expansive verandahs for farmsteads, our designs adapt to your land seamlessly.'
-  }
-];
 
 // Minimal Vintage Timber Project Card Component
 const VintageProjectCard = ({ project, isExpanded, onMouseEnter, onMouseLeave }) => {
@@ -154,7 +123,6 @@ const VintageProjectCard = ({ project, isExpanded, onMouseEnter, onMouseLeave })
 
 const ProjectsPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('All Projects');
-  const [openFaqIndex, setOpenFaqIndex] = useState(0);
   const [activeCardId, setActiveCardId] = useState(null);
 
   // Responsive hero dimensions: base height and shrunk height
@@ -219,7 +187,7 @@ const ProjectsPage = () => {
       {/* =========================================================================
           1. HERO SECTION (Classic Handcrafted Timber Cottage Hero with Scroll Animation)
       ========================================================================= */}
-      <section className="relative w-full max-w-[1440px] mx-auto p-3 sm:p-4 md:p-5">
+      <section className="relative w-full max-w-[1440px] mx-auto pt-20 sm:pt-24 pb-3 sm:pb-4 md:pb-5 px-3 sm:px-4 md:px-5">
         {/* Pinned Hero Track */}
         <div 
           className="relative w-full"
@@ -228,7 +196,7 @@ const ProjectsPage = () => {
           {/* Shrinking Hero Card (Sticky at top, bottom shrinks upward) */}
           <motion.div
             style={{ height: cardHeight }}
-            className="sticky top-3 sm:top-4 md:top-5 w-full rounded-t-[28px] sm:rounded-t-[32px] rounded-br-[28px] sm:rounded-br-[32px] rounded-bl-none overflow-hidden bg-[#1c1d21] flex flex-col justify-end shadow-sm"
+            className="sticky top-20 sm:top-24 w-full rounded-t-[28px] sm:rounded-t-[32px] rounded-br-[28px] sm:rounded-br-[32px] rounded-bl-none overflow-hidden bg-[#1c1d21] flex flex-col justify-end shadow-sm"
           >
             {/* Background Architectural Photo (Constant base height so image remains fixed/constant) */}
             <div
@@ -352,81 +320,7 @@ const ProjectsPage = () => {
           </div>
       </section>
 
-      {/* =========================================================================
-          3. FAQ ACCORDION SECTION (Resentii FAQ Section Component)
-      ========================================================================= */}
-      <section className="bg-[#f9fafc] border-y border-black/[0.06] py-20 sm:py-28 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-          {/* FAQ Left Column: Sticky while scrolling, until right accordion finishes */}
-          <div className="lg:col-span-5">
-            <div className="lg:sticky lg:top-28">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#28282c] text-white text-[11px] uppercase tracking-widest font-semibold mb-4 shadow-sm">
-                <span>FAQ</span>
-              </div>
-              <h2 className="font-heading text-3xl sm:text-5xl uppercase text-[#141517] tracking-tight leading-[1.05] mb-5">
-                Got Questions? We Have Answers.
-              </h2>
-              <p className="font-sans text-[#555866] text-sm sm:text-base font-light leading-relaxed mb-8">
-                Everything you need to know about our handcrafted timber architecture, sustainable materials, and turnkey building process.
-              </p>
-              <div className="hidden lg:block">
-                <Link
-                  to="/contact"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#141517] text-white text-xs uppercase tracking-widest font-semibold hover:bg-black transition-all shadow-md hover:scale-105 duration-200"
-                >
-                  <span>Ask A Question</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-              </div>
-            </div>
-          </div>
 
-          {/* FAQ Right Column (Accordion List) */}
-          <div className="lg:col-span-7 flex flex-col gap-4">
-            {FAQ_ITEMS.map((faq, index) => {
-              const isOpen = openFaqIndex === index;
-              return (
-                <div
-                  key={index}
-                  className="bg-white rounded-[20px] border border-black/[0.07] overflow-hidden shadow-sm transition-all duration-200"
-                >
-                  <button
-                    onClick={() => setOpenFaqIndex(isOpen ? -1 : index)}
-                    className="w-full text-left p-6 sm:p-7 flex items-center justify-between gap-4 cursor-pointer"
-                  >
-                    <span className="font-heading text-base sm:text-lg text-[#141517] font-medium leading-snug">
-                      {faq.question}
-                    </span>
-                    <span
-                      className={`w-9 h-9 rounded-full shrink-0 flex items-center justify-center transition-transform duration-300 ${
-                        isOpen
-                          ? 'bg-[#28282c] text-white rotate-180'
-                          : 'bg-[#f0f2f5] text-[#141517]'
-                      }`}
-                    >
-                      <ChevronDown className="w-4 h-4" />
-                    </span>
-                  </button>
-                  <AnimatePresence initial={false}>
-                    {isOpen && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                      >
-                        <div className="px-6 sm:px-7 pb-6 sm:pb-7 pt-1 font-sans text-xs sm:text-sm text-[#555866] leading-relaxed font-light border-t border-black/[0.04]">
-                          {faq.answer}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
 
       {/* =========================================================================
           4. CTA BANNER (Resentii "Ready to Transform Your Space?" Component)

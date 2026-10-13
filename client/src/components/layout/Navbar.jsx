@@ -46,20 +46,22 @@ const Navbar = () => {
     }
   }, [location]);
 
-  const isDarkHeroPage = location.pathname === '/' || location.pathname === '/projects';
-  const isDarkTheme = isDarkHeroPage;
+  const isHomePage = location.pathname === '/';
+  // Only the top hero on Home page uses the dark transparent navbar.
+  // All other pages, including /projects, use the clean white background with black text.
+  const isDarkTheme = isHomePage && !isScrolled;
 
   return (
     <>
       <header
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 sm:px-12 ${
-              isScrolled
-                ? isDarkTheme
-                  ? 'py-3.5 bg-black/85 backdrop-blur-xl border-b border-white/10 shadow-lg'
-                  : 'py-3.5 bg-white/90 backdrop-blur-xl border-b border-black/10 shadow-sm'
-                : 'py-5 sm:py-7 bg-transparent'
-            }`}
-          >
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 sm:px-12 ${
+          isDarkTheme
+            ? 'py-5 sm:py-7 bg-transparent'
+            : isScrolled
+              ? 'py-3.5 bg-white/95 backdrop-blur-xl border-b border-black/10 shadow-sm'
+              : 'py-4 sm:py-5 bg-white/95 backdrop-blur-xl border-b border-black/10 shadow-sm'
+        }`}
+      >
             <div className="max-w-7xl mx-auto flex items-center justify-between">
               
               {/* Logo with Brick / Cottage Icon */}
