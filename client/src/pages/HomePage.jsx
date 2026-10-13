@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -75,6 +75,29 @@ const VALUES = [
 const HomePage = () => {
   const [lightboxIndex, setLightboxIndex] = useState(null);
   const [selectedServiceModal, setSelectedServiceModal] = useState(null);
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Ensure immediate playback and hardware acceleration
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {});
+    }
+
+    // Seamless loop restart safeguard to ensure the video never freezes or gets stuck
+    const handleEnded = () => {
+      video.currentTime = 0;
+      video.play().catch(() => {});
+    };
+
+    video.addEventListener('ended', handleEnded);
+    return () => {
+      video.removeEventListener('ended', handleEnded);
+    };
+  }, []);
 
   return (
     <div className="w-full bg-[#f5f2f2] text-[#141517] font-body selection:bg-black selection:text-white">
@@ -83,13 +106,15 @@ const HomePage = () => {
           01 — HERO SECTION (Exact Bildora Screenshot Clone)
       ========================================================================= */}
       <section className="relative min-h-screen w-full flex flex-col justify-center items-center text-center px-4 sm:px-6 overflow-hidden">
-        {/* Native Full-Bleed Video Background: Autoplays instantly, infinite seamless loop, zero player controls, zero buffering */}
+        {/* Native 1080p Full-HD Video Background: Autoplays instantly, infinite seamless loop, zero player controls, zero buffering */}
         <div className="absolute inset-0 w-full h-full overflow-hidden z-0 pointer-events-none select-none bg-stone-900">
           <video
+            ref={videoRef}
             autoPlay
             loop
             muted
             playsInline
+            preload="auto"
             className="absolute inset-0 w-full h-full object-cover scale-[1.12] origin-center pointer-events-none select-none"
             poster="https://img.youtube.com/vi/Ii5h19NsZw0/maxresdefault.jpg"
           >
