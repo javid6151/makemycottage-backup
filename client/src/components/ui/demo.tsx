@@ -31,7 +31,7 @@ export function Preview() {
   const navigate = useNavigate()
   const textRotateRef = useRef<TextRotateRef>(null)
   const sectionRef = useRef<HTMLDivElement>(null)
-  const projects = PROJECTS_DATA
+  const projects = PROJECTS_DATA.slice(0, 5)
   const [activeIndex, setActiveIndex] = useState(0)
   const activeIndexRef = useRef(0)
 
